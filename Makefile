@@ -1,6 +1,8 @@
 CFLAGS=-g3 -O0 -Wall -Wextra -Werror -Wno-unused-parameter \
        -Iinclude/cushion
 
+example/cp:example/cp.o libcushion.so
+
 custom_stream:example/custom_stream.o
 
 fopen-override.so:fopen-override/fopen-override.c
