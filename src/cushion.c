@@ -178,6 +178,15 @@ FILE *cushion_handler_real_fopen(const char *path, const char *mode)
 
 __attribute__((constructor)) void cushion_constructor(void)
 {
+	const char *env_log_level;
+
 	real_fopen = dlsym(RTLD_NEXT, "fopen");
+
+	env_log_level = getenv("CUSHION_LOG_LEVEL");
+	if (env_log_level != NULL)
+		log_level = atoi(env_log_level);
+
+	if (log_level > CUSHION_HANDLER_DEBUG)
+		log_level = CUSHION_HANDLER_DEBUG;
 }
 
