@@ -9,7 +9,6 @@
 #include <stdarg.h>
 #include <string.h>
 
-#include "cushion.h"
 #include "cushion_handler.h"
 #include "utils.h"
 
@@ -22,6 +21,8 @@
 
 #define MAX_CUSHION_HANDLER 20
 #define SCHEME_END_PATTERN "://"
+
+FILE *cushion_fopen(const char *path, const char *mode);
 
 static int log_level = -1;
 
@@ -74,6 +75,11 @@ static int break_path(const char *path, char **scheme, char **envz,
 	}
 
 	return prefix_length;
+}
+
+FILE *fopen(const char *path, const char *mode)
+{
+	return cushion_fopen(path, mode);
 }
 
 FILE *cushion_fopen(const char *path, const char *mode)
@@ -168,7 +174,7 @@ int cushion_handler_register(const struct cushion_handler *handler)
 // TODO can these two be merged into one ?
 FILE *__wrap_fopen(const char *path, const char *mode)
 {
-	return real_fopen(path, mode);
+	return cushion_fopen(path, mode);
 }
 
 FILE *cushion_handler_real_fopen(const char *path, const char *mode)

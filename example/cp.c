@@ -5,8 +5,6 @@
 
 #include <error.h>
 
-#include <cushion.h>
-
 #define USAGE "usage: cp source destination\n"
 #define BUFFER_SIZE 0x100
 
@@ -38,12 +36,12 @@ int main(int argc, char *argv[])
 	src_path = argv[1];
 	dest_path = argv[2];
 
-	src = cushion_fopen(src_path, "rb");
+	src = fopen(src_path, "rb");
 	if (src == NULL)
-		error(EXIT_FAILURE, errno, "fopen");
-	dest = cushion_fopen(dest_path, "wb");
+		error(EXIT_FAILURE, errno, "fopen src");
+	dest = fopen(dest_path, "wb");
 	if (dest == NULL)
-		error(EXIT_FAILURE, errno, "fopen");
+		error(EXIT_FAILURE, errno, "fopen dest");
 
 	do {
 		sread = fread(buf, 1, BUFFER_SIZE, src);
