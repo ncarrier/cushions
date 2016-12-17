@@ -104,7 +104,7 @@ FILE *cushion_fopen(const char *path, const char *mode)
 			if (h->self == NULL)
 				break;
 			if (string_matches_prefix(path, h->scheme)) {
-				CH_LOGI("%p handles scheme %s", h, h->scheme);
+				CH_LOGI("%p handles scheme '%s'", h, h->scheme);
 				return h->fopen(h, path + offset, mode, envz,
 						envz_len);
 			}
