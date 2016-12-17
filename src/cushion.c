@@ -11,6 +11,7 @@
 
 #include "cushion_handler.h"
 #include "utils.h"
+#include "cushion_handlers.h"
 
 #define CH_LOG(l, ...) cushion_handler_log(NULL, (l), __VA_ARGS__)
 #define CH_LOGE(...) CH_LOG(CUSHION_HANDLER_ERROR, __VA_ARGS__)
@@ -183,6 +184,7 @@ FILE *cushion_handler_real_fopen(const char *path, const char *mode)
 
 __attribute__((constructor)) void cushion_constructor(void)
 {
+	int ret;
 	const char *env_log_level;
 
 	real_fopen = dlsym(RTLD_NEXT, "fopen");
@@ -193,5 +195,14 @@ __attribute__((constructor)) void cushion_constructor(void)
 
 	if (log_level > CUSHION_HANDLER_DEBUG)
 		log_level = CUSHION_HANDLER_DEBUG;
+
+	ret = cushion_handlers_load();
+	if (ret < 0)
+		CH_LOGW("cushion_handlers_load: %s", strerror(-ret));
+}
+
+__attribute__((destructor)) void cushion_destructor(void)
+{
+	cushion_handlers_unload();
 }
 
