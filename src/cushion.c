@@ -123,10 +123,10 @@ static void ch_vlog(const struct cushion_handler *h, int level,
 		const char *fmt, va_list ap)
 {
 	static const char * const level_tags[] = {
-		"\e[1;31m %s E\e[0m ",
-		"\e[1;33m %s W\e[0m ",
-		"\e[1;35m %s I\e[0m ",
-		"\e[1;36m %s D\e[0m "
+		"[\e[1;31m %s E\e[0m] ",
+		"[\e[1;33m %s W\e[0m] ",
+		"[\e[1;35m %s I\e[0m] ",
+		"[\e[1;36m %s D\e[0m] "
 	};
 	
 	fprintf(stderr, level_tags[level], h != NULL ? h->scheme : "\b");
