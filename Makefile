@@ -2,7 +2,9 @@ CFLAGS := -g3 -O0 -Wall -Wextra -Werror -Wno-unused-parameter \
        -Iinclude/cushion
 libcushion_src := $(wildcard src/*.c)
 
-all:cp cp_no_wrap
+all:libcushion.so handlers_dir/libcushion_bzip2_handler.so
+
+examples:cp cp_no_wrap
 
 cp_no_wrap:example/cp.o
 	$(CC) $^ -o $@
@@ -25,6 +27,7 @@ handlers_dir/libcushion_bzip2_handler.so:handlers/bzip2_handler.c
 clean:
 	rm -f example/custom_stream.o \
 			libcushion.so \
+			handlers_dir/libcushion_bzip2_handler.so \
 			custom_stream \
 			example/custom_stream.o \
 			variadic_macro \
@@ -34,4 +37,4 @@ clean:
 			cp_no_wrap \
 			example/cp_no_wrap.o
 
-.PHONY: clean all
+.PHONY: clean all examples

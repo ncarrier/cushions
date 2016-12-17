@@ -21,8 +21,8 @@ These two lines will simplify the next commands:
 
 Build the relevant bits and create an example file:
 
-        $ make example/cp{,_no_wrap}
-	...
+        $ make examples
+        ...
         cc example/cp.o libcushion.so -Wl,--wrap=fopen -o example/cp
         cc example/cp.o -o example/cp_no_wrap
         $ dd if=/dev/urandom of=tutu bs=1024 count=1024
