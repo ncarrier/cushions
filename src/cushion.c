@@ -171,7 +171,6 @@ int cushion_handler_register(const struct cushion_handler *handler)
 	return 0;
 }
 
-// TODO can these two be merged into one ?
 FILE *__wrap_fopen(const char *path, const char *mode)
 {
 	return cushion_fopen(path, mode);
