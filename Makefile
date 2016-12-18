@@ -17,6 +17,8 @@ wrap_malloc:example/wrap/wrap_malloc.c example/wrap/main.c
 
 custom_stream:example/custom_stream.o
 variadic_macro:example/variadic_macro.o
+bzip2_expand:example/bzip2/expand.c
+	$(CC) $^ -o $@ $(CFLAGS) -lbz2
 
 libcushion.so:$(libcushion_src)
 	$(CC) $^ -fPIC -shared -o $@ $(CFLAGS) -ldl
