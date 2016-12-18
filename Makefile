@@ -33,6 +33,7 @@ clean:
 			custom_stream \
 			example/custom_stream.o \
 			variadic_macro \
+			bzip2_expand \
 			example/variadic_macro.o \
 			cp \
 			example/cp.o \
