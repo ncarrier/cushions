@@ -8,9 +8,13 @@ By using linker flags or **LD\_PRELOAD** tricks, this can be done without
 modifying or even without recompiling the program, adding transparent support
 for archives files, or web urls, for example.
 
+**IT IS NOT FUNCTIONAL YET**
+
 ## Architecture
 
 The central part is **libcushion** itself, it proposes a public API
+
+--- WIP ---
 
 ## Usage example
 
