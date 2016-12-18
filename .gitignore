@@ -1,2 +1,11 @@
 *.swo
 *.swp
+bzip2_expand
+cp
+cp_no_wrap
+example/cp.o
+example/custom_stream.o
+example/variadic_macro.o
+handlers_dir/libcushion_bzip2_handler.so
+libcushion.so
+wrap_malloc
