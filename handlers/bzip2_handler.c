@@ -1,4 +1,7 @@
+#define _GNU_SOURCE
 #include <stdlib.h>
+#include <stdio.h>
+#include <errno.h>
 #include <string.h>
 
 #include <cushion_handler.h>
@@ -11,7 +14,7 @@
 
 struct bzip2_cushion_handler {
 	struct cushion_handler handler;
-	/* here could come some custom data */
+	cookie_io_functions_t bzip2_func;
 };
 
 static const struct bzip2_cushion_handler bzip2_cushion_handler;
@@ -24,13 +27,49 @@ static FILE *bzip2_cushion_fopen(struct cushion_handler *handler,
 
 	/* TODO here */
 
-	return cushion_handler_real_fopen(path, mode);
+	/* TODO adapt mode according to the mode argument */
+	return fopencookie((void *)&bzip2_cushion_handler, "r",
+			bzip2_cushion_handler.bzip2_func);
+}
+
+static ssize_t bzip2_write(void *c, const char *buf, size_t size)
+{
+
+	errno = ENOSYS;
+	return -1;
+}
+
+static ssize_t bzip2_read(void *c, char *buf, size_t size)
+{
+
+	errno = ENOSYS;
+	return -1;
+}
+
+static int bzip2_seek(void *c, off64_t *offset, int whence)
+{
+
+	errno = ENOSYS;
+	return -1;
+}
+
+static int bzip2_close(void *c)
+{
+
+	errno = ENOSYS;
+	return -1;
 }
 
 static const struct bzip2_cushion_handler bzip2_cushion_handler = {
 	.handler = {
 		.scheme = "bzip2",
 		.fopen = bzip2_cushion_fopen,
+	},
+	.bzip2_func = {
+		.read  = bzip2_read,
+		.write = bzip2_write,
+		.seek  = bzip2_seek,
+		.close = bzip2_close
 	},
 };
 
