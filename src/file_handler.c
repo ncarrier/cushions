@@ -2,6 +2,8 @@
 
 #include <cushion_handler.h>
 
+#include "log.h"
+
 #define FCH_LOG(level, ...) cushion_handler_log( \
 		&file_cushion_handler.handler, (level), __VA_ARGS__)
 #define FCH_LOGW(...) FCH_LOG(CUSHION_HANDLER_WARNING, __VA_ARGS__)

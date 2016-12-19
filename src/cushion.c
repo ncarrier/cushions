@@ -11,21 +11,13 @@
 
 #include "cushion_handler.h"
 #include "utils.h"
+#include "log.h"
 #include "cushion_handlers.h"
-
-#define CH_LOG(l, ...) cushion_handler_log(NULL, (l), __VA_ARGS__)
-#define CH_LOGE(...) CH_LOG(CUSHION_HANDLER_ERROR, __VA_ARGS__)
-#define CH_LOGW(...) CH_LOG(CUSHION_HANDLER_WARNING, __VA_ARGS__)
-#define CH_LOGI(...) CH_LOG(CUSHION_HANDLER_INFO, __VA_ARGS__)
-#define CH_LOGD(...) CH_LOG(CUSHION_HANDLER_DEBUG, __VA_ARGS__)
-#define CH_LOGPE(s, e) CH_LOGE("%s: %s", (s), strerror(abs((e))))
 
 #define MAX_CUSHION_HANDLER 20
 #define SCHEME_END_PATTERN "://"
 
 FILE *cushion_fopen(const char *path, const char *mode);
-
-static int log_level = -1;
 
 static struct cushion_handler handlers[MAX_CUSHION_HANDLER];
 
@@ -120,36 +112,6 @@ FILE *cushion_fopen(const char *path, const char *mode)
 	return real_fopen(path, mode);
 }
 
-static void ch_vlog(const struct cushion_handler *h, int level,
-		const char *fmt, va_list ap)
-{
-	static const char * const level_tags[] = {
-		"[\e[1;31m %s E\e[0m] ",
-		"[\e[1;33m %s W\e[0m] ",
-		"[\e[1;35m %s I\e[0m] ",
-		"[\e[1;36m %s D\e[0m] "
-	};
-	
-	fprintf(stderr, level_tags[level], h != NULL ? h->scheme : "\b");
-	vfprintf(stderr, fmt, ap); 
-	fputs("\n", stderr);
-}
-
-void cushion_handler_log(const struct cushion_handler *handler, int level,
-		const char *fmt, ...)
-{
-	va_list ap;
-
-	if (level > log_level)
-		return;
-	if (level > CUSHION_HANDLER_DEBUG)
-		level = CUSHION_HANDLER_DEBUG;
-
-	va_start(ap, fmt);
-	ch_vlog(handler, level, fmt, ap);
-	va_end(ap);
-}
-
 int cushion_handler_register(const struct cushion_handler *handler)
 {
 	int i;
@@ -191,10 +153,7 @@ __attribute__((constructor)) void cushion_constructor(void)
 
 	env_log_level = getenv("CUSHION_LOG_LEVEL");
 	if (env_log_level != NULL)
-		log_level = atoi(env_log_level);
-
-	if (log_level > CUSHION_HANDLER_DEBUG)
-		log_level = CUSHION_HANDLER_DEBUG;
+		log_set_level(atoi(env_log_level));
 
 	ret = cushion_handlers_load();
 	if (ret < 0)

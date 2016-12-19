@@ -11,6 +11,7 @@
 
 #include "cushion_handler.h"
 #include "cushion_handlers.h"
+#include "log.h"
 
 #define CH_LOG(l, ...) cushion_handler_log(NULL, (l), __VA_ARGS__)
 #define CH_LOGE(...) CH_LOG(CUSHION_HANDLER_ERROR, __VA_ARGS__)
