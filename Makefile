@@ -24,7 +24,7 @@ libcushion.so:$(libcushion_src)
 	$(CC) $^ -fPIC -shared -o $@ $(CFLAGS) -ldl
 
 handlers_dir/libcushion_bzip2_handler.so:handlers/bzip2_handler.c
-	$(CC) $^ -fPIC -shared -o $@ $(CFLAGS) -lcushion -L.
+	$(CC) $^ -fPIC -shared -o $@ $(CFLAGS) -lcushion -L. -lbz2
 
 clean:
 	rm -f example/custom_stream.o \

@@ -3,33 +3,101 @@
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
+#include <stdbool.h>
 
+#include <bzlib.h>
+
+#include <cushion.h>
 #include <cushion_handler.h>
+
+#include <bzlib.h>
+
+#define BUFFER_SIZE 0x400
 
 #define BCH_LOG(level, ...) cushion_handler_log( \
 		&bzip2_cushion_handler.handler, (level), __VA_ARGS__)
+#define BCH_LOGE(...) BCH_LOG(CUSHION_HANDLER_ERROR, __VA_ARGS__)
 #define BCH_LOGW(...) BCH_LOG(CUSHION_HANDLER_WARNING, __VA_ARGS__)
 #define BCH_LOGI(...) BCH_LOG(CUSHION_HANDLER_INFO, __VA_ARGS__)
 #define BCH_LOGD(...) BCH_LOG(CUSHION_HANDLER_DEBUG, __VA_ARGS__)
+#define BCH_LOGPE(s, e) BCH_LOGE("%s: %s", (s), strerror(abs((e))))
 
 struct bzip2_cushion_handler {
 	struct cushion_handler handler;
 	cookie_io_functions_t bzip2_func;
 };
 
+struct bzip2_cushion_file {
+	int error;
+	FILE *file;
+	BZFILE *bz;
+	char buffer[BUFFER_SIZE];
+	bool eof;
+};
+
 static const struct bzip2_cushion_handler bzip2_cushion_handler;
+
+static int bzip2_close(void *c)
+{
+	struct bzip2_cushion_file *bz2_c_file = c;
+
+	if (bz2_c_file->bz != NULL)
+		BZ2_bzReadClose(&bz2_c_file->error, bz2_c_file->bz);
+	if (bz2_c_file->file != NULL)
+		fclose(bz2_c_file->file);
+	memset(bz2_c_file, 0, sizeof(*bz2_c_file));
+	free(bz2_c_file);
+
+	return 0;
+}
 
 static FILE *bzip2_cushion_fopen(struct cushion_handler *handler,
 		const char *path, const char *mode, const char *envz,
 		size_t envz_len)
 {
+	int old_errno;
+	struct bzip2_cushion_file *bz2_c_file;
+
 	BCH_LOGD(__func__);
 
-	/* TODO here */
+	/* TODO less restrictive condition */
+	if (strcmp(mode, "r") != 0 && strcmp(mode, "rb") != 0) {
+		BCH_LOGE("bzip2 scheme only supports \"r\" open mode");
+		errno = EINVAL;
+		return NULL;
+	}
+
+	bz2_c_file = calloc(1, sizeof(*bz2_c_file));
+	if (bz2_c_file == NULL) {
+		old_errno = errno;
+		BCH_LOGPE("calloc", errno);
+		errno = old_errno;
+		return NULL;
+	}
+	bz2_c_file->file = cushion_fopen(path, mode);
+	if (bz2_c_file->file == NULL) {
+		old_errno = errno;
+		BCH_LOGPE("cushion_fopen", errno);
+		goto err;
+	}
+	bz2_c_file->bz = BZ2_bzReadOpen(&bz2_c_file->error, bz2_c_file->file,
+			0, 0, NULL, 0);
+	if (bz2_c_file->bz == NULL) {
+		old_errno = EIO;
+		BCH_LOGE("BZ2_bzReadOpen error %s(%d)",
+				BZ2_bzerror(bz2_c_file->bz, &bz2_c_file->error),
+				bz2_c_file->error);
+		goto err;
+	}
 
 	/* TODO adapt mode according to the mode argument */
-	return fopencookie((void *)&bzip2_cushion_handler, "r",
-			bzip2_cushion_handler.bzip2_func);
+	return fopencookie(bz2_c_file, mode, bzip2_cushion_handler.bzip2_func);
+err:
+
+	bzip2_close(bz2_c_file);
+
+	errno = old_errno;
+	return NULL;
 }
 
 static ssize_t bzip2_write(void *c, const char *buf, size_t size)
@@ -41,19 +109,27 @@ static ssize_t bzip2_write(void *c, const char *buf, size_t size)
 
 static ssize_t bzip2_read(void *c, char *buf, size_t size)
 {
+	int ret;
+	struct bzip2_cushion_file *bz2_c_file = c;
 
-	errno = ENOSYS;
-	return -1;
+	if (bz2_c_file->eof)
+		return 0;
+
+	ret = BZ2_bzRead(&bz2_c_file->error, bz2_c_file->bz, buf, size);
+	if (bz2_c_file->error < BZ_OK) {
+		BCH_LOGE("BZ2_bzRead error %s(%d)",
+				BZ2_bzerror(bz2_c_file->bz, &bz2_c_file->error),
+				bz2_c_file->error);
+		errno = EIO;
+		return -1;
+	}
+	if (bz2_c_file->error == BZ_STREAM_END)
+		bz2_c_file->eof = true;
+
+	return ret;
 }
 
 static int bzip2_seek(void *c, off64_t *offset, int whence)
-{
-
-	errno = ENOSYS;
-	return -1;
-}
-
-static int bzip2_close(void *c)
 {
 
 	errno = ENOSYS;
