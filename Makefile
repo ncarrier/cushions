@@ -5,6 +5,10 @@ libcushion_src := $(wildcard src/*.c)
 all:libcushion.so handlers_dir/libcushion_bzip2_handler.so
 
 examples:cp cp_no_wrap
+tests:mode_test
+
+mode_test:tests/mode_test.o src/mode.o src/utils.o src/log.o
+	$(CC) $^ -o $@
 
 cp_no_wrap:example/cp.o
 	$(CC) $^ -o $@
@@ -26,6 +30,9 @@ libcushion.so:$(libcushion_src)
 handlers_dir/libcushion_bzip2_handler.so:handlers/bzip2_handler.c
 	$(CC) $^ -fPIC -shared -o $@ $(CFLAGS) -lcushion -L. -lbz2
 
+check:mode_test
+	./mode_test
+
 clean:
 	rm -f example/custom_stream.o \
 			libcushion.so \
@@ -38,6 +45,11 @@ clean:
 			cp \
 			example/cp.o \
 			cp_no_wrap \
-			example/cp_no_wrap.o
+			example/cp_no_wrap.o \
+			src/mode.o \
+			src/utils.o \
+			src/log.o \
+			tests/mode_test.o \
+			mode_test
 
-.PHONY: clean all examples
+.PHONY: clean all examples check
