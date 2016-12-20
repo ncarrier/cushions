@@ -9,10 +9,10 @@
 #include <stdarg.h>
 #include <string.h>
 
-#include "cushion_handler.h"
-#include "utils.h"
 #define LOG_TAG cushion
 #include "log.h"
+#include "cushion_handler.h"
+#include "utils.h"
 #include "cushion_handlers.h"
 
 #define MAX_CUSHION_HANDLER 20
@@ -125,7 +125,7 @@ int cushion_handler_register(const struct cushion_handler *handler)
 			break;
 
 	if (i == MAX_CUSHION_HANDLER) {
-		LOGE("%s: too many handlers registered");
+		LOGE("%s: too many handlers registered", __func__);
 		return -ENOMEM;
 	}
 
