@@ -3,22 +3,28 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "cushion_handler.h"
+#include "utils.h"
+
+#ifndef LOG_TAG
+static const char *log_tag = "";
+#else
+static const char *log_tag = STRINGIFY(LOG_TAG);
+#endif /* LOG_TAG */
 
 #define CUSHION_HANDLER_ERROR 0
 #define CUSHION_HANDLER_WARNING 1
 #define CUSHION_HANDLER_INFO 2
 #define CUSHION_HANDLER_DEBUG 3
 
-#define CH_LOG(l, ...) cushion_handler_log(NULL, (l), __VA_ARGS__)
-#define CH_LOGE(...) CH_LOG(CUSHION_HANDLER_ERROR, __VA_ARGS__)
-#define CH_LOGW(...) CH_LOG(CUSHION_HANDLER_WARNING, __VA_ARGS__)
-#define CH_LOGI(...) CH_LOG(CUSHION_HANDLER_INFO, __VA_ARGS__)
-#define CH_LOGD(...) CH_LOG(CUSHION_HANDLER_DEBUG, __VA_ARGS__)
-#define CH_LOGPE(s, e) CH_LOGE("%s: %s", (s), strerror(abs((e))))
+#define LOG(l, ...) cushion_handler_log(log_tag, (l), __VA_ARGS__)
+#define LOGE(...) LOG(CUSHION_HANDLER_ERROR, __VA_ARGS__)
+#define LOGW(...) LOG(CUSHION_HANDLER_WARNING, __VA_ARGS__)
+#define LOGI(...) LOG(CUSHION_HANDLER_INFO, __VA_ARGS__)
+#define LOGD(...) LOG(CUSHION_HANDLER_DEBUG, __VA_ARGS__)
+#define LOGPE(s, e) LOGE("%s: %s", (s), strerror(abs((e))))
 
-void cushion_handler_log(const struct cushion_handler *handler, int level,
-		const char *fmt, ...);
+__attribute__((format(printf, 3, 4)))
+void cushion_handler_log(const char *tag, int level, const char *fmt, ...);
 void log_set_level(int level);
 
 #endif /* _LOG_H */

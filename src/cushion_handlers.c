@@ -11,13 +11,8 @@
 
 #include "cushion_handler.h"
 #include "cushion_handlers.h"
+#define LOG_TAG cushion_handlers
 #include "log.h"
-
-#define CH_LOG(l, ...) cushion_handler_log(NULL, (l), __VA_ARGS__)
-#define CH_LOGE(...) CH_LOG(CUSHION_HANDLER_ERROR, __VA_ARGS__)
-#define CH_LOGW(...) CH_LOG(CUSHION_HANDLER_WARNING, __VA_ARGS__)
-#define CH_LOGI(...) CH_LOG(CUSHION_HANDLER_INFO, __VA_ARGS__)
-#define CH_LOGD(...) CH_LOG(CUSHION_HANDLER_DEBUG, __VA_ARGS__)
 
 #define MAX_HANDLER_PLUGINS 20
 #ifndef CUSHION_DEFAULT_HANDLERS_PATH
@@ -45,24 +40,24 @@ static int load_cushion_handlers_in(const char *plugins_dir)
 	char *path;
 	void **current_plugin;
 
-	CH_LOGI("scanning plugins dir %s", plugins_dir);
+	LOGI("scanning plugins dir %s", plugins_dir);
 
 	n = scandir(plugins_dir, &namelist, pattern_filter, alphasort);
 	if (n == -1) {
 		if (errno == ENOENT) {
-			CH_LOGI("no cushion handler plugin in %s, skipped",
+			LOGI("no cushion handler plugin in %s, skipped",
 					plugins_dir);
 			return 0;
 		}
 		ret = -errno;
-		CH_LOGE("%s scandir(%s): %m", __func__, plugins_dir);
+		LOGE("%s scandir(%s): %m", __func__, plugins_dir);
 		return ret;
 	}
 
 	current_plugin = handler_plugins;
 	for (i = 0; i < n; i++) {
 		if (i > MAX_HANDLER_PLUGINS) {
-			CH_LOGW("More than %d plugins, plugin %s skipped",
+			LOGW("More than %d plugins, plugin %s skipped",
 					MAX_HANDLER_PLUGINS,
 					namelist[i]->d_name);
 			free(namelist[i]);
@@ -71,14 +66,14 @@ static int load_cushion_handlers_in(const char *plugins_dir)
 		ret = asprintf(&path, "%s/%s", plugins_dir,
 				namelist[i]->d_name);
 		if (ret == -1) {
-			CH_LOGE("%s asprintf error", __func__);
+			LOGE("%s asprintf error", __func__);
 			return -ENOMEM;
 		}
-		CH_LOGD("loading plugin %s", path);
+		LOGD("loading plugin %s", path);
 		*current_plugin = dlopen(path, RTLD_NOW);
 		free(path);
 		if (!*current_plugin)
-			CH_LOGW("%s dlopen: %s", __func__, dlerror());
+			LOGW("%s dlopen: %s", __func__, dlerror());
 		else
 			current_plugin++;
 		free(namelist[i]);
@@ -93,7 +88,7 @@ int cushion_handlers_load(void)
 	int ret;
 	const char *env;
 
-	CH_LOGD("%s", __func__);
+	LOGD("%s", __func__);
 
 	/* don't register plugins twice */
 	if (plugins_initialized)
@@ -102,7 +97,7 @@ int cushion_handlers_load(void)
 
 	ret = load_cushion_handlers_in(CUSHION_DEFAULT_HANDLERS_PATH);
 	if (ret < 0) {
-		CH_LOGE("load_cushion_handlers_in(%s): %s",
+		LOGE("load_cushion_handlers_in(%s): %s",
 				CUSHION_DEFAULT_HANDLERS_PATH, strerror(-ret));
 		return ret;
 	}
@@ -113,7 +108,7 @@ int cushion_handlers_load(void)
 
 	ret = load_cushion_handlers_in(env);
 	if (ret < 0) {
-		CH_LOGE("load_cushion_handlers_in(%s): %s", env,
+		LOGE("load_cushion_handlers_in(%s): %s", env,
 				strerror(-ret));
 		return ret;
 	}
@@ -125,7 +120,7 @@ void cushion_handlers_unload(void)
 {
 	int i = MAX_HANDLER_PLUGINS;
 
-	CH_LOGD("%s", __func__);
+	LOGD("%s", __func__);
 
 	if (!plugins_initialized)
 		return;

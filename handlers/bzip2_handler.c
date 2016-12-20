@@ -12,15 +12,10 @@
 
 #include <bzlib.h>
 
-#define BUFFER_SIZE 0x400
+#define LOG_TAG bzip2_handler
+#include "log.h"
 
-#define BCH_LOG(level, ...) cushion_handler_log( \
-		&bzip2_cushion_handler.handler, (level), __VA_ARGS__)
-#define BCH_LOGE(...) BCH_LOG(CUSHION_HANDLER_ERROR, __VA_ARGS__)
-#define BCH_LOGW(...) BCH_LOG(CUSHION_HANDLER_WARNING, __VA_ARGS__)
-#define BCH_LOGI(...) BCH_LOG(CUSHION_HANDLER_INFO, __VA_ARGS__)
-#define BCH_LOGD(...) BCH_LOG(CUSHION_HANDLER_DEBUG, __VA_ARGS__)
-#define BCH_LOGPE(s, e) BCH_LOGE("%s: %s", (s), strerror(abs((e))))
+#define BUFFER_SIZE 0x400
 
 struct bzip2_cushion_handler {
 	struct cushion_handler handler;
@@ -58,11 +53,11 @@ static FILE *bzip2_cushion_fopen(struct cushion_handler *handler,
 	int old_errno;
 	struct bzip2_cushion_file *bz2_c_file;
 
-	BCH_LOGD(__func__);
+	LOGD(__func__);
 
 	/* TODO less restrictive condition */
 	if (strcmp(mode, "r") != 0 && strcmp(mode, "rb") != 0) {
-		BCH_LOGE("bzip2 scheme only supports \"r\" open mode");
+		LOGE("bzip2 scheme only supports \"r\" open mode");
 		errno = EINVAL;
 		return NULL;
 	}
@@ -70,21 +65,21 @@ static FILE *bzip2_cushion_fopen(struct cushion_handler *handler,
 	bz2_c_file = calloc(1, sizeof(*bz2_c_file));
 	if (bz2_c_file == NULL) {
 		old_errno = errno;
-		BCH_LOGPE("calloc", errno);
+		LOGPE("calloc", errno);
 		errno = old_errno;
 		return NULL;
 	}
 	bz2_c_file->file = cushion_fopen(path, mode);
 	if (bz2_c_file->file == NULL) {
 		old_errno = errno;
-		BCH_LOGPE("cushion_fopen", errno);
+		LOGPE("cushion_fopen", errno);
 		goto err;
 	}
 	bz2_c_file->bz = BZ2_bzReadOpen(&bz2_c_file->error, bz2_c_file->file,
 			0, 0, NULL, 0);
 	if (bz2_c_file->bz == NULL) {
 		old_errno = EIO;
-		BCH_LOGE("BZ2_bzReadOpen error %s(%d)",
+		LOGE("BZ2_bzReadOpen error %s(%d)",
 				BZ2_bzerror(bz2_c_file->bz, &bz2_c_file->error),
 				bz2_c_file->error);
 		goto err;
@@ -117,7 +112,7 @@ static ssize_t bzip2_read(void *c, char *buf, size_t size)
 
 	ret = BZ2_bzRead(&bz2_c_file->error, bz2_c_file->bz, buf, size);
 	if (bz2_c_file->error < BZ_OK) {
-		BCH_LOGE("BZ2_bzRead error %s(%d)",
+		LOGE("BZ2_bzRead error %s(%d)",
 				BZ2_bzerror(bz2_c_file->bz, &bz2_c_file->error),
 				bz2_c_file->error);
 		errno = EIO;
@@ -153,10 +148,10 @@ __attribute__((constructor)) void bzip2_cushion_handler_constructor(void)
 {
 	int ret;
 
-	BCH_LOGI(__func__);
+	LOGI(__func__);
 
 	ret = cushion_handler_register(&bzip2_cushion_handler.handler);
 	if (ret < 0)
-		BCH_LOGW("cushion_handler_register(bzip2_cushion_handler): %s",
+		LOGW("cushion_handler_register(bzip2_cushion_handler): %s",
 				strerror(-ret));
 }

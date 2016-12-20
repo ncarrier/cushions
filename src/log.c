@@ -2,27 +2,34 @@
 #include <stdio.h>
 #include <stdarg.h>
 
+#define LOG_TAG log
 #include "log.h"
 
 static int log_level = -1;
 
-static void ch_vlog(const struct cushion_handler *h, int level,
-		const char *fmt, va_list ap)
+#define LOG_TAG_FORMAT "[\e[1;3%cm%c %10.10s\e[0m] "
+
+static void ch_vlog(const char *tag, int level, const char *fmt, va_list ap)
 {
-	static const char * const level_tags[] = {
-		"[\e[1;31m %s E\e[0m] ",
-		"[\e[1;33m %s W\e[0m] ",
-		"[\e[1;35m %s I\e[0m] ",
-		"[\e[1;36m %s D\e[0m] "
+	static const struct {
+		char c;
+		char l;
+	} marks[] = {
+		[CUSHION_HANDLER_ERROR] = {'1', 'E'},
+		[CUSHION_HANDLER_WARNING] = {'3', 'W'},
+		[CUSHION_HANDLER_INFO] = {'5', 'I'},
+		[CUSHION_HANDLER_DEBUG] = {'6', 'D'},
 	};
 
-	fprintf(stderr, level_tags[level], h != NULL ? h->scheme : "\b");
+	if (level < 0)
+		return;
+
+	fprintf(stderr, LOG_TAG_FORMAT, marks[level].c, marks[level].l, tag);
 	vfprintf(stderr, fmt, ap);
 	fputs("\n", stderr);
 }
 
-void cushion_handler_log(const struct cushion_handler *handler, int level,
-		const char *fmt, ...)
+void cushion_handler_log(const char *tag, int level, const char *fmt, ...)
 {
 	va_list ap;
 
@@ -32,7 +39,7 @@ void cushion_handler_log(const struct cushion_handler *handler, int level,
 		level = CUSHION_HANDLER_DEBUG;
 
 	va_start(ap, fmt);
-	ch_vlog(handler, level, fmt, ap);
+	ch_vlog(tag, level, fmt, ap);
 	va_end(ap);
 }
 
@@ -42,5 +49,7 @@ void log_set_level(int level)
 
 	if (log_level > CUSHION_HANDLER_DEBUG)
 		log_level = CUSHION_HANDLER_DEBUG;
+
+	LOG(log_level, "%s(%d)", __func__, log_level);
 }
 

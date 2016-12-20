@@ -2,11 +2,8 @@
 
 #include <cushion_handler.h>
 
+#define LOG_TAG file_handler
 #include "log.h"
-
-#define FCH_LOG(level, ...) cushion_handler_log( \
-		&file_cushion_handler.handler, (level), __VA_ARGS__)
-#define FCH_LOGW(...) FCH_LOG(CUSHION_HANDLER_WARNING, __VA_ARGS__)
 
 struct file_cushion_handler {
 	struct cushion_handler handler;
@@ -33,6 +30,6 @@ __attribute__((constructor)) void file_cushion_handler_constructor(void)
 
 	ret = cushion_handler_register(&file_cushion_handler.handler);
 	if (ret < 0)
-		FCH_LOGW("cushion_handler_register(file_cushion_handler) "
+		LOGW("cushion_handler_register(file_cushion_handler) "
 				"failed\n");
 }

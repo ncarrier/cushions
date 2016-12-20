@@ -11,6 +11,7 @@
 
 #include "cushion_handler.h"
 #include "utils.h"
+#define LOG_TAG cushion
 #include "log.h"
 #include "cushion_handlers.h"
 
@@ -42,7 +43,7 @@ static int break_path(const char *path, char **scheme, char **envz,
 	 * scheme in path
 	 */
 	if (needle == NULL || needle == path) {
-		CH_LOGD("no scheme present in path");
+		LOGD("no scheme present in path");
 		return 0;
 	}
 	prefix_length = needle - path + 3;
@@ -55,7 +56,7 @@ static int break_path(const char *path, char **scheme, char **envz,
 	/* cut the string at the end of the scheme */
 	*(*scheme + (needle - path)) = '\0';
 
-	CH_LOGD("there's only a scheme present, no parameters");
+	LOGD("there's only a scheme present, no parameters");
 	if (params == NULL)
 		return prefix_length;
 	params++;
@@ -63,7 +64,7 @@ static int break_path(const char *path, char **scheme, char **envz,
 	ret = argz_create_sep(params, ';', envz, envz_len);
 	if (ret < 0) {
 		*envz = NULL;
-		CH_LOGE("argz_create_sep failed");
+		LOGE("argz_create_sep failed");
 		return -ENOMEM;
 	}
 
@@ -87,7 +88,7 @@ FILE *cushion_fopen(const char *path, const char *mode)
 
 	offset = ret = break_path(path, &scheme, &envz, &envz_len);
 	if (ret < 0) {
-		CH_LOGPE("break_path", ret);
+		LOGPE("break_path", ret);
 		errno = -ret;
 		return NULL;
 	}
@@ -97,17 +98,17 @@ FILE *cushion_fopen(const char *path, const char *mode)
 			if (h->self == NULL)
 				break;
 			if (string_matches_prefix(path, h->scheme)) {
-				CH_LOGI("%p handles scheme '%s'", h, h->scheme);
+				LOGI("%p handles scheme '%s'", h, h->scheme);
 				return h->fopen(h, path + offset, mode, envz,
 						envz_len);
 			}
 		}
 	} else {
-		CH_LOGD("no scheme detected, use real fopen");
+		LOGD("no scheme detected, use real fopen");
 		return real_fopen(path, mode);
 	}
 
-	CH_LOGI("no handler for scheme %s, fallback to real fopen", scheme);
+	LOGI("no handler for scheme %s, fallback to real fopen", scheme);
 
 	return real_fopen(path, mode);
 }
@@ -124,7 +125,7 @@ int cushion_handler_register(const struct cushion_handler *handler)
 			break;
 
 	if (i == MAX_CUSHION_HANDLER) {
-		CH_LOGE("%s: too many handlers registered");
+		LOGE("%s: too many handlers registered");
 		return -ENOMEM;
 	}
 
@@ -157,7 +158,7 @@ __attribute__((constructor)) void cushion_constructor(void)
 
 	ret = cushion_handlers_load();
 	if (ret < 0)
-		CH_LOGW("cushion_handlers_load: %s", strerror(-ret));
+		LOGW("cushion_handlers_load: %s", strerror(-ret));
 }
 
 __attribute__((destructor)) void cushion_destructor(void)

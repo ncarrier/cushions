@@ -1,5 +1,5 @@
 CFLAGS := -g3 -O0 -Wall -Wextra -Werror -Wno-unused-parameter \
-       -Iinclude/cushion
+       -Iinclude/cushion -Isrc
 libcushion_src := $(wildcard src/*.c)
 
 all:libcushion.so handlers_dir/libcushion_bzip2_handler.so
