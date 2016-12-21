@@ -4,12 +4,12 @@
 
 #define LOG_TAG mode
 #include "log.h"
-#include "mode.h"
+#include "cushion_handler.h"
 #include "utils.h"
 
 #define CODED_CHARACTER_SET_ANCHOR ",ccs="
 
-int mode_from_string(struct mode *mode, const char *s)
+int cushion_handler_mode_from_string(struct cushion_handler_mode *mode, const char *s)
 {
 	char *ccs;
 	char __attribute__((cleanup(string_cleanup))) *str = NULL;
@@ -79,12 +79,12 @@ int mode_from_string(struct mode *mode, const char *s)
 	
 	return 0;
 err:
-	mode_cleanup(mode);
+	cushion_handler_mode_cleanup(mode);
 
 	return -EINVAL;
 }
 
-int mode_to_string(const struct mode *mode, char **str)
+int cushion_handler_mode_to_string(const struct cushion_handler_mode *mode, char **str)
 {
 	int ret;
 	char prefix[8] = {0};
@@ -124,7 +124,7 @@ int mode_to_string(const struct mode *mode, char **str)
 	return 0;
 }
 
-void mode_cleanup(struct mode *mode)
+void cushion_handler_mode_cleanup(struct cushion_handler_mode *mode)
 {
 	if (mode == NULL)
 		return;
@@ -132,7 +132,7 @@ void mode_cleanup(struct mode *mode)
 	string_cleanup(&mode->ccs);
 }
 
-void mode_dump(const struct mode *mode)
+void cushion_handler_mode_dump(const struct cushion_handler_mode *mode)
 {
 	if (mode == NULL)
 		return;
