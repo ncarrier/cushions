@@ -31,7 +31,7 @@ static int pattern_filter(const struct dirent *d)
 	return fnmatch(PLUGINS_MATCHING_PATTERN, d->d_name, 0) == 0;
 }
 
-static int load_cushion_handlers_in(const char *plugins_dir)
+static int load_cushion_handlers_plugin(const char *plugins_dir)
 {
 	int ret;
 	int n;
@@ -95,9 +95,9 @@ int cushion_handlers_load(void)
 		return 0;
 	plugins_initialized = true;
 
-	ret = load_cushion_handlers_in(CUSHION_DEFAULT_HANDLERS_PATH);
+	ret = load_cushion_handlers_plugin(CUSHION_DEFAULT_HANDLERS_PATH);
 	if (ret < 0) {
-		LOGE("load_cushion_handlers_in(%s): %s",
+		LOGE("load_cushion_handlers_plugin(%s): %s",
 				CUSHION_DEFAULT_HANDLERS_PATH, strerror(-ret));
 		return ret;
 	}
@@ -106,9 +106,9 @@ int cushion_handlers_load(void)
 	if (env == NULL)
 		return 0;
 
-	ret = load_cushion_handlers_in(env);
+	ret = load_cushion_handlers_plugin(env);
 	if (ret < 0) {
-		LOGE("load_cushion_handlers_in(%s): %s", env,
+		LOGE("load_cushion_handlers_plugin(%s): %s", env,
 				strerror(-ret));
 		return ret;
 	}
