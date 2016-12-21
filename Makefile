@@ -30,8 +30,10 @@ libcushion.so:$(libcushion_src)
 handlers_dir/libcushion_bzip2_handler.so:handlers/bzip2_handler.c libcushion.so
 	$(CC) $^ -fPIC -shared -o $@ $(CFLAGS) -L. -lbz2
 
-check:mode_test
+check:mode_test handlers_dir/libcushion_bzip2_handler.so cp
 	./mode_test
+	./tests/tests.sh
+	@echo "*** All test passed"
 
 clean:
 	rm -f example/custom_stream.o \
