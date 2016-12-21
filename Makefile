@@ -10,6 +10,9 @@ tests:mode_test
 mode_test:tests/mode_test.o src/mode.o src/utils.o src/log.o
 	$(CC) $^ -o $@
 
+params_test:tests/params_test.o libcushion.so
+	$(CC) $^ -o $@
+
 cp_no_wrap:example/cp.o
 	$(CC) $^ -o $@
 
@@ -30,8 +33,9 @@ libcushion.so:$(libcushion_src)
 handlers_dir/libcushion_bzip2_handler.so:handlers/bzip2_handler.c libcushion.so
 	$(CC) $^ -fPIC -shared -o $@ $(CFLAGS) -L. -lbz2
 
-check:mode_test handlers_dir/libcushion_bzip2_handler.so cp
+check:mode_test params_test handlers_dir/libcushion_bzip2_handler.so cp
 	./mode_test
+	./params_test
 	./tests/tests.sh
 	@echo "*** All test passed"
 
@@ -52,6 +56,8 @@ clean:
 			src/utils.o \
 			src/log.o \
 			tests/mode_test.o \
-			mode_test
+			tests/params_test.o \
+			mode_test \
+			params_test
 
 .PHONY: clean all examples check
