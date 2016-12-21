@@ -4,12 +4,12 @@
 
 #define LOG_TAG mode
 #include "log.h"
-#include "cushion_handler.h"
+#include "cushions_handler.h"
 #include "utils.h"
 
 #define CODED_CHARACTER_SET_ANCHOR ",ccs="
 
-int cushion_handler_mode_from_string(struct cushion_handler_mode *mode, const char *s)
+int cushions_handler_mode_from_string(struct cushions_handler_mode *mode, const char *s)
 {
 	char *ccs;
 	char __attribute__((cleanup(string_cleanup))) *str = NULL;
@@ -79,12 +79,12 @@ int cushion_handler_mode_from_string(struct cushion_handler_mode *mode, const ch
 	
 	return 0;
 err:
-	cushion_handler_mode_cleanup(mode);
+	cushions_handler_mode_cleanup(mode);
 
 	return -EINVAL;
 }
 
-int cushion_handler_mode_to_string(const struct cushion_handler_mode *mode, char **str)
+int cushions_handler_mode_to_string(const struct cushions_handler_mode *mode, char **str)
 {
 	int ret;
 	char prefix[8] = {0};
@@ -124,7 +124,7 @@ int cushion_handler_mode_to_string(const struct cushion_handler_mode *mode, char
 	return 0;
 }
 
-void cushion_handler_mode_cleanup(struct cushion_handler_mode *mode)
+void cushions_handler_mode_cleanup(struct cushions_handler_mode *mode)
 {
 	if (mode == NULL)
 		return;
@@ -132,7 +132,7 @@ void cushion_handler_mode_cleanup(struct cushion_handler_mode *mode)
 	string_cleanup(&mode->ccs);
 }
 
-void cushion_handler_mode_dump(const struct cushion_handler_mode *mode)
+void cushions_handler_mode_dump(const struct cushions_handler_mode *mode)
 {
 	if (mode == NULL)
 		return;

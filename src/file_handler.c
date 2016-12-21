@@ -1,34 +1,34 @@
 #include <stdlib.h>
 
-#include <cushion_handler.h>
+#include <cushions_handler.h>
 
 #define LOG_TAG file_handler
 #include "log.h"
 
-struct file_cushion_handler {
-	struct cushion_handler handler;
+struct file_cushions_handler {
+	struct cushions_handler handler;
 	/* here could come some custom data */
 };
 
-static FILE *file_cushion_fopen(struct cushion_handler *handler,
+static FILE *file_cushions_fopen(struct cushions_handler *handler,
 		const char *path, const char *mode)
 {
-	return cushion_handler_real_fopen(path, mode);
+	return cushions_handler_real_fopen(path, mode);
 }
 
-static const struct file_cushion_handler file_cushion_handler = {
+static const struct file_cushions_handler file_cushions_handler = {
 	.handler = {
 		.scheme = "file",
-		.fopen = file_cushion_fopen,
+		.fopen = file_cushions_fopen,
 	},
 };
 
-__attribute__((constructor)) void file_cushion_handler_constructor(void)
+__attribute__((constructor)) void file_cushions_handler_constructor(void)
 {
 	int ret;
 
-	ret = cushion_handler_register(&file_cushion_handler.handler);
+	ret = cushions_handler_register(&file_cushions_handler.handler);
 	if (ret < 0)
-		LOGW("cushion_handler_register(file_cushion_handler) "
+		LOGW("cushions_handler_register(file_cushions_handler) "
 				"failed\n");
 }

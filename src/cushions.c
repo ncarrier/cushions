@@ -11,16 +11,16 @@
 
 #define LOG_TAG cushion
 #include "log.h"
-#include "cushion_handler.h"
+#include "cushions_handler.h"
 #include "utils.h"
-#include "cushion_handlers.h"
+#include "cushions_handlers.h"
 
-#define MAX_CUSHION_HANDLER 20
+#define MAX_CUSHIONS_HANDLER 20
 #define SCHEME_END_PATTERN "://"
 
-FILE *cushion_fopen(const char *path, const char *mode);
+FILE *cushions_fopen(const char *path, const char *mode);
 
-static struct cushion_handler handlers[MAX_CUSHION_HANDLER];
+static struct cushions_handler handlers[MAX_CUSHIONS_HANDLER];
 
 /* Function pointers to hold the value of the glibc functions */
 static FILE *(*real_fopen)(const char *path, const char *mode);
@@ -53,7 +53,7 @@ static int break_scheme(const char *path, char **scheme)
 	return prefix_length;
 }
 
-int cushion_handler_break_params(const char *input, char **path, char **envz,
+int cushions_handler_break_params(const char *input, char **path, char **envz,
 		size_t *envz_len)
 {
 	int ret;
@@ -90,14 +90,14 @@ int cushion_handler_break_params(const char *input, char **path, char **envz,
 
 FILE *fopen(const char *path, const char *mode)
 {
-	return cushion_fopen(path, mode);
+	return cushions_fopen(path, mode);
 }
 
-FILE *cushion_fopen(const char *path, const char *mode)
+FILE *cushions_fopen(const char *path, const char *mode)
 {
 	int ret;
 	int i;
-	struct cushion_handler *h;
+	struct cushions_handler *h;
 	char __attribute__((cleanup(string_cleanup)))*scheme = NULL;
 	char __attribute__((cleanup(string_cleanup)))*envz = NULL;
 	unsigned offset;
@@ -109,7 +109,7 @@ FILE *cushion_fopen(const char *path, const char *mode)
 		return NULL;
 	}
 	if (scheme != NULL) {
-		for (i = 0; i < MAX_CUSHION_HANDLER; i++) {
+		for (i = 0; i < MAX_CUSHIONS_HANDLER; i++) {
 			h = handlers + i;
 			if (h->self == NULL)
 				break;
@@ -128,18 +128,18 @@ FILE *cushion_fopen(const char *path, const char *mode)
 	return real_fopen(path, mode);
 }
 
-int cushion_handler_register(const struct cushion_handler *handler)
+int cushions_handler_register(const struct cushions_handler *handler)
 {
 	int i;
 
 	if (handler == NULL || handler->fopen == NULL)
 		return -EINVAL;
 
-	for (i = 0; i < MAX_CUSHION_HANDLER; i++)
+	for (i = 0; i < MAX_CUSHIONS_HANDLER; i++)
 		if (handlers[i].self == NULL)
 			break;
 
-	if (i == MAX_CUSHION_HANDLER) {
+	if (i == MAX_CUSHIONS_HANDLER) {
 		LOGE("%s: too many handlers registered", __func__);
 		return -ENOMEM;
 	}
@@ -152,32 +152,32 @@ int cushion_handler_register(const struct cushion_handler *handler)
 
 FILE *__wrap_fopen(const char *path, const char *mode)
 {
-	return cushion_fopen(path, mode);
+	return cushions_fopen(path, mode);
 }
 
-FILE *cushion_handler_real_fopen(const char *path, const char *mode)
+FILE *cushions_handler_real_fopen(const char *path, const char *mode)
 {
 	return real_fopen(path, mode);
 }
 
-__attribute__((constructor)) void cushion_constructor(void)
+__attribute__((constructor)) void cushions_constructor(void)
 {
 	int ret;
 	const char *env_log_level;
 
 	real_fopen = dlsym(RTLD_NEXT, "fopen");
 
-	env_log_level = getenv("CUSHION_LOG_LEVEL");
+	env_log_level = getenv("CUSHIONS_LOG_LEVEL");
 	if (env_log_level != NULL)
 		log_set_level(atoi(env_log_level));
 
-	ret = cushion_handlers_load();
+	ret = cushions_handlers_load();
 	if (ret < 0)
-		LOGW("cushion_handlers_load: %s", strerror(-ret));
+		LOGW("cushions_handlers_load: %s", strerror(-ret));
 }
 
-__attribute__((destructor)) void cushion_destructor(void)
+__attribute__((destructor)) void cushions_destructor(void)
 {
-	cushion_handlers_unload();
+	cushions_handlers_unload();
 }
 

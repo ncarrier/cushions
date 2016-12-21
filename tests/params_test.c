@@ -3,7 +3,7 @@
 #include <assert.h>
 #include <envz.h>
 
-#include <cushion_handler.h>
+#include <cushions_handler.h>
 
 #define assert_str_equal(s1, s2) assert(strcmp((s1), (s2)) == 0)
 #define assert_null(p) assert((p) == NULL)
@@ -17,7 +17,7 @@ int main(void)
 
 	input = "/tata/tutu/toto?plop=wizz;foo=bar;baz=";
 	fprintf(stderr, "input is \"%s\"\n", input);
-	assert(cushion_handler_break_params(input, &path, &envz, &len) == 0);
+	assert(cushions_handler_break_params(input, &path, &envz, &len) == 0);
 	assert_str_equal(path, "/tata/tutu/toto");
 	assert_str_equal(envz_get(envz, len, "plop"), "wizz");
 	assert_str_equal(envz_get(envz, len, "foo"), "bar");
@@ -28,7 +28,7 @@ int main(void)
 
 	input = "/tata/tutu/toto?";
 	fprintf(stderr, "input is \"%s\"\n", input);
-	assert(cushion_handler_break_params(input, &path, &envz, &len) == 0);
+	assert(cushions_handler_break_params(input, &path, &envz, &len) == 0);
 	assert_str_equal(path, "/tata/tutu/toto");
 	assert_null(envz);
 	assert(len == 0);
@@ -36,14 +36,14 @@ int main(void)
 
 	input = "";
 	fprintf(stderr, "input is \"%s\"\n", input);
-	assert(cushion_handler_break_params(input, &path, &envz, &len) == 0);
+	assert(cushions_handler_break_params(input, &path, &envz, &len) == 0);
 	assert_null(envz);
 	assert_null(path);
 	assert(len == 0);
 
 	input = "?plop=wizz;foo=bar;baz";
 	fprintf(stderr, "input is \"%s\"\n", input);
-	assert(cushion_handler_break_params(input, &path, &envz, &len) == 0);
+	assert(cushions_handler_break_params(input, &path, &envz, &len) == 0);
 	assert_str_equal(path, "");
 	assert_str_equal(envz_get(envz, len, "plop"), "wizz");
 	assert_str_equal(envz_get(envz, len, "foo"), "bar");

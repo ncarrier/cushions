@@ -1,8 +1,8 @@
 CFLAGS := -g3 -O0 -Wall -Wextra -Werror -Wno-unused-parameter \
-       -Iinclude/cushion -Isrc
-libcushion_src := $(wildcard src/*.c)
+       -Iinclude/cushions -Isrc
+libcushions_src := $(wildcard src/*.c)
 
-all:libcushion.so handlers_dir/libcushion_bzip2_handler.so
+all:libcushions.so handlers_dir/libcushions_bzip2_handler.so
 
 examples:cp cp_no_wrap
 tests:mode_test
@@ -10,13 +10,13 @@ tests:mode_test
 mode_test:tests/mode_test.o src/mode.o src/utils.o src/log.o
 	$(CC) $^ -o $@
 
-params_test:tests/params_test.o libcushion.so
+params_test:tests/params_test.o libcushions.so
 	$(CC) $^ -o $@
 
 cp_no_wrap:example/cp.o
 	$(CC) $^ -o $@
 
-cp:example/cp.o libcushion.so
+cp:example/cp.o libcushions.so
 	$(CC) $^ -Wl,--wrap=fopen -o $@
 
 wrap_malloc:example/wrap/wrap_malloc.c example/wrap/main.c
@@ -27,13 +27,13 @@ variadic_macro:example/variadic_macro.o
 bzip2_expand:example/bzip2/expand.c
 	$(CC) $^ -o $@ $(CFLAGS) -lbz2
 
-libcushion.so:$(libcushion_src)
+libcushions.so:$(libcushions_src)
 	$(CC) $^ -fPIC -shared -o $@ $(CFLAGS) -ldl
 
-handlers_dir/libcushion_bzip2_handler.so:handlers/bzip2_handler.c libcushion.so
+handlers_dir/libcushions_bzip2_handler.so:handlers/bzip2_handler.c libcushions.so
 	$(CC) $^ -fPIC -shared -o $@ $(CFLAGS) -L. -lbz2
 
-check:mode_test params_test handlers_dir/libcushion_bzip2_handler.so cp
+check:mode_test params_test handlers_dir/libcushions_bzip2_handler.so cp
 	./mode_test
 	./params_test
 	./tests/tests.sh
@@ -41,8 +41,8 @@ check:mode_test params_test handlers_dir/libcushion_bzip2_handler.so cp
 
 clean:
 	rm -f example/custom_stream.o \
-			libcushion.so \
-			handlers_dir/libcushion_bzip2_handler.so \
+			libcushions.so \
+			handlers_dir/libcushions_bzip2_handler.so \
 			custom_stream \
 			example/custom_stream.o \
 			variadic_macro \

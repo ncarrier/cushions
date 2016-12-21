@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <assert.h>
 
-#include <cushion_handler.h>
+#include <cushions_handler.h>
 #include "utils.h"
 
 #define S(m) STRINGIFY(m)
@@ -27,18 +27,18 @@
 		assert(strcmp(m.ccs, r.ccs) == 0); \
 } while (0)
 
-static void cushion_handler_mode_from_stringTEST(void)
+static void cushions_handler_mode_from_stringTEST(void)
 {
-	struct cushion_handler_mode mode;
-	struct cushion_handler_mode ref;
+	struct cushions_handler_mode mode;
+	struct cushions_handler_mode ref;
 	const char *test_mode;
 
 	fprintf(stderr, "%s\n", __func__);
 
 	fprintf(stderr, "test string %s\n", test_mode = "rb+cmxe");
-	assert(cushion_handler_mode_from_string(&mode, test_mode) == 0);
-	cushion_handler_mode_dump(&mode);
-	ref = (struct cushion_handler_mode){
+	assert(cushions_handler_mode_from_string(&mode, test_mode) == 0);
+	cushions_handler_mode_dump(&mode);
+	ref = (struct cushions_handler_mode){
 		.read = 1,
 		.beginning = 1,
 		.end = 0,
@@ -56,16 +56,16 @@ static void cushion_handler_mode_from_stringTEST(void)
 	masserteq(mode, ref);
 
 	fprintf(stderr, "test string %s\n", test_mode = "rb+cmxe,ccs=blabla");
-	assert(cushion_handler_mode_from_string(&mode, test_mode) == 0);
-	cushion_handler_mode_dump(&mode);
+	assert(cushions_handler_mode_from_string(&mode, test_mode) == 0);
+	cushions_handler_mode_dump(&mode);
 	ref.ccs = "blabla";
 	masserteq(mode, ref);
-	cushion_handler_mode_cleanup(&mode);
+	cushions_handler_mode_cleanup(&mode);
 
 	fprintf(stderr, "test string %s\n", test_mode = "a");
-	assert(cushion_handler_mode_from_string(&mode, test_mode) == 0);
-	cushion_handler_mode_dump(&mode);
-	ref = (struct cushion_handler_mode){
+	assert(cushions_handler_mode_from_string(&mode, test_mode) == 0);
+	cushions_handler_mode_dump(&mode);
+	ref = (struct cushions_handler_mode){
 		.read = 0,
 		.beginning = 0,
 		.end = 1,
@@ -83,32 +83,32 @@ static void cushion_handler_mode_from_stringTEST(void)
 	masserteq(mode, ref);
 
 	fprintf(stderr, "test string %s\n", test_mode = "a,ccs=");
-	assert(cushion_handler_mode_from_string(&mode, test_mode) == 0);
-	cushion_handler_mode_dump(&mode);
+	assert(cushions_handler_mode_from_string(&mode, test_mode) == 0);
+	cushions_handler_mode_dump(&mode);
 	ref.ccs = "";
 	masserteq(mode, ref);
-	cushion_handler_mode_cleanup(&mode);
+	cushions_handler_mode_cleanup(&mode);
 
 	fprintf(stderr, "test string %s\n", test_mode = "ad,ccs=");
-	assert(cushion_handler_mode_from_string(&mode, test_mode) != 0);
+	assert(cushions_handler_mode_from_string(&mode, test_mode) != 0);
 
-	assert(cushion_handler_mode_from_string(NULL, "a") != 0);
-	assert(cushion_handler_mode_from_string(&mode, NULL) != 0);
-	assert(cushion_handler_mode_from_string(&mode, "") != 0);
-	assert(cushion_handler_mode_from_string(&mode, ",ccs=bla") != 0);
+	assert(cushions_handler_mode_from_string(NULL, "a") != 0);
+	assert(cushions_handler_mode_from_string(&mode, NULL) != 0);
+	assert(cushions_handler_mode_from_string(&mode, "") != 0);
+	assert(cushions_handler_mode_from_string(&mode, ",ccs=bla") != 0);
 
 	fprintf(stderr, "OK\n");
 }
 
-static void cushion_handler_mode_to_stringTEST(void)
+static void cushions_handler_mode_to_stringTEST(void)
 {
-	struct cushion_handler_mode mode;
-	struct cushion_handler_mode ref;
+	struct cushions_handler_mode mode;
+	struct cushions_handler_mode ref;
 	char *str;
 
 	fprintf(stderr, "%s\n", __func__);
 
-	ref = (struct cushion_handler_mode){
+	ref = (struct cushions_handler_mode){
 		.read = 0,
 		.beginning = 0,
 		.end = 1,
@@ -123,9 +123,9 @@ static void cushion_handler_mode_to_stringTEST(void)
 		.excl = 0,
 		.ccs = NULL,
 	};
-	assert(cushion_handler_mode_to_string(&ref, &str) == 0);
-	assert(cushion_handler_mode_from_string(&mode, str) == 0);
-	cushion_handler_mode_dump(&mode);
+	assert(cushions_handler_mode_to_string(&ref, &str) == 0);
+	assert(cushions_handler_mode_from_string(&mode, str) == 0);
+	cushions_handler_mode_dump(&mode);
 	masserteq(mode, ref);
 	free(str);
 
@@ -134,8 +134,8 @@ static void cushion_handler_mode_to_stringTEST(void)
 
 int main(void)
 {
-	cushion_handler_mode_from_stringTEST();
-	cushion_handler_mode_to_stringTEST();
+	cushions_handler_mode_from_stringTEST();
+	cushions_handler_mode_to_stringTEST();
 
 	return EXIT_SUCCESS;
 }

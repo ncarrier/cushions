@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export CUSHION_HANDLERS_PATH=./handlers_dir
+export CUSHIONS_HANDLERS_PATH=./handlers_dir
 
 on_exit() {
 	rm -f tutu.md5 toto.md5 tutu toto tutu.bz2

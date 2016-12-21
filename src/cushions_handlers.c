@@ -9,17 +9,17 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "cushion_handler.h"
-#include "cushion_handlers.h"
-#define LOG_TAG cushion_handlers
+#include "cushions_handler.h"
+#include "cushions_handlers.h"
+#define LOG_TAG cushions_handlers
 #include "log.h"
 
 #define MAX_HANDLER_PLUGINS 20
-#ifndef CUSHION_DEFAULT_HANDLERS_PATH
-#define CUSHION_DEFAULT_HANDLERS_PATH "/usr/lib/cushion_handlers"
-#endif /* CUSHION_DEFAULT_HANDLERS_PATH */
+#ifndef CUSHIONS_DEFAULT_HANDLERS_PATH
+#define CUSHIONS_DEFAULT_HANDLERS_PATH "/usr/lib/cushions_handlers"
+#endif /* CUSHIONS_DEFAULT_HANDLERS_PATH */
 /* allows to add a path in where additional handlers will be searched */
-#define CUSHION_HANDLERS_ENV "CUSHION_HANDLERS_PATH"
+#define CUSHIONS_HANDLERS_ENV "CUSHIONS_HANDLERS_PATH"
 
 #define PLUGINS_MATCHING_PATTERN "*.so"
 
@@ -31,7 +31,7 @@ static int pattern_filter(const struct dirent *d)
 	return fnmatch(PLUGINS_MATCHING_PATTERN, d->d_name, 0) == 0;
 }
 
-static int load_cushion_handlers_plugin(const char *plugins_dir)
+static int load_cushions_handlers_plugin(const char *plugins_dir)
 {
 	int ret;
 	int n;
@@ -83,7 +83,7 @@ static int load_cushion_handlers_plugin(const char *plugins_dir)
 	return 0;
 }
 
-int cushion_handlers_load(void)
+int cushions_handlers_load(void)
 {
 	int ret;
 	const char *env;
@@ -95,20 +95,20 @@ int cushion_handlers_load(void)
 		return 0;
 	plugins_initialized = true;
 
-	ret = load_cushion_handlers_plugin(CUSHION_DEFAULT_HANDLERS_PATH);
+	ret = load_cushions_handlers_plugin(CUSHIONS_DEFAULT_HANDLERS_PATH);
 	if (ret < 0) {
-		LOGE("load_cushion_handlers_plugin(%s): %s",
-				CUSHION_DEFAULT_HANDLERS_PATH, strerror(-ret));
+		LOGE("load_cushions_handlers_plugin(%s): %s",
+				CUSHIONS_DEFAULT_HANDLERS_PATH, strerror(-ret));
 		return ret;
 	}
 
-	env = getenv(CUSHION_HANDLERS_ENV);
+	env = getenv(CUSHIONS_HANDLERS_ENV);
 	if (env == NULL)
 		return 0;
 
-	ret = load_cushion_handlers_plugin(env);
+	ret = load_cushions_handlers_plugin(env);
 	if (ret < 0) {
-		LOGE("load_cushion_handlers_plugin(%s): %s", env,
+		LOGE("load_cushions_handlers_plugin(%s): %s", env,
 				strerror(-ret));
 		return ret;
 	}
@@ -116,7 +116,7 @@ int cushion_handlers_load(void)
 	return 0;
 }
 
-void cushion_handlers_unload(void)
+void cushions_handlers_unload(void)
 {
 	int i = MAX_HANDLER_PLUGINS;
 

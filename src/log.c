@@ -15,10 +15,10 @@ static void ch_vlog(const char *tag, int level, const char *fmt, va_list ap)
 		char c;
 		char l;
 	} marks[] = {
-		[CUSHION_HANDLER_ERROR] = {'1', 'E'},
-		[CUSHION_HANDLER_WARNING] = {'3', 'W'},
-		[CUSHION_HANDLER_INFO] = {'5', 'I'},
-		[CUSHION_HANDLER_DEBUG] = {'6', 'D'},
+		[CUSHIONS_HANDLER_ERROR] = {'1', 'E'},
+		[CUSHIONS_HANDLER_WARNING] = {'3', 'W'},
+		[CUSHIONS_HANDLER_INFO] = {'5', 'I'},
+		[CUSHIONS_HANDLER_DEBUG] = {'6', 'D'},
 	};
 
 	if (level < 0)
@@ -29,14 +29,14 @@ static void ch_vlog(const char *tag, int level, const char *fmt, va_list ap)
 	fputs("\n", stderr);
 }
 
-void cushion_handler_log(const char *tag, int level, const char *fmt, ...)
+void cushions_handler_log(const char *tag, int level, const char *fmt, ...)
 {
 	va_list ap;
 
 	if (level > log_level)
 		return;
-	if (level > CUSHION_HANDLER_DEBUG)
-		level = CUSHION_HANDLER_DEBUG;
+	if (level > CUSHIONS_HANDLER_DEBUG)
+		level = CUSHIONS_HANDLER_DEBUG;
 
 	va_start(ap, fmt);
 	ch_vlog(tag, level, fmt, ap);
@@ -47,8 +47,8 @@ void log_set_level(int level)
 {
 	log_level = level;
 
-	if (log_level > CUSHION_HANDLER_DEBUG)
-		log_level = CUSHION_HANDLER_DEBUG;
+	if (log_level > CUSHIONS_HANDLER_DEBUG)
+		log_level = CUSHIONS_HANDLER_DEBUG;
 
 	LOG(log_level, "%s(%d)", __func__, log_level);
 }
@@ -57,7 +57,7 @@ __attribute__((constructor)) void log_constructor(void)
 {
 	const char *env_log_level;
 
-	env_log_level = getenv("CUSHION_LOG_LEVEL");
+	env_log_level = getenv("CUSHIONS_LOG_LEVEL");
 	if (env_log_level != NULL)
 		log_set_level(atoi(env_log_level));
 }

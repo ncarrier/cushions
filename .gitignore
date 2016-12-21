@@ -6,8 +6,8 @@ cp_no_wrap
 example/cp.o
 example/custom_stream.o
 example/variadic_macro.o
-handlers_dir/libcushion_bzip2_handler.so
-libcushion.so
+handlers_dir/libcushions_bzip2_handler.so
+libcushions.so
 wrap_malloc
 src/*.o
 tests/*.o

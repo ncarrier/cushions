@@ -7,8 +7,8 @@
 
 #include <bzlib.h>
 
-#include <cushion.h>
-#include <cushion_handler.h>
+#include <cushions.h>
+#include <cushions_handler.h>
 
 #include <bzlib.h>
 
@@ -17,12 +17,12 @@
 
 #define BUFFER_SIZE 0x400
 
-struct bzip2_cushion_handler {
-	struct cushion_handler handler;
+struct bzip2_cushions_handler {
+	struct cushions_handler handler;
 	cookie_io_functions_t bzip2_func;
 };
 
-struct bzip2_cushion_file {
+struct bzip2_cushions_file {
 	int error;
 	FILE *file;
 	BZFILE *bz;
@@ -30,11 +30,11 @@ struct bzip2_cushion_file {
 	bool eof;
 };
 
-static const struct bzip2_cushion_handler bzip2_cushion_handler;
+static const struct bzip2_cushions_handler bzip2_cushions_handler;
 
 static int bzip2_close(void *c)
 {
-	struct bzip2_cushion_file *bz2_c_file = c;
+	struct bzip2_cushions_file *bz2_c_file = c;
 
 	if (bz2_c_file->bz != NULL)
 		BZ2_bzReadClose(&bz2_c_file->error, bz2_c_file->bz);
@@ -46,11 +46,11 @@ static int bzip2_close(void *c)
 	return 0;
 }
 
-static FILE *bzip2_cushion_fopen(struct cushion_handler *handler,
+static FILE *bzip2_cushions_fopen(struct cushions_handler *handler,
 		const char *path, const char *mode)
 {
 	int old_errno;
-	struct bzip2_cushion_file *bz2_c_file;
+	struct bzip2_cushions_file *bz2_c_file;
 
 	LOGD(__func__);
 
@@ -68,10 +68,10 @@ static FILE *bzip2_cushion_fopen(struct cushion_handler *handler,
 		errno = old_errno;
 		return NULL;
 	}
-	bz2_c_file->file = cushion_fopen(path, mode);
+	bz2_c_file->file = cushions_fopen(path, mode);
 	if (bz2_c_file->file == NULL) {
 		old_errno = errno;
-		LOGPE("cushion_fopen", errno);
+		LOGPE("cushions_fopen", errno);
 		goto err;
 	}
 	bz2_c_file->bz = BZ2_bzReadOpen(&bz2_c_file->error, bz2_c_file->file,
@@ -85,7 +85,7 @@ static FILE *bzip2_cushion_fopen(struct cushion_handler *handler,
 	}
 
 	/* TODO adapt mode according to the mode argument */
-	return fopencookie(bz2_c_file, mode, bzip2_cushion_handler.bzip2_func);
+	return fopencookie(bz2_c_file, mode, bzip2_cushions_handler.bzip2_func);
 err:
 
 	bzip2_close(bz2_c_file);
@@ -104,7 +104,7 @@ static ssize_t bzip2_write(void *c, const char *buf, size_t size)
 static ssize_t bzip2_read(void *c, char *buf, size_t size)
 {
 	int ret;
-	struct bzip2_cushion_file *bz2_c_file = c;
+	struct bzip2_cushions_file *bz2_c_file = c;
 
 	if (bz2_c_file->eof)
 		return 0;
@@ -130,10 +130,10 @@ static int bzip2_seek(void *c, off64_t *offset, int whence)
 	return -1;
 }
 
-static const struct bzip2_cushion_handler bzip2_cushion_handler = {
+static const struct bzip2_cushions_handler bzip2_cushions_handler = {
 	.handler = {
 		.scheme = "bzip2",
-		.fopen = bzip2_cushion_fopen,
+		.fopen = bzip2_cushions_fopen,
 	},
 	.bzip2_func = {
 		.read  = bzip2_read,
@@ -143,14 +143,14 @@ static const struct bzip2_cushion_handler bzip2_cushion_handler = {
 	},
 };
 
-__attribute__((constructor)) void bzip2_cushion_handler_constructor(void)
+__attribute__((constructor)) void bzip2_cushions_handler_constructor(void)
 {
 	int ret;
 
 	LOGI(__func__);
 
-	ret = cushion_handler_register(&bzip2_cushion_handler.handler);
+	ret = cushions_handler_register(&bzip2_cushions_handler.handler);
 	if (ret < 0)
-		LOGW("cushion_handler_register(bzip2_cushion_handler): %s",
+		LOGW("cushions_handler_register(bzip2_cushions_handler): %s",
 				strerror(-ret));
 }
