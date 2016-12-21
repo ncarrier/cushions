@@ -25,21 +25,16 @@ static struct cushion_handler handlers[MAX_CUSHION_HANDLER];
 /* Function pointers to hold the value of the glibc functions */
 static FILE *(*real_fopen)(const char *path, const char *mode);
 
-static int break_path(const char *path, char **scheme, char **envz,
-		size_t *envz_len)
+static int break_scheme(const char *path, char **scheme)
 {
-	int ret;
 	const char *needle;
-	const char *params;
 	unsigned prefix_length;
 
-	*envz = NULL;
-	*envz_len = 0;
 	*scheme = NULL;
 
 	needle = strstr(path, "://");
 	/*
-	 * if no :// in path, or the part before is of length, there is no
+	 * if no :// in path, or the part before is of length 0, there is no
 	 * scheme in path
 	 */
 	if (needle == NULL || needle == path) {
@@ -52,13 +47,35 @@ static int break_path(const char *path, char **scheme, char **envz,
 	if (*scheme == NULL)
 		return -errno;
 
-	params = strrchr(*scheme, '?');
 	/* cut the string at the end of the scheme */
 	*(*scheme + (needle - path)) = '\0';
 
-	LOGD("there's only a scheme present, no parameters");
-	if (params == NULL)
-		return prefix_length;
+	return prefix_length;
+}
+
+int cushion_handler_break_params(const char *input, char **path, char **envz,
+		size_t *envz_len)
+{
+	int ret;
+	char *params;
+
+	if (input == NULL || path == NULL || envz == NULL || envz_len == NULL)
+		return -EINVAL;
+
+	*path = NULL;
+	*envz = NULL;
+	*envz_len = 0;
+
+	params = strrchr(input, '?');
+	if (params == NULL) {
+		LOGD("no parameters are present");
+		return 0;
+	}
+	*path = strdup(input);
+	if (*path == NULL)
+		return -errno;
+	params = *path + (params - input);
+	*params = '\0';
 	params++;
 
 	ret = argz_create_sep(params, ';', envz, envz_len);
@@ -68,7 +85,7 @@ static int break_path(const char *path, char **scheme, char **envz,
 		return -ENOMEM;
 	}
 
-	return prefix_length;
+	return 0;
 }
 
 FILE *fopen(const char *path, const char *mode)
@@ -83,10 +100,9 @@ FILE *cushion_fopen(const char *path, const char *mode)
 	struct cushion_handler *h;
 	char __attribute__((cleanup(string_cleanup)))*scheme = NULL;
 	char __attribute__((cleanup(string_cleanup)))*envz = NULL;
-	size_t envz_len;
 	unsigned offset;
 
-	offset = ret = break_path(path, &scheme, &envz, &envz_len);
+	offset = ret = break_scheme(path, &scheme);
 	if (ret < 0) {
 		LOGPE("break_path", ret);
 		errno = -ret;
@@ -99,8 +115,7 @@ FILE *cushion_fopen(const char *path, const char *mode)
 				break;
 			if (string_matches_prefix(path, h->scheme)) {
 				LOGI("%p handles scheme '%s'", h, h->scheme);
-				return h->fopen(h, path + offset, mode, envz,
-						envz_len);
+				return h->fopen(h, path + offset, mode);
 			}
 		}
 	} else {

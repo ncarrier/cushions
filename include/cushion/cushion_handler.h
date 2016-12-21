@@ -5,8 +5,10 @@
 struct cushion_handler;
 
 typedef FILE *(*cushion_handler_fopen)(struct cushion_handler *handler,
-		const char *path, const char *mode, const char *envz,
-		size_t envz_len);
+		const char *path, const char *mode);
+
+int cushion_handler_break_params(const char *input, char **path,
+		char **envz, size_t *envz_len);
 
 struct cushion_handler {
 	const char *scheme;

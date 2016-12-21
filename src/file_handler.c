@@ -11,8 +11,7 @@ struct file_cushion_handler {
 };
 
 static FILE *file_cushion_fopen(struct cushion_handler *handler,
-		const char *path, const char *mode, const char *envz,
-		size_t envz_len)
+		const char *path, const char *mode)
 {
 	return cushion_handler_real_fopen(path, mode);
 }
