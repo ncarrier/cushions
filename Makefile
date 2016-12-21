@@ -27,8 +27,8 @@ bzip2_expand:example/bzip2/expand.c
 libcushion.so:$(libcushion_src)
 	$(CC) $^ -fPIC -shared -o $@ $(CFLAGS) -ldl
 
-handlers_dir/libcushion_bzip2_handler.so:handlers/bzip2_handler.c
-	$(CC) $^ -fPIC -shared -o $@ $(CFLAGS) -lcushion -L. -lbz2
+handlers_dir/libcushion_bzip2_handler.so:handlers/bzip2_handler.c libcushion.so
+	$(CC) $^ -fPIC -shared -o $@ $(CFLAGS) -L. -lbz2
 
 check:mode_test
 	./mode_test
