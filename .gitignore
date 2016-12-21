@@ -9,3 +9,10 @@ example/variadic_macro.o
 handlers_dir/libcushion_bzip2_handler.so
 libcushion.so
 wrap_malloc
+src/*.o
+tests/*.o
+mode_test
+params_test
+.settings/
+.project
+.cproject
