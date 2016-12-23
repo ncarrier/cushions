@@ -16,3 +16,5 @@ bzip2 -fk tutu
 md5sum tutu > tutu.md5
 md5sum toto > toto.md5
 diff tutu toto
+
+./tests/curl_test.sh
