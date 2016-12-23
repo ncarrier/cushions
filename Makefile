@@ -22,6 +22,9 @@ cp:example/cp.o libcushions.so
 wrap_malloc:example/wrap/wrap_malloc.c example/wrap/main.c
 	$(CC) -Wl,--wrap=malloc $^ -o $@
 
+curl_fopen:example/curl_fopen.c
+	$(CC) $^ -o $@ $(CFLAGS) `curl-config --cflags` `curl-config --libs`
+
 custom_stream:example/custom_stream.o
 variadic_macro:example/variadic_macro.o
 bzip2_expand:example/bzip2/expand.c
