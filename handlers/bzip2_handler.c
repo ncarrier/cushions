@@ -143,7 +143,8 @@ static const struct bzip2_cushions_handler bzip2_cushions_handler = {
 	},
 };
 
-__attribute__((constructor)) void bzip2_cushions_handler_constructor(void)
+static __attribute__((constructor)) void bzip2_cushions_handler_constructor(
+		void)
 {
 	int ret;
 

@@ -14,7 +14,7 @@ struct memfile_cookie {
 	unsigned offset;     /* Current file offset in buf */
 };
 
-ssize_t memfile_write(void *c, const char *buf, size_t size)
+static ssize_t memfile_write(void *c, const char *buf, size_t size)
 {
 	char *new_buff;
 	struct memfile_cookie *cookie = c;
@@ -40,7 +40,7 @@ ssize_t memfile_write(void *c, const char *buf, size_t size)
 	return size;
 }
 
-ssize_t memfile_read(void *c, char *buf, size_t size)
+static ssize_t memfile_read(void *c, char *buf, size_t size)
 {
 	ssize_t xbytes;
 	struct memfile_cookie *cookie = c;
@@ -59,7 +59,7 @@ ssize_t memfile_read(void *c, char *buf, size_t size)
 	return xbytes;
 }
 
-int memfile_seek(void *c, off64_t *offset, int whence)
+static int memfile_seek(void *c, off64_t *offset, int whence)
 {
 	off64_t new_offset;
 	struct memfile_cookie *cookie = c;
@@ -81,7 +81,7 @@ int memfile_seek(void *c, off64_t *offset, int whence)
 	return 0;
 }
 
-int memfile_close(void *c)
+static int memfile_close(void *c)
 {
 	struct memfile_cookie *cookie = c;
 

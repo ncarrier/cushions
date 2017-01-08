@@ -53,7 +53,7 @@ void log_set_level(int level)
 	LOG(log_level, "%s(%d)", __func__, log_level);
 }
 
-__attribute__((constructor)) void log_constructor(void)
+static __attribute__((constructor)) void log_constructor(void)
 {
 	const char *env_log_level;
 

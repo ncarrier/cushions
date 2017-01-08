@@ -23,7 +23,7 @@ static const struct file_cushions_handler file_cushions_handler = {
 	},
 };
 
-__attribute__((constructor)) void file_cushions_handler_constructor(void)
+static __attribute__((constructor)) void file_cushions_handler_constructor(void)
 {
 	int ret;
 

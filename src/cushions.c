@@ -9,6 +9,8 @@
 #include <stdarg.h>
 #include <string.h>
 
+#include <cushions.h>
+
 #define LOG_TAG cushion
 #include "log.h"
 #include "cushions_handler.h"
@@ -17,8 +19,6 @@
 
 #define MAX_CUSHIONS_HANDLER 20
 #define SCHEME_END_PATTERN "://"
-
-FILE *cushions_fopen(const char *path, const char *mode);
 
 static struct cushions_handler handlers[MAX_CUSHIONS_HANDLER];
 
@@ -160,7 +160,7 @@ FILE *cushions_handler_real_fopen(const char *path, const char *mode)
 	return real_fopen(path, mode);
 }
 
-__attribute__((constructor)) void cushions_constructor(void)
+static __attribute__((constructor)) void cushions_constructor(void)
 {
 	int ret;
 	const char *env_log_level;
@@ -176,7 +176,7 @@ __attribute__((constructor)) void cushions_constructor(void)
 		LOGW("cushions_handlers_load: %s", strerror(-ret));
 }
 
-__attribute__((destructor)) void cushions_destructor(void)
+static __attribute__((destructor)) void cushions_destructor(void)
 {
 	cushions_handlers_unload();
 }
