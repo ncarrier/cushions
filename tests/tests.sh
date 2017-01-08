@@ -10,6 +10,8 @@ trap on_exit EXIT
 
 set -xeu
 
+script_dir=$(dirname $0)
+
 dd if=/dev/urandom of=tutu bs=1024 count=1024
 bzip2 -fk tutu
 ./cp bzip2://tutu.bz2 toto
@@ -17,4 +19,4 @@ md5sum tutu > tutu.md5
 md5sum toto > toto.md5
 diff tutu toto
 
-./tests/curl_test.sh
+#${script_dir}/curl_test.sh
