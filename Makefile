@@ -23,8 +23,9 @@ CFLAGS += \
 	-Wformat-signedness
 
 libcushions_src := $(wildcard $(here)src/*.c)
+handlers := $(foreach h,curl bzip2,handlers_dir/libcushions_$(h)_handler.so)
 
-all:libcushions.so handlers_dir/libcushions_bzip2_handler.so
+all:libcushions.so $(handlers)
 
 examples:cp cp_no_wrap
 tests:mode_test
@@ -41,7 +42,7 @@ obj := \
 	src/log.o \
 	tests/mode_test.o \
 	tests/params_test.o \
-	handlers_dir/libcushions_bzip2_handler.so
+	$(handlers)
 
 tree_structure := $(sort $(foreach s,$(obj) \
 	handlers_dir/libcushions_bzip2_handler.so,${CURDIR}/$(dir $(s))))
@@ -79,6 +80,10 @@ libcushions.so:$(libcushions_src)
 
 handlers_dir/libcushions_bzip2_handler.so:handlers/bzip2_handler.c libcushions.so
 	$(CC) $^ -fPIC -shared -o $@ $(CFLAGS) -L. -lbz2
+
+handlers_dir/libcushions_curl_handler.so:handlers/curl_handler.c libcushions.so
+	$(CC) $^ -fPIC -shared -o $@ $(CFLAGS) -L. \
+			`curl-config --cflags` `curl-config --libs`
 
 check:mode_test params_test handlers_dir/libcushions_bzip2_handler.so cp
 	LD_LIBRARY_PATH=. ./mode_test
