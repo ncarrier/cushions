@@ -92,13 +92,6 @@ err:
 	return NULL;
 }
 
-static ssize_t bzip2_write(void *c, const char *buf, size_t size)
-{
-
-	errno = ENOSYS;
-	return -1;
-}
-
 static ssize_t bzip2_read(void *c, char *buf, size_t size)
 {
 	int ret;
@@ -121,13 +114,6 @@ static ssize_t bzip2_read(void *c, char *buf, size_t size)
 	return ret;
 }
 
-static int bzip2_seek(void *c, off64_t *offset, int whence)
-{
-
-	errno = ENOSYS;
-	return -1;
-}
-
 static const struct bzip2_cushions_handler bzip2_cushions_handler = {
 	.handler = {
 		.scheme = "bzip2",
@@ -135,8 +121,6 @@ static const struct bzip2_cushions_handler bzip2_cushions_handler = {
 	},
 	.bzip2_func = {
 		.read  = bzip2_read,
-		.write = bzip2_write,
-		.seek  = bzip2_seek,
 		.close = bzip2_close
 	},
 };
