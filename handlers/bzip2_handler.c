@@ -10,8 +10,6 @@
 #include <cushions.h>
 #include <cushions_handler.h>
 
-#include <bzlib.h>
-
 #define LOG_TAG bzip2_handler
 #include "log.h"
 
