@@ -9,6 +9,8 @@
 #define S(m) STRINGIFY(m)
 #define assert_null(p) assert((p) == NULL || !S(p should be null))
 #define assert_not_null(p) assert((p) != NULL || !S(p should be null))
+#define assert_str_equal(a, b) assert((a != NULL) && (b != NULL) && \
+		strcmp((a), (b)) == 0)
 #define masserteq(m, r) do { \
 	assert((m).read == (r).read); \
 	assert((m).beginning == (r).beginning); \
@@ -54,12 +56,15 @@ static void cushions_handler_mode_from_stringTEST(void)
 		.ccs = NULL,
 	};
 	masserteq(mode, ref);
+	assert_str_equal(mode.mode, test_mode);
+	cushions_handler_mode_cleanup(&mode);
 
 	fprintf(stderr, "test string %s\n", test_mode = "rb+cmxe,ccs=blabla");
 	assert(cushions_handler_mode_from_string(&mode, test_mode) == 0);
 	cushions_handler_mode_dump(&mode);
 	ref.ccs = "blabla";
 	masserteq(mode, ref);
+	assert_str_equal(mode.mode, test_mode);
 	cushions_handler_mode_cleanup(&mode);
 
 	fprintf(stderr, "test string %s\n", test_mode = "a");
@@ -81,12 +86,15 @@ static void cushions_handler_mode_from_stringTEST(void)
 		.ccs = NULL,
 	};
 	masserteq(mode, ref);
+	assert_str_equal(mode.mode, test_mode);
+	cushions_handler_mode_cleanup(&mode);
 
 	fprintf(stderr, "test string %s\n", test_mode = "a,ccs=");
 	assert(cushions_handler_mode_from_string(&mode, test_mode) == 0);
 	cushions_handler_mode_dump(&mode);
 	ref.ccs = "";
 	masserteq(mode, ref);
+	assert_str_equal(mode.mode, test_mode);
 	cushions_handler_mode_cleanup(&mode);
 
 	fprintf(stderr, "test string %s\n", test_mode = "ad,ccs=");

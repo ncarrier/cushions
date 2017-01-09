@@ -36,6 +36,8 @@ struct cushions_handler_mode {
 	int cloexec:1;
 	int mmap:1;
 	int excl:1;
+	/* original mode string, if any */
+	char *mode;
 	char *ccs;
 };
 

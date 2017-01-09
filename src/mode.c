@@ -9,10 +9,11 @@
 
 #define CODED_CHARACTER_SET_ANCHOR ",ccs="
 
-int cushions_handler_mode_from_string(struct cushions_handler_mode *mode, const char *s)
+int cushions_handler_mode_from_string(struct cushions_handler_mode *mode,
+		const char *s)
 {
 	char *ccs;
-	char __attribute__((cleanup(string_cleanup))) *str = NULL;
+	char *str;
 	const char *needle;
 	size_t invalid;
 
@@ -22,6 +23,7 @@ int cushions_handler_mode_from_string(struct cushions_handler_mode *mode, const 
 	if (str == NULL)
 		return -errno;
 	memset(mode, 0, sizeof(*mode));
+	mode->mode = str;
 	ccs = strstr(str, CODED_CHARACTER_SET_ANCHOR);
 	if (ccs != NULL) {
 		mode->ccs = strdup(ccs +
@@ -31,7 +33,7 @@ int cushions_handler_mode_from_string(struct cushions_handler_mode *mode, const 
 		*ccs = '\0';
 	}
 	if (*str == '\0')
-		return -EINVAL;
+		goto err;
 	invalid = strspn(str, "abcemrwx+");
 	if (invalid != strlen(str)) {
 		LOGE("format character %c not allowed in mode %s",
@@ -76,7 +78,11 @@ int cushions_handler_mode_from_string(struct cushions_handler_mode *mode, const 
 		mode->excl = 1;
 	if (strchr(str, 'm'))
 		mode->mmap = 1;
-	
+
+	/* restore the original format string with it's , */
+	if (ccs != NULL)
+		*ccs = CODED_CHARACTER_SET_ANCHOR[0];
+
 	return 0;
 err:
 	cushions_handler_mode_cleanup(mode);
@@ -84,7 +90,8 @@ err:
 	return -EINVAL;
 }
 
-int cushions_handler_mode_to_string(const struct cushions_handler_mode *mode, char **str)
+int cushions_handler_mode_to_string(const struct cushions_handler_mode *mode,
+		char **str)
 {
 	int ret;
 	char prefix[8] = {0};
@@ -129,6 +136,7 @@ void cushions_handler_mode_cleanup(struct cushions_handler_mode *mode)
 	if (mode == NULL)
 		return;
 
+	string_cleanup(&mode->mode);
 	string_cleanup(&mode->ccs);
 }
 
