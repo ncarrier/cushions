@@ -53,6 +53,14 @@ static int break_scheme(const char *path, char **scheme)
 	return prefix_length;
 }
 
+static bool handle_handles(struct cushions_handler *handler, const char *path)
+{
+	if (handler->handles == NULL)
+		return string_matches_prefix(path, handler->scheme);
+	else
+		return handler->handles(handler, path);
+}
+
 int cushions_handler_break_params(const char *input, char **path, char **envz,
 		size_t *envz_len)
 {
@@ -121,7 +129,7 @@ FILE *cushions_fopen(const char *path, const char *m)
 		h = handlers + i;
 		if (h->self == NULL)
 			break;
-		if (string_matches_prefix(path, h->scheme)) {
+		if (handle_handles(h, path)) {
 			LOGI("%p handles scheme '%s'", h, h->scheme);
 			ret = cushions_handler_mode_from_string(&mode, m);
 			if (ret < 0) {

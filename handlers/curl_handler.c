@@ -66,15 +66,34 @@ static ssize_t curl_read(void *c, char *buf, size_t size)
 	return -1;
 }
 
+static bool curl_handler_handles(struct cushions_handler *handler,
+		const char *path)
+{
+	const char *schemes[] = {
+			"http",
+
+			NULL /* NULL guard */
+	};
+	const char **scheme;
+
+	for (scheme = schemes; *scheme != NULL; scheme++)
+		if (string_matches_prefix(path, *scheme))
+			return true;
+
+	return false;
+}
+
 static const struct curl_cushions_handler curl_cushions_handler = {
-	.handler = {
-		.scheme = "bzip2",
-		.fopen = curl_cushions_fopen,
-	},
-	.curl_func = {
-		.read  = curl_read,
-		.close = curl_close
-	},
+		.handler = {
+				/* not used for matching scheme */
+				.scheme = "curl",
+				.fopen = curl_cushions_fopen,
+				.handles = curl_handler_handles,
+		},
+		.curl_func = {
+				.read  = curl_read,
+				.close = curl_close
+		},
 };
 
 static __attribute__((constructor)) void curl_cushions_handler_constructor(
