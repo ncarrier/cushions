@@ -45,7 +45,8 @@ static int bzip2_close(void *c)
 }
 
 static FILE *bzip2_cushions_fopen(struct cushions_handler *handler,
-		const char *path, const char *mode)
+		const char *path, const char *full_path, const char *scheme,
+		const char *mode)
 {
 	int old_errno;
 	struct bzip2_cushions_file *bz2_c_file;

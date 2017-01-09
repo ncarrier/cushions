@@ -4,8 +4,10 @@
 
 struct cushions_handler;
 
+/* TODO use broken up mode as the last argument */
 typedef FILE *(*cushions_handler_fopen)(struct cushions_handler *handler,
-		const char *path, const char *mode);
+		const char *path, const char *full_path, const char *scheme,
+		const char *mode);
 
 int cushions_handler_break_params(const char *input, char **path,
 		char **envz, size_t *envz_len);

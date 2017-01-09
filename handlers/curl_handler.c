@@ -52,7 +52,8 @@ static int curl_close(void *c)
 }
 
 static FILE *curl_cushions_fopen(struct cushions_handler *handler,
-		const char *path, const char *mode)
+		const char *path, const char *full_path, const char *scheme,
+		const char *mode)
 {
 	errno = -ENOSYS;
 

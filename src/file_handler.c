@@ -11,7 +11,8 @@ struct file_cushions_handler {
 };
 
 static FILE *file_cushions_fopen(struct cushions_handler *handler,
-		const char *path, const char *mode)
+		const char *path, const char *full_path, const char *scheme,
+		const char *mode)
 {
 	return cushions_handler_real_fopen(path, mode);
 }
