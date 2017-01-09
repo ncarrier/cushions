@@ -86,9 +86,9 @@ handlers_dir/libcushions_curl_handler.so:handlers/curl_handler.c libcushions.so
 			`curl-config --cflags` `curl-config --libs`
 
 check:mode_test params_test handlers_dir/libcushions_bzip2_handler.so cp
-	LD_LIBRARY_PATH=. ./mode_test
-	LD_LIBRARY_PATH=. ./params_test
-	LD_LIBRARY_PATH=. $(here)tests/tests.sh
+	CUSHIONS_LOG_LEVEL=3 LD_LIBRARY_PATH=. ./mode_test
+	CUSHIONS_LOG_LEVEL=3 LD_LIBRARY_PATH=. ./params_test
+	CUSHIONS_LOG_LEVEL=3 LD_LIBRARY_PATH=. $(here)tests/tests.sh
 	@echo "*** All test passed"
 
 clean:
