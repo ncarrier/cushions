@@ -41,13 +41,11 @@ obj := \
 	src/utils.o \
 	src/log.o \
 	tests/mode_test.o \
-	tests/params_test.o \
-	$(handlers)
+	tests/params_test.o
 
-tree_structure := $(sort $(foreach s,$(obj) \
-	handlers_dir/libcushions_bzip2_handler.so,${CURDIR}/$(dir $(s))))
+tree_structure := $(sort $(foreach s,$(obj) $(handlers),${CURDIR}/$(dir $(s))))
 
-$(obj): | $(tree_structure)
+$(obj) $(handlers): | $(tree_structure)
 
 $(tree_structure):
 	mkdir -p $@
@@ -85,7 +83,7 @@ handlers_dir/libcushions_curl_handler.so:handlers/curl_handler.c libcushions.so
 	$(CC) $^ -fPIC -shared -o $@ $(CFLAGS) -L. \
 			`curl-config --cflags` `curl-config --libs`
 
-check:mode_test params_test handlers_dir/libcushions_bzip2_handler.so cp
+check:mode_test params_test $(handlers) cp
 	CUSHIONS_LOG_LEVEL=3 LD_LIBRARY_PATH=. ./mode_test
 	CUSHIONS_LOG_LEVEL=3 LD_LIBRARY_PATH=. ./params_test
 	CUSHIONS_LOG_LEVEL=3 LD_LIBRARY_PATH=. $(here)tests/tests.sh
@@ -94,6 +92,7 @@ check:mode_test params_test handlers_dir/libcushions_bzip2_handler.so cp
 clean:
 	rm -f \
 			$(obj) \
+			$(handlers)
 			libcushions.so \
 			custom_stream \
 			variadic_macro \
