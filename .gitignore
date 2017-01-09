@@ -18,3 +18,4 @@ params_test
 .project
 .cproject
 build
+handlers_dir/libcushions_curl_handler.so
