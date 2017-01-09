@@ -12,9 +12,9 @@ struct file_cushions_handler {
 
 static FILE *file_cushions_fopen(struct cushions_handler *handler,
 		const char *path, const char *full_path, const char *scheme,
-		const char *mode)
+		const struct cushions_handler_mode *mode)
 {
-	return cushions_handler_real_fopen(path, mode);
+	return cushions_handler_real_fopen(path, mode->mode);
 }
 
 static const struct file_cushions_handler file_cushions_handler = {

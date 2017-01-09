@@ -46,7 +46,7 @@ static int bzip2_close(void *c)
 
 static FILE *bzip2_cushions_fopen(struct cushions_handler *handler,
 		const char *path, const char *full_path, const char *scheme,
-		const char *mode)
+		const struct cushions_handler_mode *mode)
 {
 	int old_errno;
 	struct bzip2_cushions_file *bz2_c_file;
@@ -54,7 +54,7 @@ static FILE *bzip2_cushions_fopen(struct cushions_handler *handler,
 	LOGD(__func__);
 
 	/* TODO less restrictive condition */
-	if (strcmp(mode, "r") != 0 && strcmp(mode, "rb") != 0) {
+	if (strcmp(mode->mode, "r") != 0 && strcmp(mode->mode, "rb") != 0) {
 		LOGE("bzip2 scheme only supports \"r\" open mode");
 		errno = EINVAL;
 		return NULL;
@@ -67,7 +67,7 @@ static FILE *bzip2_cushions_fopen(struct cushions_handler *handler,
 		errno = old_errno;
 		return NULL;
 	}
-	bz2_c_file->file = cushions_fopen(path, mode);
+	bz2_c_file->file = cushions_fopen(path, mode->mode);
 	if (bz2_c_file->file == NULL) {
 		old_errno = errno;
 		LOGPE("cushions_fopen", errno);
@@ -84,7 +84,8 @@ static FILE *bzip2_cushions_fopen(struct cushions_handler *handler,
 	}
 
 	/* TODO adapt mode according to the mode argument */
-	return fopencookie(bz2_c_file, mode, bzip2_cushions_handler.bzip2_func);
+	return fopencookie(bz2_c_file, mode->mode,
+			bzip2_cushions_handler.bzip2_func);
 err:
 
 	bzip2_close(bz2_c_file);

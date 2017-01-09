@@ -4,25 +4,6 @@
 
 struct cushions_handler;
 
-/* TODO use broken up mode as the last argument */
-typedef FILE *(*cushions_handler_fopen)(struct cushions_handler *handler,
-		const char *path, const char *full_path, const char *scheme,
-		const char *mode);
-
-int cushions_handler_break_params(const char *input, char **path,
-		char **envz, size_t *envz_len);
-
-struct cushions_handler {
-	const char *scheme;
-	cushions_handler_fopen fopen;
-
-	/* data private to the cushion library */
-	const struct cushions_handler *self;
-};
-
-int cushions_handler_register(const struct cushions_handler *handler);
-FILE *cushions_handler_real_fopen(const char *path, const char *mode);
-
 struct cushions_handler_mode {
 	int read:1;
 	int beginning:1;
@@ -40,6 +21,24 @@ struct cushions_handler_mode {
 	char *mode;
 	char *ccs;
 };
+
+typedef FILE *(*cushions_handler_fopen)(struct cushions_handler *handler,
+		const char *path, const char *full_path, const char *scheme,
+		const struct cushions_handler_mode *mode);
+
+int cushions_handler_break_params(const char *input, char **path,
+		char **envz, size_t *envz_len);
+
+struct cushions_handler {
+	const char *scheme;
+	cushions_handler_fopen fopen;
+
+	/* data private to the cushion library */
+	const struct cushions_handler *self;
+};
+
+int cushions_handler_register(const struct cushions_handler *handler);
+FILE *cushions_handler_real_fopen(const char *path, const char *mode);
 
 int cushions_handler_mode_from_string(struct cushions_handler_mode *mode,
 		const char *str);

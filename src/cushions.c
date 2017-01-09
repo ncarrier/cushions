@@ -93,7 +93,7 @@ FILE *fopen(const char *path, const char *mode)
 	return cushions_fopen(path, mode);
 }
 
-FILE *cushions_fopen(const char *path, const char *mode)
+FILE *cushions_fopen(const char *path, const char *m)
 {
 	int ret;
 	int i;
@@ -101,6 +101,10 @@ FILE *cushions_fopen(const char *path, const char *mode)
 	char __attribute__((cleanup(string_cleanup)))*scheme = NULL;
 	char __attribute__((cleanup(string_cleanup)))*envz = NULL;
 	unsigned offset;
+	struct cushions_handler_mode
+	__attribute__((cleanup(cushions_handler_mode_cleanup)))mode = {
+			.ccs = NULL,
+	};
 
 	offset = ret = break_scheme(path, &scheme);
 	if (ret < 0) {
@@ -110,7 +114,7 @@ FILE *cushions_fopen(const char *path, const char *mode)
 	}
 	if (scheme == NULL) {
 		LOGD("no scheme detected, use real fopen");
-		return real_fopen(path, mode);
+		return real_fopen(path, m);
 	}
 
 	for (i = 0; i < MAX_CUSHIONS_HANDLER; i++) {
@@ -119,13 +123,19 @@ FILE *cushions_fopen(const char *path, const char *mode)
 			break;
 		if (string_matches_prefix(path, h->scheme)) {
 			LOGI("%p handles scheme '%s'", h, h->scheme);
-			return h->fopen(h, path + offset, path, scheme, mode);
+			ret = cushions_handler_mode_from_string(&mode, m);
+			if (ret < 0) {
+				LOGPE("cushions_handler_mode_from_string", ret);
+				errno = -ret;
+				return NULL;
+			}
+			return h->fopen(h, path + offset, path, scheme, &mode);
 		}
 	}
 
 	LOGI("no handler for scheme %s, fallback to real fopen", scheme);
 
-	return real_fopen(path, mode);
+	return real_fopen(path, m);
 }
 
 int cushions_handler_register(const struct cushions_handler *handler)
