@@ -108,21 +108,19 @@ FILE *cushions_fopen(const char *path, const char *mode)
 		errno = -ret;
 		return NULL;
 	}
-	/* TDOO remove this extra level */
-	if (scheme != NULL) {
-		for (i = 0; i < MAX_CUSHIONS_HANDLER; i++) {
-			h = handlers + i;
-			if (h->self == NULL)
-				break;
-			if (string_matches_prefix(path, h->scheme)) {
-				LOGI("%p handles scheme '%s'", h, h->scheme);
-				return h->fopen(h, path + offset, path, scheme,
-						mode);
-			}
-		}
-	} else {
+	if (scheme == NULL) {
 		LOGD("no scheme detected, use real fopen");
 		return real_fopen(path, mode);
+	}
+
+	for (i = 0; i < MAX_CUSHIONS_HANDLER; i++) {
+		h = handlers + i;
+		if (h->self == NULL)
+			break;
+		if (string_matches_prefix(path, h->scheme)) {
+			LOGI("%p handles scheme '%s'", h, h->scheme);
+			return h->fopen(h, path + offset, path, scheme, mode);
+		}
 	}
 
 	LOGI("no handler for scheme %s, fallback to real fopen", scheme);
