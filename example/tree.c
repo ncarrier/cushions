@@ -4,16 +4,16 @@
 #include <stdarg.h>
 
 struct node {
-	struct node *next;
 	char c;
+	struct node *next;
 };
 
 #define EOT 0x04
 
 #define TREE_TERMINAL(ch) { .c = (ch), .next = NULL}
 #define TREE_GUARD TREE_TERMINAL(EOT)
-#define LEAF(s) TREE_TERMINAL('\0')
-#define NODE(ch, ...) { .c = ch, .next = (struct node[]) { __VA_ARGS__, TREE_GUARD}}
+#define L TREE_TERMINAL('\0')
+#define N(ch, ...) { .c = ch, .next = (struct node[]){__VA_ARGS__, TREE_GUARD}}
 
 /*
  * The following state machine contains the strings :
@@ -27,34 +27,19 @@ struct node {
  *   "tftp"
  */
 static struct node tree =
-NODE(' ',
-	NODE('f',
-		NODE('t',
-			NODE('p', LEAF(ftp)))),
-	NODE('s',
-		NODE('c',
-			NODE('p', LEAF(scp))),
-		NODE('m',
-			NODE('b',
-				NODE('s', LEAF(smbs)),
-				LEAF(smb))),
-		NODE('f',
-			NODE('t',
-				NODE('p', LEAF(sftp))))),
-	NODE('h',
-		NODE('t',
-			NODE('t',
-				NODE('p',
-					NODE('s', LEAF(https)))))),
-	NODE('t',
-		NODE('f',
-			NODE('t',
-				NODE('p', LEAF(tftp))))));
+		N(' ',	N('f',	N('t',	N('p',	L))), /* ftp */
+			N('s',	N('c',	N('p',	L)), /* scp */
+				N('m',	N('b',	N('s',	L), /* smbs */
+						L)), /* smb */
+				N('f',	N('t',	N('p',	L)))), /* ftp */
+			N('h',	N('t',	N('t',	N('p',	N('s',	L), /* https */
+							L)))), /* http */
+			N('t',	N('f',	N('t',	N('p',	L))))); /* tftp */
 
 typedef void (*cb)(const char *string, void *data);
 
-static void foreach_states_rec(const struct node *node, char *buf, char *c, cb cb,
-		void *data)
+static void foreach_leaves_rec(const struct node *node, char *buf, char *c,
+		cb cb, void *data)
 {
 	const struct node *cur;
 
@@ -65,14 +50,14 @@ static void foreach_states_rec(const struct node *node, char *buf, char *c, cb c
 		return;
 
 	for (cur = node->next; cur->c != EOT; cur++)
-		foreach_states_rec(cur, buf, c + 1, cb, data);
+		foreach_leaves_rec(cur, buf, c + 1, cb, data);
 }
 
-static void foreach_states(const struct node *tree, cb cb, void *data)
+static void foreach_leaves(const struct node *tree, cb cb, void *data)
 {
 	char buf[0x400];
 
-	foreach_states_rec(tree, buf, buf, cb, data);
+	foreach_leaves_rec(tree, buf, buf, cb, data);
 }
 
 static bool match_rec(const char *str, const struct node *node)
@@ -135,7 +120,7 @@ int main(void)
 	const char **string;
 
 	printf("strings in tree:\n");
-	foreach_states(&tree, print_cb, NULL);
+	foreach_leaves(&tree, print_cb, NULL);
 
 	for (string = strings; *string != NULL; string++)
 		printf("test string: '%s', matches: %s\n", *string,
