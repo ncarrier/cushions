@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdarg.h>
 
 struct node {
 	struct node *next;
@@ -11,7 +12,8 @@ struct node {
 
 #define TREE_TERMINAL(ch) { .c = (ch), .next = NULL}
 #define TREE_GUARD TREE_TERMINAL(EOT)
-#define TREE_LEAF TREE_TERMINAL('\0')
+#define LEAF(s) TREE_TERMINAL('\0')
+#define NODE(ch, ...) { .c = ch, .next = (struct node[]) { __VA_ARGS__, TREE_GUARD}}
 
 /*
  * The following state machine contains the strings :
@@ -24,146 +26,46 @@ struct node {
  *   "sftp"
  *   "tftp"
  */
-static struct node tree = {
-		.c = ' ',
-		.next = (struct node[])
-{
-	{
-		.c = 'f',
-		.next = (struct node[]) {
-			{
-				.c = 't',
-				.next = (struct node[]) {
-					{
-						.c = 'p',
-						.next = (struct node[]) {
-							TREE_LEAF, /* ftp */
-							TREE_GUARD
-						}
-					},
-					TREE_GUARD
-				}
-			},
-			TREE_GUARD
-		}
-	},
-	{
-		.c = 's',
-		.next = (struct node[]) {
-			{
-				.c = 'c',
-				.next = (struct node[]) {
-					{
-						.c = 'p',
-						.next = (struct node[]) {
-							TREE_LEAF, /* scp */
-							TREE_GUARD
-						}
-					},
-					TREE_GUARD
-				}
-			},
-			{
-				.c = 'm',
-				.next = (struct node[]) {
-					{
-						.c = 'b',
-						.next = (struct node[]) {
-							{
-								.c = 's',
-								.next = (struct node[]) {
-									TREE_LEAF, /* smbs */
-									TREE_GUARD
-								}
-							},
-							TREE_GUARD
-						}
-					},
-					TREE_GUARD
-				}
-			},
-			{
-				.c = 'f',
-				.next = (struct node[]) {
-					{
-						.c = 't',
-						.next = (struct node[]) {
-							{
-								.c = 'p',
-								.next = (struct node[]) {
-									TREE_LEAF, /* sftp */
-									TREE_GUARD
-								}
-							},
-							TREE_GUARD
-						}
-					},
-					TREE_GUARD
-				}
-			},
-			TREE_GUARD
-		}
-	},
-	{
-		.c = 'h',
-		.next = (struct node[]) {
-			{
-				.c = 't',
-				.next = (struct node[]) {
-					{
-						.c = 't',
-						.next = (struct node[]) {
-							{
-								.c = 'p',
-								.next = (struct node[]) {
-									{
-										.c = 's',
-										.next = (struct node[]) {
-											TREE_LEAF, /* https */
-											TREE_GUARD
-										}
-									},
-									TREE_LEAF, /* http */
-									TREE_GUARD
-								}
-							},
-							TREE_GUARD
-						}
-					},
-					TREE_GUARD
-				}
-			},
-			TREE_GUARD
-		}
-	},
-	{
-		.c = 't',
-		.next = (struct node[]) {
-			{
-				.c = 'f',
-				.next = (struct node[]) {
-					{
-						.c = 't',
-						.next = (struct node[]) {
-							{
-								.c = 'p',
-								.next = (struct node[]) {
-									TREE_LEAF, /* tftp */
-									TREE_GUARD
-								}
-							},
-							TREE_GUARD
-						}
-					},
-					TREE_GUARD
-				}
-			},
-			TREE_GUARD
-		}
-	},
-	TREE_GUARD
-}
-};
+static struct node tree =
+NODE(' ',
+	NODE('f',
+		NODE('t',
+			NODE('p', LEAF(ftp))
+		)
+	),
+	NODE('s',
+		NODE('c',
+			NODE('p', LEAF(scp))
+		),
+		NODE('m',
+			NODE('b',
+				NODE('s', LEAF(smbs)),
+				LEAF(smb)
+			)
+		),
+		NODE('f',
+			NODE('t',
+				NODE('p', LEAF(sftp))
+			)
+		)
+	),
+	NODE('h',
+		NODE('t',
+			NODE('t',
+				NODE('p',
+					NODE('s', LEAF(https))
+				)
+			)
+		)
+	),
+	NODE('t',
+		NODE('f',
+			NODE('t',
+				NODE('p', LEAF(tftp))
+			)
+		)
+	)
+);
 
 typedef void (*cb)(const char *string, void *data);
 
