@@ -9,6 +9,10 @@ struct node {
 
 #define EOT 0x04
 
+#define TREE_TERMINAL(ch) { .c = (ch), .next = NULL}
+#define TREE_GUARD TREE_TERMINAL(EOT)
+#define TREE_LEAF TREE_TERMINAL('\0')
+
 /*
  * The following state machine contains the strings :
  *   "ftp"
@@ -29,163 +33,107 @@ static struct node tree = {
 		.next = (struct node[]) {
 			{
 				.c = 't',
-				.next = (struct node[] ) {
+				.next = (struct node[]) {
 					{
 						.c = 'p',
-						.next = (struct node[] ) {
-							{
-								.c = '\0', /* ftp */
-								.next = NULL,
-							},
-							{
-								.c = EOT
-							}
+						.next = (struct node[]) {
+							TREE_LEAF, /* ftp */
+							TREE_GUARD
 						}
 					},
-					{
-						.c = EOT
-					}
+					TREE_GUARD
 				}
 			},
-			{
-				.c = EOT
-			}
+			TREE_GUARD
 		}
 	},
 	{
 		.c = 's',
-		.next = (struct node[] ) {
+		.next = (struct node[]) {
 			{
 				.c = 'c',
-				.next = (struct node[] ) {
+				.next = (struct node[]) {
 					{
 						.c = 'p',
-						.next = (struct node[] ) {
-							{
-								.c = '\0', /* scp */
-								.next = NULL,
-							},
-							{
-								.c = EOT
-							}
+						.next = (struct node[]) {
+							TREE_LEAF, /* scp */
+							TREE_GUARD
 						}
 					},
-					{
-						.c = EOT
-					}
+					TREE_GUARD
 				}
 			},
 			{
 				.c = 'm',
-				.next = (struct node[] ) {
+				.next = (struct node[]) {
 					{
 						.c = 'b',
-						.next = (struct node[] ) {
+						.next = (struct node[]) {
 							{
 								.c = 's',
-								.next = (struct node[] ) {
-									{
-										.c = '\0', /* smbs */
-										.next = NULL,
-									},
-									{
-										.c = EOT
-									}
+								.next = (struct node[]) {
+									TREE_LEAF, /* smbs */
+									TREE_GUARD
 								}
 							},
-							{
-								.c = '\0', /* smb */
-								.next = NULL,
-							},
-							{
-								.c = EOT
-							}
+							TREE_GUARD
 						}
 					},
-					{
-						.c = EOT
-					}
+					TREE_GUARD
 				}
 			},
 			{
 				.c = 'f',
-				.next = (struct node[] ) {
+				.next = (struct node[]) {
 					{
 						.c = 't',
-						.next = (struct node[] ) {
+						.next = (struct node[]) {
 							{
 								.c = 'p',
-								.next = (struct node[] ) {
-									{
-										.c = '\0', /* sftp */
-										.next = NULL,
-									},
-									{
-										.c = EOT
-									}
+								.next = (struct node[]) {
+									TREE_LEAF, /* sftp */
+									TREE_GUARD
 								}
 							},
-							{
-								.c = EOT
-							}
+							TREE_GUARD
 						}
 					},
-					{
-						.c = EOT
-					}
+					TREE_GUARD
 				}
 			},
-			{
-				.c = EOT
-			}
+			TREE_GUARD
 		}
 	},
 	{
 		.c = 'h',
-		.next = (struct node[] ) {
+		.next = (struct node[]) {
 			{
 				.c = 't',
-				.next = (struct node[] ) {
+				.next = (struct node[]) {
 					{
 						.c = 't',
-						.next = (struct node[] ) {
+						.next = (struct node[]) {
 							{
 								.c = 'p',
-								.next = (struct node[] ) {
+								.next = (struct node[]) {
 									{
 										.c = 's',
-										.next = (struct node[] ) {
-											{
-												.c = '\0', /* https */
-												.next = NULL,
-											},
-											{
-												.c = EOT
-											}
+										.next = (struct node[]) {
+											TREE_LEAF, /* https */
+											TREE_GUARD
 										}
 									},
-									{
-										.c = '\0', /* http */
-										.next = NULL,
-									},
-									{
-										.c = EOT
-									}
+									TREE_LEAF, /* http */
+									TREE_GUARD
 								}
 							},
-							{
-								.c = EOT
-							}
+							TREE_GUARD
 						}
 					},
-					{
-						.c = EOT
-					}
+					TREE_GUARD
 				}
 			},
-			{
-				.c = EOT
-			}
+			TREE_GUARD
 		}
 	},
 	{
@@ -193,40 +141,27 @@ static struct node tree = {
 		.next = (struct node[]) {
 			{
 				.c = 'f',
-				.next = (struct node[] ) {
+				.next = (struct node[]) {
 					{
 						.c = 't',
-						.next = (struct node[] ) {
+						.next = (struct node[]) {
 							{
 								.c = 'p',
-								.next = (struct node[] ) {
-									{
-										.c = '\0', /* tftp */
-										.next = NULL,
-									},
-									{
-										.c = EOT
-									}
+								.next = (struct node[]) {
+									TREE_LEAF, /* tftp */
+									TREE_GUARD
 								}
 							},
-							{
-								.c = EOT
-							}
+							TREE_GUARD
 						}
 					},
-					{
-						.c = EOT
-					}
+					TREE_GUARD
 				}
 			},
-			{
-				.c = EOT
-			}
+			TREE_GUARD
 		}
 	},
-	{
-		.c = EOT
-	}
+	TREE_GUARD
 }
 };
 
