@@ -30,42 +30,26 @@ static struct node tree =
 NODE(' ',
 	NODE('f',
 		NODE('t',
-			NODE('p', LEAF(ftp))
-		)
-	),
+			NODE('p', LEAF(ftp)))),
 	NODE('s',
 		NODE('c',
-			NODE('p', LEAF(scp))
-		),
+			NODE('p', LEAF(scp))),
 		NODE('m',
 			NODE('b',
 				NODE('s', LEAF(smbs)),
-				LEAF(smb)
-			)
-		),
+				LEAF(smb))),
 		NODE('f',
 			NODE('t',
-				NODE('p', LEAF(sftp))
-			)
-		)
-	),
+				NODE('p', LEAF(sftp))))),
 	NODE('h',
 		NODE('t',
 			NODE('t',
 				NODE('p',
-					NODE('s', LEAF(https))
-				)
-			)
-		)
-	),
+					NODE('s', LEAF(https)))))),
 	NODE('t',
 		NODE('f',
 			NODE('t',
-				NODE('p', LEAF(tftp))
-			)
-		)
-	)
-);
+				NODE('p', LEAF(tftp))))));
 
 typedef void (*cb)(const char *string, void *data);
 
