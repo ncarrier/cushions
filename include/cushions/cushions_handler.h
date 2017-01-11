@@ -28,7 +28,7 @@ typedef FILE *(*cushions_handler_fopen)(struct cushions_handler *handler,
 		const struct cushions_handler_mode *mode);
 
 typedef bool (*cushions_handler_handles)(struct cushions_handler *handler,
-		const char *path);
+		const char *scheme);
 
 int cushions_handler_break_params(const char *input, char **path,
 		char **envz, size_t *envz_len);
