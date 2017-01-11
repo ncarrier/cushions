@@ -79,14 +79,14 @@ static bool dict_contains_rec(const char *str, const struct dict_node *node)
 	return false;
 }
 
-static bool dict_contains(const struct dict_node *tree, const char *str)
+static bool dict_contains(const struct dict_node *dict, const char *str)
 {
 	const struct dict_node *cur;
 
-	if (str == NULL || tree == NULL)
+	if (str == NULL || dict == NULL)
 		return false;
 
-	for (cur = tree->next; cur->c != EOT; cur++)
+	for (cur = dict->next; cur->c != EOT; cur++)
 		if (dict_contains_rec(str, cur))
 			return true;
 
@@ -121,7 +121,7 @@ int main(void)
 	};
 	const char **string;
 
-	printf("strings in tree:\n");
+	printf("strings in dictionnary:\n");
 	dict_foreach_word(&dict, print_cb, NULL);
 
 	for (string = strings; *string != NULL; string++)
