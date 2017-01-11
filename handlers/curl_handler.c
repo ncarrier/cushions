@@ -13,6 +13,8 @@
 #define LOG_TAG curl_handler
 #include "log.h"
 
+#include "dict.h"
+
 #define BUFFER_SIZE 0x400
 
 enum fcurl_type_e {
@@ -25,6 +27,15 @@ struct curl_cushions_handler {
 	struct cushions_handler handler;
 	cookie_io_functions_t curl_func;
 };
+
+static const struct dict_node dict = DICT(F(T(P(_))),
+                                          S(C(P(_)),
+                                            M(B(S(_),
+                                                  _)),
+                                          F(T(P(_)))),
+                                          H(T(T(P(S(_),
+                                                  _)))),
+                                          T(F(T(P(_)))));
 
 struct curl_cushions_file {
 	enum fcurl_type_e type; /* type of handle */
@@ -55,7 +66,13 @@ static FILE *curl_cushions_fopen(struct cushions_handler *handler,
 		const char *path, const char *full_path, const char *scheme,
 		const struct cushions_handler_mode *mode)
 {
-	errno = -ENOSYS;
+	/* TODO less restrictive condition */
+	if (strcmp(mode->mode, "r") != 0 && strcmp(mode->mode, "rb") != 0) {
+		LOGE("curl scheme only supports \"r\" open mode");
+		errno = EINVAL;
+		return NULL;
+	}
+	errno = ENOSYS;
 
 	return NULL;
 }
@@ -67,20 +84,9 @@ static ssize_t curl_read(void *c, char *buf, size_t size)
 }
 
 static bool curl_handler_handles(struct cushions_handler *handler,
-		const char *path)
+		const char *scheme)
 {
-	const char *schemes[] = {
-			"http",
-
-			NULL /* NULL guard */
-	};
-	const char **scheme;
-
-	for (scheme = schemes; *scheme != NULL; scheme++)
-		if (string_matches_prefix(path, *scheme))
-			return true;
-
-	return false;
+	return dict_contains(&dict, scheme);
 }
 
 static const struct curl_cushions_handler curl_cushions_handler = {
