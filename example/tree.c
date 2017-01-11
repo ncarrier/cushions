@@ -27,14 +27,14 @@ struct node {
  *   "tftp"
  */
 static struct node tree =
-		N(' ',	N('f',	N('t',	N('p',	L))), /* ftp */
-			N('s',	N('c',	N('p',	L)), /* scp */
-				N('m',	N('b',	N('s',	L), /* smbs */
-						L)), /* smb */
-				N('f',	N('t',	N('p',	L)))), /* ftp */
-			N('h',	N('t',	N('t',	N('p',	N('s',	L), /* https */
-							L)))), /* http */
-			N('t',	N('f',	N('t',	N('p',	L))))); /* tftp */
+  N(' ', N('f', N('t', N('p', L))), /* ftp */
+         N('s', N('c', N('p', L)), /* scp */
+                N('m', N('b', N('s', L), /* smbs */
+                              L)), /* smb */
+         N('f', N('t', N('p', L)))), /* ftp */
+         N('h', N('t', N('t', N('p', N('s', L), /* https */
+                                     L)))), /* http */
+         N('t', N('f', N('t', N('p', L))))); /* tftp */
 
 typedef void (*cb)(const char *string, void *data);
 
