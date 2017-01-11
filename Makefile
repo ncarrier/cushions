@@ -53,6 +53,9 @@ $(tree_structure):
 mode_test:tests/mode_test.o src/mode.o src/utils.o src/log.o
 	$(CC) $^ -o $@
 
+dict_test:tests/dict_test.o src/dict.o
+	$(CC) $^ -o $@
+
 params_test:tests/params_test.o libcushions.so
 	$(CC) $^ -o $@
 
@@ -83,16 +86,18 @@ handlers_dir/libcushions_curl_handler.so:handlers/curl_handler.c libcushions.so
 	$(CC) $^ -fPIC -shared -o $@ $(CFLAGS) -L. \
 			`curl-config --cflags` `curl-config --libs`
 
-check:mode_test params_test $(handlers) cp
+check:mode_test params_test dict_test $(handlers) cp
 	CUSHIONS_LOG_LEVEL=3 LD_LIBRARY_PATH=. ./mode_test
 	CUSHIONS_LOG_LEVEL=3 LD_LIBRARY_PATH=. ./params_test
 	CUSHIONS_LOG_LEVEL=3 LD_LIBRARY_PATH=. $(here)tests/tests.sh
+	./dict_test
 	@echo "*** All test passed"
 
 clean:
 	rm -f \
 			$(obj) \
-			$(handlers)
+			$(handlers) \
+			dict_test \
 			libcushions.so \
 			custom_stream \
 			variadic_macro \
