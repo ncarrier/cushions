@@ -5,7 +5,7 @@
 
 #include <error.h>
 
-#define USAGE "usage: cp source destination\n"
+#define USAGE "usage: cp source destination"
 #define BUFFER_SIZE 0x100
 
 static void cleanup_file(FILE **f)
@@ -28,8 +28,10 @@ int main(int argc, char *argv[])
 	char buf[BUFFER_SIZE];
 	bool eof = false;
 
-	if (argc == 1)
-		error(EXIT_SUCCESS, 0, USAGE);
+	if (argc == 1) {
+		puts(USAGE);
+		return EXIT_SUCCESS;
+	}
 	if (argc == 2)
 		error(EXIT_FAILURE, 0, "missing destination file\n" USAGE);
 
