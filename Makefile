@@ -32,14 +32,14 @@ tests:mode_test
 
 # used for cleanup and tree structure
 obj := \
-	example/custom_stream.o \
-	example/custom_stream.o \
-	example/variadic_macro.o \
 	example/cp.o \
 	example/cp_no_wrap.o \
+	example/custom_stream.o \
+	example/variadic_macro.o \
+	src/dict.o \
+	src/log.o \
 	src/mode.o \
 	src/utils.o \
-	src/log.o \
 	tests/mode_test.o \
 	tests/params_test.o
 
