@@ -41,6 +41,7 @@ obj := \
 	src/mode.o \
 	src/utils.o \
 	tests/mode_test.o \
+	tests/dict_test.o \
 	tests/params_test.o
 
 tree_structure := $(sort $(foreach s,$(obj) $(handlers),${CURDIR}/$(dir $(s))))
