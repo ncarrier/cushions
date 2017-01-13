@@ -135,6 +135,7 @@ static void cushions_handler_mode_to_stringTEST(void)
 	assert(cushions_handler_mode_from_string(&mode, str) == 0);
 	cushions_handler_mode_dump(&mode);
 	masserteq(mode, ref);
+	cushions_handler_mode_cleanup(&mode);
 	free(str);
 
 	fprintf(stderr, "OK\n");
