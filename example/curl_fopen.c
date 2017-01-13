@@ -540,5 +540,6 @@ int main(int argc, char *argv[])
 
 	fclose(outf);
 
+	curl_multi_cleanup(multi_handle);
 	return 0;/* all done */
 }
