@@ -317,7 +317,7 @@ static bool curl_handler_handles(struct cushions_handler *handler,
 static struct curl_cushions_handler curl_cushions_handler = {
 		.handler = {
 				/* not used for matching scheme */
-				.scheme = "curl",
+				.name = "curl",
 				.fopen = curl_cushions_fopen,
 				.handles = curl_handler_handles,
 		},

@@ -24,18 +24,19 @@ struct cushions_handler_mode {
 };
 
 typedef FILE *(*cushions_handler_fopen)(struct cushions_handler *handler,
-		const char *path, const char *full_path, const char *scheme,
+		const char *path, const char *full_path, const char *name,
 		const struct cushions_handler_mode *mode);
 
 typedef bool (*cushions_handler_handles)(struct cushions_handler *handler,
-		const char *scheme);
+		const char *name);
 
 int cushions_handler_break_params(const char *input, char **path,
 		char **envz, size_t *envz_len);
 
 struct cushions_handler {
-	const char *scheme;
+	const char *name;
 	cushions_handler_fopen fopen;
+	/* optional, if null, name will be compared against the url's scheme */
 	cushions_handler_handles handles;
 
 	/* data private to the cushion library */

@@ -19,7 +19,7 @@ static FILE *file_cushions_fopen(struct cushions_handler *handler,
 
 static const struct file_cushions_handler file_cushions_handler = {
 	.handler = {
-		.scheme = "file",
+		.name = "file",
 		.fopen = file_cushions_fopen,
 	},
 };

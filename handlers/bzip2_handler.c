@@ -118,7 +118,7 @@ static ssize_t bzip2_read(void *c, char *buf, size_t size)
 
 static const struct bzip2_cushions_handler bzip2_cushions_handler = {
 	.handler = {
-		.scheme = "bzip2",
+		.name = "bzip2",
 		.fopen = bzip2_cushions_fopen,
 	},
 	.bzip2_func = {
