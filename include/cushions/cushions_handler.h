@@ -6,18 +6,18 @@
 struct cushions_handler;
 
 struct cushions_handler_mode {
-	int read:1;
-	int beginning:1;
-	int end:1;
-	int write:1;
-	int truncate:1;
-	int create:1;
-	int binary:1;
-	int append:1;
-	int no_cancellation:1;
-	int cloexec:1;
-	int mmap:1;
-	int excl:1;
+	bool read:1;
+	bool beginning:1;
+	bool end:1;
+	bool write:1;
+	bool truncate:1;
+	bool create:1;
+	bool binary:1;
+	bool append:1;
+	bool no_cancellation:1;
+	bool cloexec:1;
+	bool mmap:1;
+	bool excl:1;
 	/* original mode string, if any */
 	char *mode;
 	char *ccs;
