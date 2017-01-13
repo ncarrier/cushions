@@ -118,6 +118,7 @@ int cushions_handlers_load(void)
 
 void cushions_handlers_unload(void)
 {
+	int ret;
 	int i = MAX_HANDLER_PLUGINS;
 
 	LOGD("%s", __func__);
@@ -127,6 +128,9 @@ void cushions_handlers_unload(void)
 	plugins_initialized = false;
 
 	while (i--)
-		if (handler_plugins[i] != NULL)
-			dlclose(handler_plugins[i]);
+		if (handler_plugins[i] != NULL) {
+			ret = dlclose(handler_plugins[i]);
+			if (ret != 0)
+				LOGE("dlclose: %d", ret);
+		}
 }
