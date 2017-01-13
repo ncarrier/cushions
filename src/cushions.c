@@ -114,6 +114,8 @@ FILE *cushions_fopen(const char *path, const char *m)
 			.ccs = NULL,
 	};
 
+	LOGD("%s(%s, %s)", __func__, path, m);
+
 	offset = ret = break_scheme(path, &scheme);
 	if (ret < 0) {
 		LOGPE("break_path", ret);
@@ -130,7 +132,7 @@ FILE *cushions_fopen(const char *path, const char *m)
 		if (h->self == NULL)
 			break;
 		if (handle_handles(h, scheme)) {
-			LOGI("%p handles scheme '%s'", h, scheme);
+			LOGI("%s handles scheme '%s'", h->scheme, scheme);
 			ret = cushions_handler_mode_from_string(&mode, m);
 			if (ret < 0) {
 				LOGPE("cushions_handler_mode_from_string", ret);
