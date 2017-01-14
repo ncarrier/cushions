@@ -65,5 +65,9 @@ int main(int argc, char *argv[])
 	fflush(dest);
 	fflush(src);
 
+	fclose(stdin);
+	fclose(stdout);
+	fclose(stderr);
+
 	return EXIT_SUCCESS;
 }
