@@ -5,3 +5,10 @@
   fun:_dl_catch_error
   ...
 }
+{
+  _dl_error_run-leak
+  Memcheck:Leak
+  ...
+  fun:_dlerror_run
+  ...
+}
