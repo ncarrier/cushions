@@ -1,0 +1,9 @@
+{
+   curl_ssh2-leak
+   Memcheck:Leak
+   ...
+   fun:gcry_control
+   fun:libssh2_init
+   fun:global_init
+   ...
+}
