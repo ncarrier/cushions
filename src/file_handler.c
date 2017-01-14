@@ -17,7 +17,7 @@ static FILE *file_cushions_fopen(struct cushions_handler *handler,
 	return cushions_handler_real_fopen(path, mode->mode);
 }
 
-static const struct file_cushions_handler file_cushions_handler = {
+static struct file_cushions_handler file_cushions_handler = {
 	.handler = {
 		.name = "file",
 		.fopen = file_cushions_fopen,

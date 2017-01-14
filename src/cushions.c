@@ -20,7 +20,7 @@
 #define MAX_CUSHIONS_HANDLER 20
 #define SCHEME_END_PATTERN "://"
 
-static struct cushions_handler handlers[MAX_CUSHIONS_HANDLER];
+static struct cushions_handler *handlers[MAX_CUSHIONS_HANDLER];
 
 /* Function pointers to hold the value of the glibc functions */
 static FILE *(*real_fopen)(const char *path, const char *mode);
@@ -128,8 +128,8 @@ FILE *cushions_fopen(const char *path, const char *m)
 	}
 
 	for (i = 0; i < MAX_CUSHIONS_HANDLER; i++) {
-		h = handlers + i;
-		if (h->self == NULL)
+		h = handlers[i];
+		if (h == NULL)
 			break;
 		if (handle_handles(h, scheme)) {
 			LOGI("%s handles scheme '%s'", h->name, scheme);
@@ -148,7 +148,7 @@ FILE *cushions_fopen(const char *path, const char *m)
 	return real_fopen(path, m);
 }
 
-int cushions_handler_register(const struct cushions_handler *handler)
+int cushions_handler_register(struct cushions_handler *handler)
 {
 	int i;
 
@@ -156,7 +156,7 @@ int cushions_handler_register(const struct cushions_handler *handler)
 		return -EINVAL;
 
 	for (i = 0; i < MAX_CUSHIONS_HANDLER; i++)
-		if (handlers[i].self == NULL)
+		if (handlers[i] == NULL)
 			break;
 
 	if (i == MAX_CUSHIONS_HANDLER) {
@@ -164,8 +164,7 @@ int cushions_handler_register(const struct cushions_handler *handler)
 		return -ENOMEM;
 	}
 
-	handlers[i] = *handler;
-	handlers[i].self = handler;
+	handlers[i] = handler;
 
 	return 0;
 }

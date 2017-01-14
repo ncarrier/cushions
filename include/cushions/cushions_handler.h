@@ -38,12 +38,9 @@ struct cushions_handler {
 	cushions_handler_fopen fopen;
 	/* optional, if null, name will be compared against the url's scheme */
 	cushions_handler_handles handles;
-
-	/* data private to the cushion library */
-	const struct cushions_handler *self;
 };
 
-int cushions_handler_register(const struct cushions_handler *handler);
+int cushions_handler_register( struct cushions_handler *handler);
 FILE *cushions_handler_real_fopen(const char *path, const char *mode);
 
 int cushions_handler_mode_from_string(struct cushions_handler_mode *mode,

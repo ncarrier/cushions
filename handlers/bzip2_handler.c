@@ -28,7 +28,7 @@ struct bzip2_cushions_file {
 	bool eof;
 };
 
-static const struct bzip2_cushions_handler bzip2_cushions_handler;
+static struct bzip2_cushions_handler bzip2_cushions_handler;
 
 static int bzip2_close(void *c)
 {
@@ -116,7 +116,7 @@ static ssize_t bzip2_read(void *c, char *buf, size_t size)
 	return ret;
 }
 
-static const struct bzip2_cushions_handler bzip2_cushions_handler = {
+static struct bzip2_cushions_handler bzip2_cushions_handler = {
 	.handler = {
 		.name = "bzip2",
 		.fopen = bzip2_cushions_fopen,
