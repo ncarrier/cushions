@@ -1,0 +1,3 @@
+#!/bin/bash
+
+LD_LIBRARY_PATH=. CUSHIONS_HANDLERS_PATH=handlers_dir CUSHIONS_LOG_LEVEL=3 "$@"
