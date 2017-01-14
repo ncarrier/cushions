@@ -52,13 +52,3 @@ void log_set_level(int level)
 
 	LOG(log_level, "%s(%d)", __func__, log_level);
 }
-
-static __attribute__((constructor)) void log_constructor(void)
-{
-	const char *env_log_level;
-
-	env_log_level = getenv("CUSHIONS_LOG_LEVEL");
-	if (env_log_level != NULL)
-		log_set_level(atoi(env_log_level));
-}
-
