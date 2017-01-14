@@ -85,6 +85,8 @@ struct curl_cushions_file {
 	 */
 	int still_running; /* Is background url fetch still in progress */
 	struct curl_cushions_handler *handler;
+	char err_buf[CURL_ERROR_SIZE];
+	bool handler_added;
 };
 
 static struct curl_cushions_handler curl_cushions_handler;
@@ -95,11 +97,14 @@ static int curl_close(void *c)
 
 	file = c;
 
-	curl_multi_remove_handle(file->handler->multi_handle, file->curl);
-
-	curl_easy_cleanup(file->curl);
-
-	free(file->buffer);
+	if (file->handler_added)
+		curl_multi_remove_handle(file->handler->multi_handle,
+				file->curl);
+	if (file->curl != NULL)
+		curl_easy_cleanup(file->curl);
+	if (file->buffer != NULL)
+		free(file->buffer);
+	memset(file, 0, sizeof(*file));
 	free(file);
 
 	return 0;
@@ -116,7 +121,6 @@ static size_t write_callback(char *buffer, size_t size, size_t nitems,
 	url = userp;
 	size *= nitems;
 
-	/* remaining space in buffer */
 	rembuff = url->buffer_len - url->buffer_pos;
 
 	if (size > rembuff) {
@@ -145,6 +149,8 @@ static FILE *curl_cushions_fopen(struct cushions_handler *handler,
 {
 	struct curl_cushions_file *file;
 	struct curl_cushions_handler *ch;
+	CURLMcode mcode;
+	CURLcode ecode;
 
 	ch = to_curl_handler(handler);
 
@@ -159,38 +165,77 @@ static FILE *curl_cushions_fopen(struct cushions_handler *handler,
 	if (file == NULL)
 		return NULL;
 
-	/* TODO error checks */
 	file->curl = curl_easy_init();
+	if (file->curl == NULL) {
+		LOGE("curl_easy_init failed");
+		goto err;
+	}
 	file->handler = ch;
 
-	curl_easy_setopt(file->curl, CURLOPT_URL, full_path);
-	curl_easy_setopt(file->curl, CURLOPT_WRITEDATA, file);
-	curl_easy_setopt(file->curl, CURLOPT_VERBOSE, 0L);
-	curl_easy_setopt(file->curl, CURLOPT_WRITEFUNCTION, write_callback);
+	ecode = curl_easy_setopt(file->curl, CURLOPT_URL, full_path);
+	if (ecode != CURLE_OK) {
+		LOGE("curl_easy_setopt url: %s, %s", curl_easy_strerror(ecode),
+				file->err_buf);
+		goto err;
+	}
+	ecode = curl_easy_setopt(file->curl, CURLOPT_ERRORBUFFER,
+			file->err_buf);
+	if (ecode != CURLE_OK) {
+		LOGE("curl_easy_setopt write_data: %s, %s",
+				curl_easy_strerror(ecode), file->err_buf);
+		goto err;
+	}
+	ecode = curl_easy_setopt(file->curl, CURLOPT_WRITEDATA, file);
+	if (ecode != CURLE_OK) {
+		LOGE("curl_easy_setopt url: %s, %s", curl_easy_strerror(ecode),
+				file->err_buf);
+		goto err;
+	}
+	ecode = curl_easy_setopt(file->curl, CURLOPT_VERBOSE, 0L);
+	if (ecode != CURLE_OK) {
+		LOGE("curl_easy_setopt verbose: %s, %s",
+				curl_easy_strerror(ecode), file->err_buf);
+		goto err;
+	}
+	ecode = curl_easy_setopt(file->curl, CURLOPT_WRITEFUNCTION,
+			write_callback);
+	if (ecode != CURLE_OK) {
+		LOGE("curl_easy_setopt writefunction: %s, %s",
+				curl_easy_strerror(ecode), file->err_buf);
+		goto err;
+	}
 
-	if (ch->multi_handle == NULL)
+	if (ch->multi_handle == NULL) {
 		ch->multi_handle = curl_multi_init();
+		if (ch->multi_handle == NULL) {
+			LOGE("%d: curl_multi_init failed", __LINE__);
+			goto err;
+		}
+	}
 
-	curl_multi_add_handle(ch->multi_handle, file->curl);
+	mcode = curl_multi_add_handle(ch->multi_handle, file->curl);
+	if (mcode != CURLM_OK) {
+		LOGE("curl_multi_add_handle: %s", curl_multi_strerror(mcode));
+		goto err;
+	}
+	file->handler_added = true;
 
 	/* lets start the fetch */
-	curl_multi_perform(ch->multi_handle, &file->still_running);
+	mcode = curl_multi_perform(ch->multi_handle, &file->still_running);
+	if (mcode != CURLM_OK) {
+		LOGE("curl_multi_perform: %s", curl_multi_strerror(mcode));
+		goto err;
+	}
 
 	if (file->buffer_pos != 0 || file->still_running)
-		/* TODO adapt mode according to the mode argument */
 		return fopencookie(file, mode->mode,
 				curl_cushions_handler.curl_func);
-	/* if still_running is 0 now, we should return NULL */
 
-	/* make sure the easy handle is not in the multi handle anymore */
-	curl_multi_remove_handle(ch->multi_handle, file->curl);
+err:
+	curl_close(file);
 
-	/* cleanup */
-	curl_easy_cleanup(file->curl);
+	errno = EIO;
 
-	free(file);
-
-	/* TODO proper cleanup on errors */
 	return NULL;
 }
 
@@ -202,28 +247,32 @@ static int fill_buffer(struct curl_cushions_file *file, size_t want)
 	fd_set fdexcep;
 	struct timeval timeout;
 	int rc;
-	CURLMcode mc; /* curl_multi_fdset() return code */
+	CURLMcode mc;
 	int maxfd;
 	long curl_timeo;
 
-	/* only attempt to fill buffer if transactions still running and buffer
+	/*
+	 * only attempt to fill buffer if transactions still running and buffer
 	 * doesn't exceed required size already
 	 */
 	if ((!file->still_running) || (file->buffer_pos > want))
 		return 0;
 
-	/* attempt to fill buffer */
 	do {
 
 		FD_ZERO(&fdread);
 		FD_ZERO(&fdwrite);
 		FD_ZERO(&fdexcep);
 
-		/* set a suitable timeout to fail on */
-		timeout.tv_sec = 60; /* 1 minute */
+		timeout.tv_sec = 60;
 		timeout.tv_usec = 0;
 
-		curl_multi_timeout(file->handler->multi_handle, &curl_timeo);
+		mc = curl_multi_timeout(file->handler->multi_handle,
+				&curl_timeo);
+		if (mc != CURLM_OK) {
+			LOGE("curl_multi_timeout: %s", curl_multi_strerror(mc));
+			break;
+		}
 		if (curl_timeo >= 0) {
 			timeout.tv_sec = curl_timeo / 1000;
 			if (timeout.tv_sec > 1)
@@ -236,7 +285,7 @@ static int fill_buffer(struct curl_cushions_file *file, size_t want)
 		mc = curl_multi_fdset(file->handler->multi_handle, &fdread,
 				&fdwrite, &fdexcep, &maxfd);
 		if (mc != CURLM_OK) {
-			fprintf(stderr, "curl_multi_fdset() failed: %d.\n", mc);
+			LOGE("curl_multi_fdset: %s", curl_multi_strerror(mc));
 			break;
 		}
 
@@ -256,23 +305,22 @@ static int fill_buffer(struct curl_cushions_file *file, size_t want)
 				return -errno;
 		}
 		/* timeout or readable/writable sockets */
-		curl_multi_perform(file->handler->multi_handle,
+		mc = curl_multi_perform(file->handler->multi_handle,
 				&file->still_running);
+		if (mc != CURLM_OK) {
+			LOGE("curl_multi_perform: %s", curl_multi_strerror(mc));
+			break;
+		}
 	} while (file->still_running && (file->buffer_pos < want));
 
 	return 0;
 }
 
 /* use to remove want bytes from the front of a files buffer */
-static int use_buffer(struct curl_cushions_file *file, size_t want)
+static void use_buffer(struct curl_cushions_file *file, size_t want)
 {
-	/* sort out buffer */
-	if ((file->buffer_pos - want) <= 0) {
-		/* ditch buffer - write will recreate */
-		free(file->buffer);
-		file->buffer = NULL;
+	if (file->buffer_pos - want <= 0) {
 		file->buffer_pos = 0;
-		file->buffer_len = 0;
 	} else {
 		/* move rest down make it available for later */
 		memmove(file->buffer, &file->buffer[want],
@@ -280,19 +328,22 @@ static int use_buffer(struct curl_cushions_file *file, size_t want)
 
 		file->buffer_pos -= want;
 	}
-
-	return 0;
 }
 
 static ssize_t curl_read(void *c, char *buf, size_t size)
 {
+	int ret;
 	struct curl_cushions_file *file;
 
 	file = c;
-	fill_buffer(file, size);
+	ret = fill_buffer(file, size);
+	if (ret < 0) {
+		LOGPE("fill_buffer", ret);
+		errno = -ret;
+		return -1;
+	}
 
-	/* check if there's data in the buffer - if not fill_buffer()
-	 * either errored or EOF */
+	/* check if there's data in the buffer, if not -> EOF */
 	if (file->buffer_pos == 0)
 		return 0;
 
@@ -300,7 +351,7 @@ static ssize_t curl_read(void *c, char *buf, size_t size)
 	if (file->buffer_pos < size)
 		size = file->buffer_pos;
 
-	/* xfer data to caller */
+	/* transfer data to caller */
 	memcpy(buf, file->buffer, size);
 
 	use_buffer(file, size);
@@ -331,10 +382,15 @@ static __attribute__((constructor)) void curl_cushions_handler_constructor(
 		void)
 {
 	int ret;
+	CURLMcode mc;
 
 	LOGI(__func__);
 
-	curl_global_init(CURL_GLOBAL_ALL);
+	mc = curl_global_init(CURL_GLOBAL_ALL);
+	if (mc != CURLM_OK) {
+		LOGE("curl_global_init: %s", curl_multi_strerror(mc));
+		return;
+	}
 
 	ret = cushions_handler_register(&curl_cushions_handler.handler);
 	if (ret < 0)
