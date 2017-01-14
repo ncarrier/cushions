@@ -17,7 +17,7 @@ static void cleanup_file(FILE **f)
 	*f = NULL;
 }
 
-int main(int argc, char *argv[])
+static int old_main(int argc, char *argv[])
 {
 	const char *src_path;
 	const char *dest_path;
@@ -70,4 +70,14 @@ int main(int argc, char *argv[])
 	fclose(stderr);
 
 	return EXIT_SUCCESS;
+}
+
+int main(int argc, char *argv[])
+{
+	int count = 1;
+
+	while (count--)
+		old_main(argc, argv);
+
+	return old_main(argc, argv);
 }
