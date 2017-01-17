@@ -23,7 +23,7 @@ CFLAGS += \
 	-Wformat-signedness
 
 libcushions_src := $(wildcard $(here)src/*.c)
-handlers := $(foreach h,curl bzip2,handlers_dir/libcushions_$(h)_handler.so)
+handlers := $(foreach h,curl bzip2 lzo,handlers_dir/libcushions_$(h)_handler.so)
 
 all:libcushions.so $(handlers)
 
@@ -80,12 +80,16 @@ bzip2_expand:example/bzip2/expand.c
 libcushions.so:$(libcushions_src)
 	$(CC) $^ -fPIC -shared -o $@ $(CFLAGS) -ldl
 
-handlers_dir/libcushions_bzip2_handler.so:handlers/bzip2_handler.c libcushions.so
+handlers_dir/libcushions_bzip2_handler.so:handlers/bzip2_handler.c \
+		libcushions.so
 	$(CC) $^ -fPIC -shared -o $@ $(CFLAGS) -L. -lbz2
 
 handlers_dir/libcushions_curl_handler.so:handlers/curl_handler.c libcushions.so
 	$(CC) $^ -fPIC -shared -o $@ $(CFLAGS) -L. \
 			`curl-config --cflags` `curl-config --libs`
+
+handlers_dir/libcushions_lzo_handler.so:handlers/lzo_handler.c libcushions.so
+	$(CC) $^ -fPIC -shared -o $@ $(CFLAGS) -L. -llzo2
 
 check:mode_test params_test dict_test $(handlers) cp
 	CUSHIONS_LOG_LEVEL=3 LD_LIBRARY_PATH=. ./mode_test
