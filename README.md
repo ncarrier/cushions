@@ -8,24 +8,36 @@ By using linker flags or **LD\_PRELOAD** tricks, this can be done without
 modifying or even without recompiling the program, adding transparent support
 for archives files, or web urls, for example.
 
-**IT IS NOT FUNCTIONAL YET**
+**IMPORTANT NOTICE:** **libcushions**, while already potentially useful in some
+use cases, should be considered as a proof of concept.
 
 ## Architecture
 
-The central part is **libcushions** itself, it proposes a public API
+The first part is **libcushions** itself, it proposes a minimalistic public
+API with the *cushions.h* header. The *cushions\_fopen* can be used directly in
+a program, or one can use the `-Wl,--wrap=fopen` flag at compilation to
+transparently replace fopen calls on the fly with *\_\_wrap\_fopen*, which in
+turn, will call *cushions\_fopen*.  
+The third possibility is to set the *LD\_PRELOAD* environment variable to the
+path to *libcushions.so*, calls to fopen in the program executed, will be
+replaced by calls to cushions_fopen transparently and with no compilation step
+required.
 
---- WIP ---
+The second central part is the url scheme handlers. They use the
+*cushions\_handler.h* API to implement support for url schemes, by registering
+an handler with *cushions\_handler\_register()*. Some handlers are provided and
+are listed in the scheme support table at the end of this README.
 
 ## Usage example
 
-These two lines will simplify the next commands:
+These two following lines will simplify the next commands:
 
-        $ export CUSHIONS_LOG_LEVEL=4
         $ export LD_LIBRARY_PATH=.
+        $ export CUSHIONS_HANDLERS_PATH=handlers_dir
 
 Build the relevant bits and create an example file:
 
-        $ make examples
+        $ make all examples
         ...
         cc example/cp.o libcushions.so -Wl,--wrap=fopen -o example/cp
         cc example/cp.o -o example/cp_no_wrap
@@ -37,7 +49,7 @@ Build the relevant bits and create an example file:
 **example/cp** is built with the --wrap linker option, the fopen glibc symbol
 will be overriden by that of libcushions, the program will use it directly.
 
-        $ ./example/cp file://tutu file://toto
+        $ ./cp file://tutu file://toto
         $ md5sum tutu toto
         91451e93db0faa7997536d7aa606cfe3  tutu
         91451e93db0faa7997536d7aa606cfe3  toto
@@ -46,11 +58,52 @@ On the contrary, **example/cp\_no\_wrap** has been compiled without even knowing
 about libcushions, but using **LD\_PRELOAD**, it's functionality can be added
 transparently:
 
-        $ ./example/cp_no_wrap file://tutu file://toto
-        ./example/cp_no_wrap: fopen src: No such file or directory
+        $ ./cp_no_wrap file://tutu file://toto
+        ./cp_no_wrap: fopen src: No such file or directory
         $ rm toto
-        $ LD_PRELOAD=./libcushions.so ./example/cp_no_wrap file://tutu file://toto
+        $ LD_PRELOAD=./libcushions.so ./cp_no_wrap file://tutu file://toto
         $ md5sum tutu toto
         91451e93db0faa7997536d7aa606cfe3  tutu
         91451e93db0faa7997536d7aa606cfe3  toto
+
+Now a more interesting example, our cp program will download a file from an
+http web site and compress it on the fly in the lzop format:
+
+        $ python -m SimpleHTTPServer &
+          Serving HTTP on 0.0.0.0 port 8000 ...
+        $ ./cp http://localhost:8000/src/cushions.c lzo://plop.lzo
+        $ lzop -df plop.lzo
+        $ md5sum plop src/cushions.c
+          de9cc9b40dd030524aacf08d910cf4f0  plop
+          de9cc9b40dd030524aacf08d910cf4f0  src/cushions.c
+        $ rm -f plop plop.lzo
+        $ fg # bring back HTTP server to foreground and kill it
+        <Ctrl + C>
+
+Some other programs will be able to use libcushions unmodified, for example, if
+you want to:
+
+ * compute the md5sum of the www.perdu.com webpage
+
+        $ LD_PRELOAD=libcushions.so md5sum http://www.perdu.com/
+
+ * execute a lua script from a webpage:
+
+        $ LD_PRELOAD=libcushions.so lua http://download.redis.io/redis-stable/deps/lua/test/hello.lua
+
+## Scheme support table
+
+| handler | description                               | scheme | write support | read support |
+| ------- |:-----------------------------------------:|:------:|:-------------:|:------------:|
+| bzip2   | supports for bzip2 compressed file format | bzip2  | no            | yes          |
+| curl    | URL transfers support, on top of libcurl  | ftp    | no            | yes          |
+|         |                                           | http   | no            | yes          |
+|         |                                           | https  | no            | yes          |
+|         |                                           | scp    | no            | yes          |
+|         |                                           | sftp   | no            | yes          |
+|         |                                           | smb    | no            | yes          |
+|         |                                           | smbs   | no            | yes          |
+|         |                                           | tftp   | no            | yes          |
+| file    | noop                                      | file   | yes           | yes          |
+| lzo     | supports for lzop compressed file format  | lzo    | yes           | no           |
 
