@@ -1,5 +1,6 @@
 #include <stdlib.h>
 
+#include <cushions.h>
 #include <cushions_handler.h>
 
 #define LOG_TAG file_handler
@@ -14,7 +15,7 @@ static FILE *file_cushions_fopen(struct cushions_handler *handler,
 		const char *path, const char *full_path, const char *scheme,
 		const struct cushions_handler_mode *mode)
 {
-	return cushions_handler_real_fopen(path, mode->mode);
+	return cushions_fopen(path, mode->mode);
 }
 
 static struct file_cushions_handler file_cushions_handler = {
