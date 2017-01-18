@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <inttypes.h>
+#include <time.h>
 
 #include <arpa/inet.h>
 
