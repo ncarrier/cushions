@@ -92,9 +92,9 @@ handlers_dir/libcushions_lzo_handler.so:handlers/lzo_handler.c libcushions.so
 	$(CC) $^ -fPIC -shared -o $@ $(CFLAGS) -L. -llzo2
 
 check:mode_test params_test dict_test $(handlers) cp
-	CUSHIONS_LOG_LEVEL=3 LD_LIBRARY_PATH=. ./mode_test
-	CUSHIONS_LOG_LEVEL=3 LD_LIBRARY_PATH=. ./params_test
-	CUSHIONS_LOG_LEVEL=3 LD_LIBRARY_PATH=. $(here)tests/tests.sh
+	$(here)/misc/setenv.sh ./mode_test
+	$(here)/misc/setenv.sh ./params_test
+	$(here)/misc/setenv.sh $(here)tests/tests.sh
 	./dict_test
 	@echo "*** All test passed"
 

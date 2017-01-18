@@ -2,9 +2,11 @@
 
 set -xeu
 
+wdir=$(basename $0)
+
 on_exit() {
 	kill ${pid}
-	rm -f toto.so
+	rm -rf ${wdir}
 }
 
 set -xeu
@@ -14,5 +16,9 @@ python -m SimpleHTTPServer &
 trap on_exit EXIT
 
 pid=$!
-
-cp http://libcushions.so toto.so
+mkdir -p ${wdir}
+./cp http://localhost:8000/libcushions.so ${wdir}/libcushions.so
+md5sum libcushions.so > ${wdir}/libcushions.so.md5sum
+cd ${wdir}
+md5sum -c libcushions.so.md5sum
+cd -
