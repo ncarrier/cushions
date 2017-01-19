@@ -71,11 +71,11 @@ static int load_cushions_handlers_plugin(const char *plugins_dir)
 		}
 		LOGD("loading plugin %s", path);
 		*current_plugin = dlopen(path, RTLD_NOW);
-		free(path);
 		if (!*current_plugin)
-			LOGW("%s dlopen: %s", __func__, dlerror());
+			LOGW("%s dlopen(%s): %s", __func__, path, dlerror());
 		else
 			current_plugin++;
+		free(path);
 		free(namelist[i]);
 	}
 	free(namelist);
