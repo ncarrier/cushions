@@ -23,11 +23,12 @@ CFLAGS += \
 	-Wformat-signedness
 
 libcushions_src := $(wildcard $(here)src/*.c)
-handlers := $(foreach h,curl bzip2 lzo,handlers_dir/libcushions_$(h)_handler.so)
+hdlr_names := curl bzip2 lzo mem
+handlers := $(foreach h,$(hdlr_names),handlers_dir/libcushions_$(h)_handler.so)
 
 all:libcushions.so $(handlers)
 
-examples:cp cp_no_wrap
+examples:cp cp_no_wrap curl_fopen
 tests:mode_test
 
 # used for cleanup and tree structure
@@ -91,6 +92,9 @@ handlers_dir/libcushions_curl_handler.so:handlers/curl_handler.c libcushions.so
 handlers_dir/libcushions_lzo_handler.so:handlers/lzo_handler.c libcushions.so
 	$(CC) $^ -fPIC -shared -o $@ $(CFLAGS) -L. -llzo2
 
+handlers_dir/libcushions_mem_handler.so:handlers/mem_handler.c libcushions.so
+	$(CC) $^ -fPIC -shared -o $@ $(CFLAGS)
+
 check:mode_test params_test dict_test $(handlers) cp
 	$(here)/misc/setenv.sh ./mode_test
 	$(here)/misc/setenv.sh ./params_test
@@ -108,6 +112,7 @@ clean:
 			variadic_macro \
 			bzip2_expand \
 			cp \
+			curl_fopen \
 			cp_no_wrap \
 			mode_test \
 			params_test
