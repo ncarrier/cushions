@@ -93,17 +93,18 @@ you want to:
 
 ## Scheme support table
 
-| handler | description                               | scheme | write support | read support |
-| ------- |:-----------------------------------------:|:------:|:-------------:|:------------:|
-| bzip2   | supports for bzip2 compressed file format | bzip2  | no            | yes          |
-| curl    | URL transfers support, on top of libcurl  | ftp    | no            | yes          |
-|         |                                           | http   | no            | yes          |
-|         |                                           | https  | no            | yes          |
-|         |                                           | scp    | no            | yes          |
-|         |                                           | sftp   | no            | yes          |
-|         |                                           | smb    | no            | yes          |
-|         |                                           | smbs   | no            | yes          |
-|         |                                           | tftp   | no            | yes          |
-| file    | noop                                      | file   | yes           | yes          |
-| lzo     | supports for lzop compressed file format  | lzo    | yes           | no           |
+| handler | description                                    | scheme | write support | read support |
+| ------- |:----------------------------------------------:|:------:|:-------------:|:------------:|
+| bzip2   | supports for bzip2 compressed file format      | bzip2  | no            | yes          |
+| curl    | URL transfers support, on top of libcurl       | ftp    | no            | yes          |
+|         |                                                | http   | no            | yes          |
+|         |                                                | https  | no            | yes          |
+|         |                                                | scp    | no            | yes          |
+|         |                                                | sftp   | no            | yes          |
+|         |                                                | smb    | no            | yes          |
+|         |                                                | smbs   | no            | yes          |
+|         |                                                | tftp   | no            | yes          |
+| file    | noop                                           | file   | yes           | yes          |
+| lzo     | supports for lzop compressed file format       | lzo    | yes           | no           |
+| mem     | defers real writes at file close by buffering  | mem    | yes           | no           |
 
