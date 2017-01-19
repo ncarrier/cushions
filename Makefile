@@ -2,8 +2,11 @@
 here := $(dir $(lastword $(MAKEFILE_LIST)))
 VPATH := $(here)
 
-# TODO add debug / release handling
+ifeq ($(DEBUG),1)
 CFLAGS := -g3 -O0
+else
+CFLAGS := -O3
+endif
 
 CFLAGS += \
 	-I$(here)include/cushions \
