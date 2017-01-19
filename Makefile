@@ -1,6 +1,12 @@
 # location of this Makefile
 here := $(dir $(lastword $(MAKEFILE_LIST)))
 VPATH := $(here)
+ifeq ($(CC),cc)
+CC := gcc
+endif
+
+# quirk for Wformat-signedness support
+GCCVERSIONGTEQ5 := $(shell expr `gcc -dumpversion | cut -f1 -d.` \>= 5)
 
 ifeq ($(DEBUG),1)
 CFLAGS := -g3 -O0
@@ -22,8 +28,14 @@ CFLAGS += \
 	-Wno-unused-parameter \
 	-Wmissing-declarations \
 	-Wmissing-prototypes \
-	-Wpointer-arith \
+	-Wpointer-arith
+
+ifeq ($(CC),gcc)
+ifeq "$(GCCVERSIONGTEQ5)" "1"
+CFLAGS += \
 	-Wformat-signedness
+endif
+endif
 
 libcushions_src := $(wildcard $(here)src/*.c)
 hdlr_names := curl bzip2 lzo mem
