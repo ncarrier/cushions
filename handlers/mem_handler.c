@@ -55,7 +55,7 @@ static int mem_close(void *cookie)
 			sret = fwrite(mf->buffer, mf->size, 1, mf->dest_file);
 			if (sret < 1) {
 				old_errno = errno;
-				LOGPE("fwrite", ret);
+				LOGPE("fwrite", old_errno);
 			}
 		}
 		ret = fclose(mf->dest_file);
