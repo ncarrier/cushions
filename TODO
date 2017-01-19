@@ -1,0 +1,7 @@
+implement a mem handler
+find a way to cascade curl handler
+make lzop and bzip2 rw
+implement a popen handler
+implement a socket handler
+use dict for accepted modes
+make returned FILE structures access thread safe
