@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-#include "dict.h"
+#include "cushions_handler_dict.h"
 
 #define ARRAY_SIZE(a) (sizeof((a)) / sizeof(*(a)))
 

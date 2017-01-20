@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "utils.h"
+#include "../include/cushions/cushions_handler_utils.h"
 
 bool string_matches_prefix(const char *string, const char *prefix)
 {

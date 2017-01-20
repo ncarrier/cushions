@@ -1,9 +1,13 @@
-#ifndef _LOG_H
-#define _LOG_H
+/*
+ * one should not need to include this header directly, include
+ * cushions_handler.h instead
+ */
+#ifndef CUSHIONS_HANDLER_LOG_H
+#define CUSHIONS_HANDLER_LOG_H
 #include <string.h>
 #include <stdlib.h>
 
-#include <utils.h>
+#include "cushions_handler_utils.h"
 
 #ifndef LOG_TAG
 static const char *log_tag = "";
@@ -27,4 +31,4 @@ __attribute__((format(printf, 3, 4)))
 void cushions_handler_log(const char *tag, int level, const char *fmt, ...);
 void log_set_level(int level);
 
-#endif /* _LOG_H */
+#endif /* CUSHIONS_HANDLER_LOG_H */

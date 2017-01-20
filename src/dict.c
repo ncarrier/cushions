@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "dict.h"
+#include "cushions_handler_dict.h"
 
 static void dict_foreach_word_rec(const struct dict_node *node, char *buf,
 		char *c, dict_cb cb, void *data)

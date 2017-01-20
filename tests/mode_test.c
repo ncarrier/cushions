@@ -5,9 +5,9 @@
 
 #include <cushions_handler.h>
 
-#define S(m) STRINGIFY(m)
-#define assert_null(p) assert((p) == NULL || !S(p should be null))
-#define assert_not_null(p) assert((p) != NULL || !S(p should be null))
+#define ST(m) STRINGIFY(m)
+#define assert_null(p) assert((p) == NULL || !ST(p should be null))
+#define assert_not_null(p) assert((p) != NULL || !ST(p should be null))
 #define assert_str_equal(a, b) assert((a != NULL) && (b != NULL) && \
 		strcmp((a), (b)) == 0)
 #define masserteq(m, r) do { \

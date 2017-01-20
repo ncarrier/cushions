@@ -3,7 +3,7 @@
 #include <stdarg.h>
 
 #define LOG_TAG log
-#include "log.h"
+#include "cushions_handler_log.h"
 
 static int log_level = -1;
 

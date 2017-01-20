@@ -1,5 +1,9 @@
-#ifndef _UTILS_H
-#define _UTILS_H
+/*
+ * one should not need to include this header directly, include
+ * cushions_handler.h instead
+ */
+#ifndef CUSHIONS_HANDLER_UTILS_H
+#define CUSHIONS_HANDLER_UTILS_H
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdbool.h>
@@ -17,4 +21,4 @@
 bool string_matches_prefix(const char *string, const char *prefix);
 void string_cleanup(char **s);
 
-#endif /* _UTILS_H */
+#endif /* CUSHIONS_HANDLER_UTILS_H */

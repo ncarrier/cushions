@@ -1,5 +1,9 @@
-#ifndef SRC_DICT_H_
-#define SRC_DICT_H_
+/*
+ * one should not need to include this header directly, include
+ * cushions_handler.h instead
+ */
+#ifndef CUSHIONS_HANDLERS_DICT_H_
+#define CUSHIONS_HANDLERS_DICT_H_
 
 #include <stdbool.h>
 #include <stdarg.h>
@@ -56,4 +60,4 @@ typedef void (*dict_cb)(const char *string, void *data);
 void dict_foreach_word(const struct dict_node *dict, dict_cb cb, void *data);
 bool dict_contains(const struct dict_node *dict, const char *str);
 
-#endif /* SRC_DICT_H_ */
+#endif /* CUSHIONS_HANDLERS_DICT_H_ */

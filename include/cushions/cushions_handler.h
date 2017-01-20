@@ -4,9 +4,9 @@
 #include <stdbool.h>
 
 #include <cushions.h>
-#include <log.h>
-#include <utils.h>
-#include <dict.h>
+#include <cushions_handler_dict.h>
+#include <cushions_handler_log.h>
+#include <cushions_handler_utils.h>
 
 struct cushions_handler;
 
