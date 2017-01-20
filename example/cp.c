@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
 {
 	int count = 1;
 
-	while (count--)
+	while (--count)
 		old_main(argc, argv);
 
 	return old_main(argc, argv);
