@@ -1,5 +1,4 @@
-implement a mem handler
-find a way to cascade curl handler
+make handlers only include from include/, not src/
 make lzop and bzip2 rw
 implement a popen handler
 implement a socket handler
