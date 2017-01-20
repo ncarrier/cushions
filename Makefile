@@ -15,8 +15,7 @@ CFLAGS := -O3
 endif
 
 CFLAGS += \
-	-I$(here)include/cushions \
-	-I$(here)src
+	-I$(here)include/cushions
 
 CFLAGS += \
 	-Wall \

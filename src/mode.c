@@ -3,9 +3,7 @@
 #include <errno.h>
 
 #define LOG_TAG mode
-#include "log.h"
 #include "cushions_handler.h"
-#include "utils.h"
 
 #define CODED_CHARACTER_SET_ANCHOR ",ccs="
 

@@ -7,11 +7,8 @@
 
 #include <bzlib.h>
 
-#include <cushions.h>
-#include <cushions_handler.h>
-
 #define LOG_TAG bzip2_handler
-#include "log.h"
+#include <cushions_handler.h>
 
 #define BUFFER_SIZE 0x400
 

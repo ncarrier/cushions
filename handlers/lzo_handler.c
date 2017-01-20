@@ -13,11 +13,8 @@
 
 #include <lzo/lzo1x.h>
 
-#include <cushions.h>
-#include <cushions_handler.h>
-
 #define LOG_TAG lzo_handler
-#include "log.h"
+#include <cushions_handler.h>
 
 /* hardcode the mode, we don't have information on the original file */
 #define DEFAULT_MODE 0x81ed

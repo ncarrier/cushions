@@ -1,10 +1,7 @@
 #include <stdlib.h>
 
-#include <cushions.h>
-#include <cushions_handler.h>
-
 #define LOG_TAG file_handler
-#include "log.h"
+#include <cushions_handler.h>
 
 struct file_cushions_handler {
 	struct cushions_handler handler;

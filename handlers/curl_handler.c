@@ -43,14 +43,8 @@
 
 #include <curl/curl.h>
 
-#include <cushions.h>
-#include <cushions_handler.h>
-
 #define LOG_TAG curl_handler
-#include "log.h"
-
-#include "dict.h"
-#include "utils.h"
+#include <cushions_handler.h>
 
 #define BUFFER_SIZE 0x400
 

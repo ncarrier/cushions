@@ -3,11 +3,8 @@
 #include <errno.h>
 #include <inttypes.h>
 
-#include <cushions.h>
-#include <cushions_handler.h>
-
 #define LOG_TAG mem_handler
-#include "log.h"
+#include <cushions_handler.h>
 
 struct mem_cushions_handler {
 	struct cushions_handler handler;

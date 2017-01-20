@@ -12,9 +12,7 @@
 #include <cushions.h>
 
 #define LOG_TAG cushion
-#include "log.h"
 #include "cushions_handler.h"
-#include "utils.h"
 #include "cushions_handlers.h"
 
 #define MAX_CUSHIONS_HANDLER 20

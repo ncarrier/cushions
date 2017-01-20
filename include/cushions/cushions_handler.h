@@ -3,6 +3,11 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+#include <cushions.h>
+#include <log.h>
+#include <utils.h>
+#include <dict.h>
+
 struct cushions_handler;
 
 struct cushions_handler_mode {

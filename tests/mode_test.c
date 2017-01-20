@@ -4,7 +4,6 @@
 #include <assert.h>
 
 #include <cushions_handler.h>
-#include "utils.h"
 
 #define S(m) STRINGIFY(m)
 #define assert_null(p) assert((p) == NULL || !S(p should be null))
