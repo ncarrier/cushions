@@ -66,14 +66,14 @@ $(obj) $(handlers): | $(tree_structure)
 $(tree_structure):
 	mkdir -p $@
 
-mode_test:tests/mode_test.o src/mode.o src/utils.o src/log.o
-	$(CC) $^ -o $@
+mode_test:tests/mode_test.o  libcushions.so
+	$(CC) $(CFLAGS) $^ -o $@
 
-dict_test:tests/dict_test.o src/dict.o
-	$(CC) $^ -o $@
+dict_test:tests/dict_test.o libcushions.so
+	$(CC) $(CFLAGS) $^ -o $@
 
 params_test:tests/params_test.o libcushions.so
-	$(CC) $^ -o $@
+	$(CC) $(CFLAGS) $^ -o $@
 
 cp_no_wrap:example/cp.o
 	$(CC) $^ -o $@
