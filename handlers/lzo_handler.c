@@ -291,7 +291,7 @@ static ssize_t lzo_write(void *cookie, const char *buf, size_t size)
 	struct lzo_cushions_file *file = cookie;
 
 	do {
-		ret = store(file, buf, size);
+		ret = store(file, buf + consumed, size - consumed);
 		if (ret < 0) {
 			LOGPE("store", ret);
 			errno = -ret;
