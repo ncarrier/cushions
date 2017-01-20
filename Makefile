@@ -8,26 +8,28 @@ endif
 # quirk for Wformat-signedness support
 GCCVERSIONGTEQ5 := $(shell expr `gcc -dumpversion | cut -f1 -d.` \>= 5)
 
-ifeq ($(DEBUG),1)
-CFLAGS := -g3 -O0
-else
-CFLAGS := -O3
-endif
-
-CFLAGS += \
+CFLAGS := \
 	-I$(here)include/cushions
 
 CFLAGS += \
 	-Wall \
 	-Wextra \
 	-Wformat=2 \
-	-Wunused-variable \
-	-Wold-style-definition \
-	-Wstrict-prototypes \
-	-Wno-unused-parameter \
 	-Wmissing-declarations \
 	-Wmissing-prototypes \
-	-Wpointer-arith
+	-Wpointer-arith \
+	-Wno-unused-parameter \
+	-Wold-style-definition \
+	-Wstrict-prototypes \
+	-Wunused-variable
+
+ifeq ($(DEBUG),1)
+CFLAGS += -g3 -O0 -Werror
+else
+CFLAGS += -O3
+endif
+
+DYN_FLAGS := -fPIC -shared
 
 ifeq ($(CC),gcc)
 ifeq "$(GCCVERSIONGTEQ5)" "1"
@@ -36,99 +38,73 @@ CFLAGS += \
 endif
 endif
 
+lib := libcushions.so
 libcushions_src := $(wildcard $(here)src/*.c)
-hdlr_names := curl bzip2 lzo mem
-handlers := $(foreach h,$(hdlr_names),handlers_dir/libcushions_$(h)_handler.so)
+tests := dict_test mode_test params_test
+examples := bzip2_expand cpw cp curl_fopen custom_stream variadic_macro \
+	wrap_malloc
 
-all:libcushions.so $(handlers)
+# build infos for handlers
+handler_pattern := handlers_dir/libcushions_%_handler.so
+handler_deps := handlers/%_handler.c $(lib)
+hdlr_names := bzip2 curl lzo mem
+handlers := $(foreach h,$(hdlr_names),$(subst %,$(h),$(handler_pattern)))
+bzip2_extra_flags := -lbz2
+curl_extra_flags := $(shell curl-config --cflags --libs)
+lzo_extra_flags := -llzo2
+mem_extra_flags :=
 
-examples:cp cp_no_wrap curl_fopen
-tests:mode_test
+world := $(handlers) $(tests) $(examples)
 
-# used for cleanup and tree structure
-obj := \
-	example/cp.o \
-	example/cp_no_wrap.o \
-	example/custom_stream.o \
-	example/variadic_macro.o \
-	src/dict.o \
-	src/log.o \
-	src/mode.o \
-	src/utils.o \
-	tests/mode_test.o \
-	tests/dict_test.o \
-	tests/params_test.o
+all:$(lib) $(handlers)
 
-tree_structure := $(sort $(foreach s,$(obj) $(handlers),${CURDIR}/$(dir $(s))))
+world:$(world)
+examples:$(examples)
+tests:$(tests)
 
-$(obj) $(handlers): | $(tree_structure)
+tree_structure := $(sort $(foreach s, $(world),${CURDIR}/$(dir $(s))))
+
+$(handlers): | $(tree_structure)
 
 $(tree_structure):
 	mkdir -p $@
 
-mode_test:tests/mode_test.o  libcushions.so
-	$(CC) $(CFLAGS) $^ -o $@
+# static pattern rules allow tab-completion, pattern rules don't
+$(tests): %_test: tests/%_test.c $(lib)
+	$(CC) $(CFLAGS) -o $@ $^
 
-dict_test:tests/dict_test.o libcushions.so
-	$(CC) $(CFLAGS) $^ -o $@
+custom_stream variadic_macro cp: %: example/%.c
+	$(CC) $(CFLAGS) -o $@ $^
 
-params_test:tests/params_test.o libcushions.so
-	$(CC) $(CFLAGS) $^ -o $@
-
-cp_no_wrap:example/cp.o
-	$(CC) $^ -o $@
-
-cp:example/cp.o libcushions.so
-	$(CC) $^ -Wl,--wrap=fopen -o $@
+cpw:example/cp.c $(lib)
+	$(CC) $(CFLAGS) -o $@ $^ -Wl,--wrap=fopen
 
 wrap_malloc:example/wrap/wrap_malloc.c example/wrap/main.c
-	$(CC) -Wl,--wrap=malloc $^ -o $@
+	$(CC) $(CFLAGS) -o $@ $^ -Wl,--wrap=malloc
 
 curl_fopen:example/curl_fopen.c
-	$(CC) $^ -o $@ $(CFLAGS) `curl-config --cflags` `curl-config --libs`
+	$(CC) $(CFLAGS) -o $@ $^ $(curl_extra_flags)
 
-custom_stream:example/custom_stream.o
-variadic_macro:example/variadic_macro.o
 bzip2_expand:example/bzip2/expand.c
-	$(CC) $^ -o $@ $(CFLAGS) -lbz2
+	$(CC) $(CFLAGS) -o $@ $^ $(bzip2_extra_flags)
 
-libcushions.so:$(libcushions_src)
-	$(CC) $^ -fPIC -shared -o $@ $(CFLAGS) -ldl
+$(lib):$(libcushions_src)
+	$(CC) $(CFLAGS) -o $@ $^ $(DYN_FLAGS) -ldl
 
-handlers_dir/libcushions_bzip2_handler.so:handlers/bzip2_handler.c \
-		libcushions.so
-	$(CC) $^ -fPIC -shared -o $@ $(CFLAGS) -L. -lbz2
+$(handlers): $(handler_pattern): $(handler_deps)
+	$(CC) $(CFLAGS) -o $@ $^ $(DYN_FLAGS) $($*_extra_flags)
 
-handlers_dir/libcushions_curl_handler.so:handlers/curl_handler.c libcushions.so
-	$(CC) $^ -fPIC -shared -o $@ $(CFLAGS) -L. \
-			`curl-config --cflags` `curl-config --libs`
-
-handlers_dir/libcushions_lzo_handler.so:handlers/lzo_handler.c libcushions.so
-	$(CC) $^ -fPIC -shared -o $@ $(CFLAGS) -L. -llzo2
-
-handlers_dir/libcushions_mem_handler.so:handlers/mem_handler.c libcushions.so
-	$(CC) $^ -fPIC -shared -o $@ $(CFLAGS)
-
-check:mode_test params_test dict_test $(handlers) cp
-	$(here)/misc/setenv.sh ./mode_test
-	$(here)/misc/setenv.sh ./params_test
-	$(here)/misc/setenv.sh $(here)tests/tests.sh
-	./dict_test
+setenv := $(here)/misc/setenv.sh
+check:$(tests) $(handlers) cp
+	$(foreach t,$(tests),$(setenv) ./$(t))
+	$(setenv) $(here)tests/tests.sh
 	@echo "*** All test passed"
 
 clean:
 	rm -f \
-			$(obj) \
 			$(handlers) \
-			dict_test \
-			libcushions.so \
-			custom_stream \
-			variadic_macro \
-			bzip2_expand \
-			cp \
-			curl_fopen \
-			cp_no_wrap \
-			mode_test \
-			params_test
+			$(lib) \
+			$(examples) \
+			$(tests)
 
-.PHONY: clean all examples check
+.PHONY: clean all world examples tests check
