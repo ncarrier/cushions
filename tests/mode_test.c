@@ -1,9 +1,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include <assert.h>
 
-#include <cushions_handler.h>
+#include <cushions_handler_mode.h>
 
 #define ST(m) STRINGIFY(m)
 #define assert_null(p) assert((p) == NULL || !ST(p should be null))
