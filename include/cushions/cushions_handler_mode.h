@@ -4,6 +4,7 @@
  */
 #ifndef CUSHIONS_HANDLER_MODE_H_
 #define CUSHIONS_HANDLER_MODE_H_
+#include <stdbool.h>
 
 struct cushions_handler_mode {
 	bool read:1;
