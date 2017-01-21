@@ -17,7 +17,7 @@ trap on_exit EXIT
 
 pid=$!
 mkdir -p ${wdir}
-./cp http://localhost:8000/libcushions.so ${wdir}/libcushions.so
+./cpw http://localhost:8000/libcushions.so ${wdir}/libcushions.so
 md5sum libcushions.so > ${wdir}/libcushions.so.md5sum
 cd ${wdir}
 md5sum -c libcushions.so.md5sum

@@ -39,39 +39,39 @@ Build the relevant bits and create an example file:
 
         $ make all examples
         ...
-        cc example/cp.o libcushions.so -Wl,--wrap=fopen -o example/cp
-        cc example/cp.o -o example/cp_no_wrap
+        cc example/cp.c libcushions.so -Wl,--wrap=fopen -o example/cpw
+        cc example/cp.c -o example/cp
         $ dd if=/dev/urandom of=tutu bs=1024 count=1024
         1024+0 records in
         1024+0 records out
         1048576 bytes (1.0 MB, 1.0 MiB) copied, 0.0106583 s, 98.4 MB/s
 
-**example/cp** is built with the --wrap linker option, the fopen glibc symbol
+**example/cpw** is built with the --wrap linker option, the fopen glibc symbol
 will be overriden by that of libcushions, the program will use it directly.
 
-        $ ./cp file://tutu file://toto
+        $ ./cpw file://tutu file://toto
         $ md5sum tutu toto
         91451e93db0faa7997536d7aa606cfe3  tutu
         91451e93db0faa7997536d7aa606cfe3  toto
 
-On the contrary, **example/cp\_no\_wrap** has been compiled without even knowing
-about libcushions, but using **LD\_PRELOAD**, it's functionality can be added
+On the contrary, **example/cp** has been compiled without even knowing about
+libcushions, but using **LD\_PRELOAD**, it's functionality can be added
 transparently:
 
-        $ ./cp_no_wrap file://tutu file://toto
-        ./cp_no_wrap: fopen src: No such file or directory
+        $ ./cp file://tutu file://toto
+        ./cp: fopen src: No such file or directory
         $ rm toto
-        $ LD_PRELOAD=./libcushions.so ./cp_no_wrap file://tutu file://toto
+        $ LD_PRELOAD=./libcushions.so ./cp file://tutu file://toto
         $ md5sum tutu toto
         91451e93db0faa7997536d7aa606cfe3  tutu
         91451e93db0faa7997536d7aa606cfe3  toto
 
-Now a more interesting example, our cp program will download a file from an
+Now a more interesting example, our cpw program will download a file from an
 http web site and compress it on the fly in the lzop format:
 
         $ python -m SimpleHTTPServer &
           Serving HTTP on 0.0.0.0 port 8000 ...
-        $ ./cp http://localhost:8000/src/cushions.c lzo://plop.lzo
+        $ ./cpw http://localhost:8000/src/cushions.c lzo://plop.lzo
         $ lzop -df plop.lzo
         $ md5sum plop src/cushions.c
           de9cc9b40dd030524aacf08d910cf4f0  plop
