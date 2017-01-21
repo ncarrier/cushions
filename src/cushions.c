@@ -30,7 +30,7 @@ static int break_scheme(const char *path, char **scheme)
 
 	*scheme = NULL;
 
-	needle = strstr(path, "://");
+	needle = strstr(path, SCHEME_END_PATTERN);
 	/*
 	 * if no :// in path, or the part before is of length 0, there is no
 	 * scheme in path
