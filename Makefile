@@ -58,6 +58,18 @@ world := $(handlers) $(tests) $(examples)
 
 all:$(lib) $(handlers)
 
+# generate the world.d makefile, containing dependencies on the headers, this
+# is done by making the world target with a fake compiler and some bash extra
+# foo too
+ifneq ($(notdir $(CC)), cc_wrapper.sh)
+world.d:
+	@echo Generating header dependencies handling Makefile world.d
+	@CC=$(here)misc/cc_wrapper.sh make -B -s -f $(here)Makefile world | \
+		sed "s/\(.*\)-o \([^ ]*\) \(.*\)/gcc \1\3 -MM -MT \2 >> $@/g" | \
+		sh
+endif
+-include world.d
+
 world:$(world)
 examples:$(examples)
 tests:$(tests)
@@ -71,13 +83,13 @@ $(tree_structure):
 
 # static pattern rules allow tab-completion, pattern rules don't
 $(tests): %_test: tests/%_test.c $(lib)
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) -o $@ $< -L. -lcushions
 
 custom_stream variadic_macro cp: %: example/%.c
 	$(CC) $(CFLAGS) -o $@ $^
 
 cpw:example/cp.c $(lib)
-	$(CC) $(CFLAGS) -o $@ $^ -Wl,--wrap=fopen
+	$(CC) $(CFLAGS) -o $@ $< -Wl,--wrap=fopen -L. -lcushions
 
 wrap_malloc:example/wrap/wrap_malloc.c example/wrap/main.c
 	$(CC) $(CFLAGS) -o $@ $^ -Wl,--wrap=malloc
@@ -92,7 +104,7 @@ $(lib):$(libcushions_src)
 	$(CC) $(CFLAGS) -o $@ $^ $(DYN_FLAGS) -ldl
 
 $(handlers): $(handler_pattern): $(handler_deps)
-	$(CC) $(CFLAGS) -o $@ $^ $(DYN_FLAGS) $($*_extra_flags)
+	$(CC) $(CFLAGS) -o $@ $< $(DYN_FLAGS) $($*_extra_flags) -L. -lcushions
 
 setenv := $(here)/misc/setenv.sh
 check:$(tests) $(handlers) cp
@@ -107,4 +119,4 @@ clean:
 			$(examples) \
 			$(tests)
 
-.PHONY: clean all world examples tests check
+.PHONY: clean all world examples tests check world.d
