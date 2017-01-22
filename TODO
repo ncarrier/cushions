@@ -1,4 +1,5 @@
-make lzop and bzip2 rw
+make lzop readable
+can cURL be writable too ?
 implement a popen handler
 implement a socket handler
 use dict for accepted modes
