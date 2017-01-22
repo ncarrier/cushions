@@ -95,7 +95,7 @@ you want to:
 
 | handler | description                                    | scheme | write support | read support |
 | ------- |:----------------------------------------------:|:------:|:-------------:|:------------:|
-| bzip2   | supports for bzip2 compressed file format      | bzip2  | no            | yes          |
+| bzip2   | supports for bzip2 compressed file format      | bzip2  | yes           | yes          |
 | curl    | URL transfers support, on top of libcurl       | ftp    | no            | yes          |
 |         |                                                | http   | no            | yes          |
 |         |                                                | https  | no            | yes          |
