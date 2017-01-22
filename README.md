@@ -107,4 +107,5 @@ you want to:
 | file    | noop                                           | file   | yes           | yes          |
 | lzo     | supports for lzop compressed file format       | lzo    | yes           | no           |
 | mem     | defers real writes at file close by buffering  | mem    | yes           | no           |
-
+| sock    | opens sockets - client side                    | csock  | yes           | yes          |
+|         |               - server side                    | ssock  | yes           | yes          |
