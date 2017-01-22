@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "../include/cushions/cushions_handler_utils.h"
 
@@ -15,4 +16,13 @@ void string_cleanup(char **s)
 
 	free(*s);
 	*s = NULL;
+}
+
+void fd_cleanup(int *fd)
+{
+	if (fd == NULL || *fd < 1)
+		return;
+
+	close(*fd);
+	*fd = -1;
 }

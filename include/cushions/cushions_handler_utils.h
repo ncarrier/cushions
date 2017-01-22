@@ -20,5 +20,6 @@
 
 bool string_matches_prefix(const char *string, const char *prefix);
 void string_cleanup(char **s);
+void fd_cleanup(int *fd);
 
 #endif /* CUSHIONS_HANDLER_UTILS_H */
