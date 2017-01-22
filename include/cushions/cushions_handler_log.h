@@ -9,6 +9,7 @@
 
 #include "cushions_handler_utils.h"
 
+__attribute__((unused))
 #ifndef LOG_TAG
 static const char *log_tag = "";
 #else
