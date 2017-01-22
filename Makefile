@@ -47,12 +47,13 @@ examples := bzip2_expand cpw cp curl_fopen custom_stream variadic_macro \
 # build infos for handlers
 handler_pattern := handlers_dir/libcushions_%_handler.so
 handler_deps := handlers/%_handler.c $(lib)
-hdlr_names := bzip2 curl lzo mem
+hdlr_names := bzip2 curl lzo mem sock
 handlers := $(foreach h,$(hdlr_names),$(subst %,$(h),$(handler_pattern)))
 bzip2_extra_flags := -lbz2
 curl_extra_flags := $(shell curl-config --cflags --libs)
 lzo_extra_flags := -llzo2
 mem_extra_flags :=
+sock_extra_flags :=
 
 world := $(handlers) $(tests) $(examples)
 
