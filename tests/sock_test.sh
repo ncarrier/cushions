@@ -1,7 +1,7 @@
 #!/bin/bash
 
-cwd=${PWD}
-wdir=${cwd}/$(basename $0)
+wdir=${PWD}/$(basename $0)/
+mkdir -p ${wdir}
 
 on_exit() {
 	rm -rf ${wdir}
@@ -11,23 +11,17 @@ set -xeu
 
 trap on_exit EXIT
 
-mkdir -p ${wdir}
-
-cd ${wdir}
-dd if=/dev/urandom of=tutu bs=1024 count=1024
-
-export LD_LIBRARY_PATH=${cwd}
-export CUSHIONS_HANDLERS_PATH=${cwd}/handlers_dir
+dd if=/dev/urandom of=${wdir}tutu bs=1024 count=1024
 
 # server serves file
-${cwd}/cpw tutu ssock://inet:127.0.0.1:56789 &
+./cpw ${wdir}tutu ssock://inet:127.0.0.1:56789 &
 sleep .05 # a small sleep shortens the test
-${cwd}/cpw csock://inet:127.0.0.1:56789 toto
-cmp tutu toto
+./cpw csock://inet:127.0.0.1:56789 ${wdir}toto
+cmp ${wdir}tutu ${wdir}toto
 
 # client serves file
-${cwd}/cpw ssock://inet:127.0.0.1:56789 toto &
+./cpw ssock://inet:127.0.0.1:56789 ${wdir}toto &
 sleep .05 # a small sleep shortens the test
-${cwd}/cpw tutu csock://inet:127.0.0.1:56789
-cmp tutu toto
+./cpw ${wdir}tutu csock://inet:127.0.0.1:56789
+cmp ${wdir}tutu ${wdir}toto
 
