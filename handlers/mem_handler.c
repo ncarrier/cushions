@@ -11,7 +11,8 @@ struct mem_cushions_handler {
 	cookie_io_functions_t mem_func;
 };
 
-#define to_mem_handler(h) container_of((h), struct mem_cushions_handler, handler)
+#define to_mem_handler(h) container_of((h), struct mem_cushions_handler, \
+		handler)
 
 struct mem_cushions_file {
 	FILE *dest_file;
@@ -75,6 +76,14 @@ static int mem_close(void *cookie)
 	return 0;
 }
 
+static bool mode_is_valid(const struct cushions_handler_mode *mode)
+{
+	if (mode->append || mode->read)
+		return false;
+
+	return mode->write;
+}
+
 static FILE *mem_cushions_fopen(struct cushions_handler *handler,
 		const char *path, const char *full_path, const char *scheme,
 		const struct cushions_handler_mode *mode)
@@ -83,9 +92,7 @@ static FILE *mem_cushions_fopen(struct cushions_handler *handler,
 	struct mem_cushions_file *mf;
 	struct mem_cushions_handler *h = to_mem_handler(handler);
 
-	/* TODO less restrictive condition */
-	if (strcmp(mode->mode, "w") != 0 && strcmp(mode->mode, "wb") != 0) {
-		LOGE("lzo scheme only supports \"r\" open mode");
+	if (!mode_is_valid(mode)) {
 		errno = EINVAL;
 		return NULL;
 	}
@@ -111,7 +118,6 @@ static FILE *mem_cushions_fopen(struct cushions_handler *handler,
 		goto err;
 	}
 
-	/* TODO adapt mode according to the mode argument */
 	return fopencookie(mf, mode->mode, h->mem_func);
 err:
 
