@@ -217,7 +217,7 @@ static FILE *pimp_accept(int server, int flags)
 		return NULL;
 	}
 
-	addr.len = sizeof(addr.un); // TODO check that
+	addr.len = sizeof(addr.un);
 	fdc = accept4(server, &addr.addr, &addr.len, flags);
 	if (fdc == -1)
 		return NULL;
