@@ -1,6 +1,6 @@
+write test cases for all handlers
+add support for codecheck and at least one static analysis too (scan-build ?)
 make lzop readable
 can cURL be writable too ?
-implement a popen handler
-implement a socket handler
-use dict for accepted modes
+implement a popen handler, see popen_noshell from project relog
 make returned FILE structures access thread safe
