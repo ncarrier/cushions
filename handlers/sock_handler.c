@@ -168,6 +168,7 @@ static int pimp_server(const char *address, int flags, int backlog)
 	int old_errno;
 	int server;
 	struct addr addr;
+	socklen_t len;
 
 	ret = addr_from_str(&addr, address);
 	if (ret != 0) {
@@ -178,8 +179,12 @@ static int pimp_server(const char *address, int flags, int backlog)
 	server = socket(addr.addr.sa_family, SOCK_STREAM | flags, 0);
 	if (server == -1)
 		return -1;
+	ret = setsockopt(server, SOL_SOCKET, SO_REUSEADDR, &(int){ 1 },
+			sizeof(int));
+	if (ret == -1)
+		return -1;
 
-	socklen_t len = addr_len(&addr);
+	len = addr_len(&addr);
 	ret = bind(server, &addr.addr, len);
 	if (ret == -1) {
 		old_errno = errno;
