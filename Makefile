@@ -64,7 +64,7 @@ all:$(lib) $(handlers)
 # is done by making the world target with a fake compiler and some bash extra
 # foo too
 ifneq ($(notdir $(CC)), cc_wrapper.sh)
-world.d:
+world.d:$(shell find $(here) -name '*.h' -o -name '*.c')
 	@echo Generating header dependencies handling Makefile world.d
 	@CC=$(here)misc/cc_wrapper.sh make -B -s -f $(here)Makefile world | \
 		sed "s/\(.*\)-o \([^ ]*\) \(.*\)/gcc \1\3 -MM -MT \2 >> $@/g" | \
@@ -121,4 +121,4 @@ clean:
 			$(examples) \
 			$(tests)
 
-.PHONY: clean all world examples tests check world.d
+.PHONY: clean all world examples tests check
