@@ -7,7 +7,8 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "cushions_handler_utils.h"
+#include <cushions_handler_utils.h>
+#include <cushions_common.h>
 
 __attribute__((unused))
 #ifndef LOG_TAG
@@ -28,8 +29,8 @@ static const char *log_tag = STRINGIFY(LOG_TAG);
 #define LOGD(...) LOG(CUSHIONS_HANDLER_DEBUG, __VA_ARGS__)
 #define LOGPE(s, e) LOGE("%s: %s", (s), strerror(abs((e))))
 
-__attribute__((format(printf, 3, 4)))
+CUSHIONS_API __attribute__((format(printf, 3, 4)))
 void cushions_handler_log(const char *tag, int level, const char *fmt, ...);
-void log_set_level(int level);
+CUSHIONS_API void log_set_level(int level);
 
 #endif /* CUSHIONS_HANDLER_LOG_H */

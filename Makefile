@@ -9,6 +9,7 @@ endif
 GCCVERSIONGTEQ5 := $(shell expr `gcc -dumpversion | cut -f1 -d.` \>= 5)
 
 CFLAGS := \
+	-fvisibility=hidden \
 	-I$(here)include/cushions
 
 CFLAGS += \

@@ -25,9 +25,10 @@ struct cushions_handler {
 	cushions_handler_handles handles;
 };
 
-int cushions_handler_register( struct cushions_handler *handler);
-FILE *cushions_handler_real_fopen(const char *path, const char *mode);
-int cushions_handler_break_params(const char *input, char **path,
+CUSHIONS_API int cushions_handler_register(struct cushions_handler *handler);
+CUSHIONS_API FILE *cushions_handler_real_fopen(const char *path,
+		const char *mode);
+CUSHIONS_API int cushions_handler_break_params(const char *input, char **path,
 		char **envz, size_t *envz_len);
 
 #endif /* _CUSHIONS_HANDLER */

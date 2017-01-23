@@ -6,6 +6,8 @@
 #define CUSHIONS_HANDLER_MODE_H_
 #include <stdbool.h>
 
+#include <cushions_common.h>
+
 struct cushions_handler_mode {
 	bool read:1;
 	bool beginning:1;
@@ -24,13 +26,15 @@ struct cushions_handler_mode {
 	char *ccs;
 };
 
-int cushions_handler_mode_from_string(struct cushions_handler_mode *mode,
-		const char *str);
-int cushions_handler_mode_to_string(const struct cushions_handler_mode *mode,
-		char **str);
+CUSHIONS_API int cushions_handler_mode_from_string(
+		struct cushions_handler_mode *mode, const char *str);
+CUSHIONS_API int cushions_handler_mode_to_string(
+		const struct cushions_handler_mode *mode, char **str);
 /* must be called after mode_fnom_string to free resources */
-void cushions_handler_mode_cleanup(struct cushions_handler_mode *mode);
+CUSHIONS_API void cushions_handler_mode_cleanup(
+		struct cushions_handler_mode *mode);
 /* for debug only */
-void cushions_handler_mode_dump(const struct cushions_handler_mode *mode);
+CUSHIONS_API void cushions_handler_mode_dump(
+		const struct cushions_handler_mode *mode);
 
 #endif /* CUSHIONS_HANDLER_MODE_H_ */

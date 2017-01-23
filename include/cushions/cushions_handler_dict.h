@@ -8,6 +8,8 @@
 #include <stdbool.h>
 #include <stdarg.h>
 
+#include <cushions_common.h>
+
 struct dict_node {
 	char c;
 	struct dict_node *next;
@@ -57,7 +59,8 @@ struct dict_node {
 
 typedef void (*dict_cb)(const char *string, void *data);
 
-void dict_foreach_word(const struct dict_node *dict, dict_cb cb, void *data);
-bool dict_contains(const struct dict_node *dict, const char *str);
+CUSHIONS_API void dict_foreach_word(const struct dict_node *dict, dict_cb cb,
+		void *data);
+CUSHIONS_API bool dict_contains(const struct dict_node *dict, const char *str);
 
 #endif /* CUSHIONS_HANDLERS_DICT_H_ */
