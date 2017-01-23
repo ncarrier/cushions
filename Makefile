@@ -110,7 +110,7 @@ $(handlers): $(handler_pattern): $(handler_deps)
 setenv := $(here)/misc/setenv.sh
 check:$(tests) $(handlers) cp
 	$(foreach t,$(tests),$(setenv) ./$(t))
-	$(setenv) $(here)tests/tests.sh
+	$(foreach t,$(wildcard $(here)tests/*_test.sh), $(setenv) $(t))
 	@echo "*** All test passed"
 
 clean:
