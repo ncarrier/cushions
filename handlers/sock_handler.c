@@ -259,13 +259,21 @@ static FILE *pimp_client(const char *address, int flags)
 	if (fd == -1)
 		return NULL;
 
-	ret = connect(fd, &addr.addr, addr_len(&addr));
-	if (ret == -1) {
-		old_errno = errno;
-		close(fd);
-		errno = old_errno;
-		return NULL;
-	}
+	do {
+		ret = connect(fd, &addr.addr, addr_len(&addr));
+		if (ret == -1) {
+			if (errno == ECONNREFUSED) {
+				LOGD("server not responding, retry in 1 sec");
+				sleep(1);
+				continue;
+			}
+			old_errno = errno;
+			perror("connect");
+			close(fd);
+			errno = old_errno;
+			return NULL;
+		}
+	} while (ret != 0);
 
 	client = fdopen(fd, "r+");
 	if (client == NULL) {
