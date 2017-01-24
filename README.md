@@ -93,19 +93,19 @@ you want to:
 
 ## Scheme support table
 
-| handler | description                                    | scheme | write support | read support |
-| ------- |:----------------------------------------------:|:------:|:-------------:|:------------:|
-| bzip2   | supports for bzip2 compressed file format      | bzip2  | yes           | yes          |
-| curl    | URL transfers support, on top of libcurl       | ftp    | no            | yes          |
-|         |                                                | http   | no            | yes          |
-|         |                                                | https  | no            | yes          |
-|         |                                                | scp    | no            | yes          |
-|         |                                                | sftp   | no            | yes          |
-|         |                                                | smb    | no            | yes          |
-|         |                                                | smbs   | no            | yes          |
-|         |                                                | tftp   | no            | yes          |
-| file    | noop                                           | file   | yes           | yes          |
-| lzo     | supports for lzop compressed file format       | lzo    | yes           | no           |
-| mem     | defers real writes at file close by buffering  | mem    | yes           | no           |
-| sock    | opens sockets - client side                    | csock  | yes           | yes          |
-|         |               - server side                    | ssock  | yes           | yes          |
+| handler | description                                    | scheme | read support                          | write support                         |
+|:-------:|:-----------------------------------------------|:------:|:-------------------------------------:|:-------------------------------------:|
+| bzip2   | supports for bzip2 compressed file format      | bzip2  | <span style="color:green;">yes</span> | <span style="color:green;">yes</span> |
+| curl    | URL transfers support, on top of libcurl       | ftp    | <span style="color:green;">yes</span> | <span style="color:red;">no</span>    |
+|         |                                                | http   | <span style="color:green;">yes</span> | <span style="color:red;">no</span>    |
+|         |                                                | https  | <span style="color:green;">yes</span> | <span style="color:red;">no</span>    |
+|         |                                                | scp    | <span style="color:green;">yes</span> | <span style="color:red;">no</span>    |
+|         |                                                | sftp   | <span style="color:green;">yes</span> | <span style="color:red;">no</span>    |
+|         |                                                | smb    | <span style="color:green;">yes</span> | <span style="color:red;">no</span>    |
+|         |                                                | smbs   | <span style="color:green;">yes</span> | <span style="color:red;">no</span>    |
+|         |                                                | tftp   | <span style="color:green;">yes</span> | <span style="color:red;">no</span>    |
+| file    | noop                                           | file   | <span style="color:green;">yes</span> | <span style="color:green;">yes</span> |
+| lzo     | supports for lzop compressed file format       | lzo    | <span style="color:red;">no</span>    | <span style="color:green;">yes</span> |
+| mem     | defers real writes at file close by buffering  | mem    | <span style="color:red;">no</span>    | <span style="color:green;">yes</span> |
+| sock    | opens a client socket                          | csock  | <span style="color:green;">yes</span> | <span style="color:green;">yes</span> |
+|         | opens a server socket                          | ssock  | <span style="color:green;">yes</span> | <span style="color:green;">yes</span> |
