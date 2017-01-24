@@ -153,7 +153,7 @@ static struct mem_cushions_handler mem_cushions_handler = {
 	},
 };
 
-static __attribute__((constructor)) void lzo_cushions_handler_constructor(
+static __attribute__((constructor)) void mem_cushions_handler_constructor(
 		void)
 {
 	int ret;
