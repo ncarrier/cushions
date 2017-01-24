@@ -93,19 +93,21 @@ you want to:
 
 ## Scheme support table
 
-| handler | description                                    | scheme | read support                          | write support                         |
-|:-------:|:-----------------------------------------------|:------:|:-------------------------------------:|:-------------------------------------:|
-| bzip2   | supports for bzip2 compressed file format      | bzip2  | <span style="color:green;">yes</span> | <span style="color:green;">yes</span> |
-| curl    | URL transfers support, on top of libcurl       | ftp    | <span style="color:green;">yes</span> | <span style="color:red;">no</span>    |
-|         |                                                | http   | <span style="color:green;">yes</span> | <span style="color:red;">no</span>    |
-|         |                                                | https  | <span style="color:green;">yes</span> | <span style="color:red;">no</span>    |
-|         |                                                | scp    | <span style="color:green;">yes</span> | <span style="color:red;">no</span>    |
-|         |                                                | sftp   | <span style="color:green;">yes</span> | <span style="color:red;">no</span>    |
-|         |                                                | smb    | <span style="color:green;">yes</span> | <span style="color:red;">no</span>    |
-|         |                                                | smbs   | <span style="color:green;">yes</span> | <span style="color:red;">no</span>    |
-|         |                                                | tftp   | <span style="color:green;">yes</span> | <span style="color:red;">no</span>    |
-| file    | noop                                           | file   | <span style="color:green;">yes</span> | <span style="color:green;">yes</span> |
-| lzo     | supports for lzop compressed file format       | lzo    | <span style="color:red;">no</span>    | <span style="color:green;">yes</span> |
-| mem     | defers real writes at file close by buffering  | mem    | <span style="color:red;">no</span>    | <span style="color:green;">yes</span> |
-| sock    | opens a client socket                          | csock  | <span style="color:green;">yes</span> | <span style="color:green;">yes</span> |
-|         | opens a server socket                          | ssock  | <span style="color:green;">yes</span> | <span style="color:green;">yes</span> |
+| handler | description                                    | scheme | read support                                                                                        | write support                                                                                       |
+|:-------:|:-----------------------------------------------|:------:|:---------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------:|
+| bzip2   | supports for bzip2 compressed file format      | bzip2  | <img src="https://www.iconfinder.com/icons/32133/download/png/128" alt="yes" style="width: 20px;"/> | <img src="https://www.iconfinder.com/icons/32133/download/png/128" alt="yes" style="width: 20px;"/> |
+| curl    | URL transfers support, on top of libcurl       | ftp    | <img src="https://www.iconfinder.com/icons/32133/download/png/128" alt="yes" style="width: 20px;"/> | <img src="https://www.iconfinder.com/icons/32141/download/png/128" alt="no" style="width: 20px;"/>  |
+|         |                                                | http   | <img src="https://www.iconfinder.com/icons/32133/download/png/128" alt="yes" style="width: 20px;"/> | <img src="https://www.iconfinder.com/icons/32141/download/png/128" alt="no" style="width: 20px;"/>  |
+|         |                                                | https  | <img src="https://www.iconfinder.com/icons/32133/download/png/128" alt="yes" style="width: 20px;"/> | <img src="https://www.iconfinder.com/icons/32141/download/png/128" alt="no" style="width: 20px;"/>  |
+|         |                                                | scp    | <img src="https://www.iconfinder.com/icons/32133/download/png/128" alt="yes" style="width: 20px;"/> | <img src="https://www.iconfinder.com/icons/32141/download/png/128" alt="no" style="width: 20px;"/>  |
+|         |                                                | sftp   | <img src="https://www.iconfinder.com/icons/32133/download/png/128" alt="yes" style="width: 20px;"/> | <img src="https://www.iconfinder.com/icons/32141/download/png/128" alt="no" style="width: 20px;"/>  |
+|         |                                                | smb    | <img src="https://www.iconfinder.com/icons/32133/download/png/128" alt="yes" style="width: 20px;"/> | <img src="https://www.iconfinder.com/icons/32141/download/png/128" alt="no" style="width: 20px;"/>  |
+|         |                                                | smbs   | <img src="https://www.iconfinder.com/icons/32133/download/png/128" alt="yes" style="width: 20px;"/> | <img src="https://www.iconfinder.com/icons/32141/download/png/128" alt="no" style="width: 20px;"/>  |
+|         |                                                | tftp   | <img src="https://www.iconfinder.com/icons/32133/download/png/128" alt="yes" style="width: 20px;"/> | <img src="https://www.iconfinder.com/icons/32141/download/png/128" alt="no" style="width: 20px;"/>  |
+| file    | noop                                           | file   | <img src="https://www.iconfinder.com/icons/32133/download/png/128" alt="yes" style="width: 20px;"/> | <img src="https://www.iconfinder.com/icons/32133/download/png/128" alt="yes" style="width: 20px;"/> |
+| lzo     | supports for lzop compressed file format       | lzo    | <img src="https://www.iconfinder.com/icons/32141/download/png/128" alt="no" style="width: 20px;"/>  | <img src="https://www.iconfinder.com/icons/32133/download/png/128" alt="yes" style="width: 20px;"/> |
+| mem     | defers real writes at file close by buffering  | mem    | <img src="https://www.iconfinder.com/icons/32141/download/png/128" alt="no" style="width: 20px;"/>  | <img src="https://www.iconfinder.com/icons/32133/download/png/128" alt="yes" style="width: 20px;"/> |
+| sock    | opens a client socket                          | csock  | <img src="https://www.iconfinder.com/icons/32133/download/png/128" alt="yes" style="width: 20px;"/> | <img src="https://www.iconfinder.com/icons/32133/download/png/128" alt="yes" style="width: 20px;"/> |
+|         | opens a server socket                          | ssock  | <img src="https://www.iconfinder.com/icons/32133/download/png/128" alt="yes" style="width: 20px;"/> | <img src="https://www.iconfinder.com/icons/32133/download/png/128" alt="yes" style="width: 20px;"/> |
+
+[cross]: https://www.iconfinder.com/icons/32141/download/png/128 "no"
