@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <errno.h>
+#include <string.h>
 
 #include <error.h>
 
@@ -19,6 +20,7 @@ static void cleanup_file(FILE **f)
 
 static int old_main(int argc, char *argv[])
 {
+	int ret;
 	const char *src_path;
 	const char *dest_path;
 	FILE __attribute__((cleanup(cleanup_file)))*src = NULL;
@@ -39,11 +41,14 @@ static int old_main(int argc, char *argv[])
 	dest_path = argv[2];
 
 	src = fopen(src_path, "rb");
+	ret = errno;
 	if (src == NULL)
-		error(EXIT_FAILURE, errno, "fopen src");
+		error(EXIT_FAILURE, 0, "fopen %s: %s", src_path, strerror(ret));
 	dest = fopen(dest_path, "wb");
+	ret = errno;
 	if (dest == NULL)
-		error(EXIT_FAILURE, errno, "fopen dest");
+		error(EXIT_FAILURE, errno, "fopen %s: %s", dest_path,
+				strerror(ret));
 
 	do {
 		sread = fread(buf, 1, BUFFER_SIZE, src);
