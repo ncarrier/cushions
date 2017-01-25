@@ -47,10 +47,10 @@ examples := bzip2_expand cpw cp curl_fopen custom_stream variadic_macro \
 	wrap_malloc
 
 # build infos for handlers
-hdlr_names := bzip2 curl lzo mem sock
 handler_pattern := handlers_dir/$(lib)_%_handler.so
 handler_src_pattern := handlers/%_handler.c
 handler_deps := $(handler_src_pattern) $(lib).so
+hdlr_names := bzip2 curl lzo mem sock tar
 handlers := $(foreach h,$(hdlr_names),$(subst %,$(h),$(handler_pattern)))
 bzip2_extra_flags := -lbz2
 curl_extra_flags := $(shell curl-config --cflags --libs)
@@ -63,6 +63,9 @@ $(lib).a_obj := $($(lib).a_src:.c=.o)
 
 world := $(handlers) $(tests) $(examples) $(lib).so $(lib).a
 
+# TODO linker flags to link with libcushions.a :
+# -Wl,--whole-archive libcushions.a -Wl,--no-whole-archive -llzo2 -lbz2 \
+# -Wl,--wrap=fopen -ldl $(curl-config --libs)
 all:$(lib).so $(lib).a $(handlers)
 
 # generate the world.d makefile, containing dependencies on the headers, this

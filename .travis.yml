@@ -1,4 +1,5 @@
 language: c
+
 script:
-	- make world
-	- make check
+  - make world
+  - make check
