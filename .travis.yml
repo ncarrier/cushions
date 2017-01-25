@@ -1,5 +1,10 @@
 language: c
 
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y libbz2-dev liblzo2-dev lzop bzip2 \
+	libcurl4-openssl-dev
+
 script:
   - make world
   - make check
