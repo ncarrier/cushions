@@ -26,6 +26,8 @@ static __attribute__((constructor)) void file_cushions_handler_constructor(void)
 {
 	int ret;
 
+	LOGI(__func__);
+
 	ret = cushions_handler_register(&file_cushions_handler.handler);
 	if (ret < 0)
 		LOGW("cushions_handler_register(file_cushions_handler) "
