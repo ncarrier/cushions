@@ -127,9 +127,11 @@ check:$(tests) $(handlers) cpw
 clean:
 	rm -f \
 			$(handlers) \
+			$(examples) \
 			$(lib).so \
 			$(lib).a \
-			$(examples) \
-			$(tests)
+			$($(lib).a_obj) \
+			$(tests) \
+			world.d
 
 .PHONY: clean all world examples tests check
