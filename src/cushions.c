@@ -93,11 +93,6 @@ int cushions_handler_break_params(const char *input, char **path, char **envz,
 	return 0;
 }
 
-FILE *fopen(const char *path, const char *mode)
-{
-	return cushions_fopen(path, mode);
-}
-
 FILE *cushions_fopen(const char *path, const char *m)
 {
 	int ret;
