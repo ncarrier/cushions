@@ -11,7 +11,6 @@
 
 #define LOG_TAG cushions_handlers
 #include "cushions_handler.h"
-#include "cushions_handlers.h"
 
 #define MAX_HANDLER_PLUGINS 20
 #ifndef CUSHIONS_DEFAULT_HANDLERS_PATH
@@ -82,7 +81,7 @@ static int load_cushions_handlers_plugin(const char *plugins_dir)
 	return 0;
 }
 
-int cushions_handlers_load(void)
+__attribute__((constructor)) static int cushions_handlers_load(void)
 {
 	int ret;
 	const char *env;
@@ -115,7 +114,7 @@ int cushions_handlers_load(void)
 	return 0;
 }
 
-void cushions_handlers_unload(void)
+__attribute__((destructor)) static void cushions_handlers_unload(void)
 {
 	int ret;
 	int i = MAX_HANDLER_PLUGINS;

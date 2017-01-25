@@ -13,7 +13,6 @@
 
 #define LOG_TAG cushion
 #include "cushions_handler.h"
-#include "cushions_handlers.h"
 
 #define MAX_CUSHIONS_HANDLER 20
 #define SCHEME_END_PATTERN "://"
@@ -179,7 +178,6 @@ FILE *cushions_handler_real_fopen(const char *path, const char *mode)
 
 static __attribute__((constructor)) void cushions_constructor(void)
 {
-	int ret;
 	const char *env_log_level;
 
 	real_fopen = dlsym(RTLD_NEXT, "fopen");
@@ -187,14 +185,4 @@ static __attribute__((constructor)) void cushions_constructor(void)
 	env_log_level = getenv("CUSHIONS_LOG_LEVEL");
 	if (env_log_level != NULL)
 		log_set_level(atoi(env_log_level));
-
-	ret = cushions_handlers_load();
-	if (ret < 0)
-		LOGW("cushions_handlers_load: %s", strerror(-ret));
 }
-
-static __attribute__((destructor)) void cushions_destructor(void)
-{
-	cushions_handlers_unload();
-}
-
