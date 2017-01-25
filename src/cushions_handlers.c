@@ -130,5 +130,6 @@ __attribute__((destructor)) static void cushions_handlers_unload(void)
 			ret = dlclose(handler_plugins[i]);
 			if (ret != 0)
 				LOGE("dlclose: %d", ret);
+			handler_plugins[i] = NULL;
 		}
 }
