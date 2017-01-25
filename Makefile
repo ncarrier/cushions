@@ -109,7 +109,7 @@ $(handlers): $(handler_pattern): $(handler_deps)
 	$(CC) $(CFLAGS) -o $@ $< $(DYN_FLAGS) $($*_extra_flags) -L. -lcushions
 
 setenv := $(here)/misc/setenv.sh
-check:$(tests) $(handlers) cp
+check:$(tests) $(handlers) cpw
 	$(foreach t,$(tests),$(setenv) ./$(t))
 	$(foreach t,$(wildcard $(here)tests/*_test.sh), $(setenv) $(t))
 	@echo "*** All test passed"
