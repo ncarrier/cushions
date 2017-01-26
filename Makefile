@@ -44,13 +44,13 @@ $(lib)_src := $(wildcard $(here)src/*.c)
 $(lib)_src := $($(lib)_src:$(here)%=%)
 tests := dict_test mode_test params_test
 examples := bzip2_expand cpw cp curl_fopen custom_stream variadic_macro \
-	wrap_malloc
+	wrap_malloc untar
 
 # build infos for handlers
 handler_pattern := handlers_dir/$(lib)_%_handler.so
 handler_src_pattern := handlers/%_handler.c
 handler_deps := $(handler_src_pattern) $(lib).so
-hdlr_names := bzip2 curl lzo mem sock
+hdlr_names := bzip2 curl lzo mem sock tar
 handlers := $(foreach h,$(hdlr_names),$(subst %,$(h),$(handler_pattern)))
 bzip2_extra_flags := -lbz2
 curl_extra_flags := $(shell curl-config --cflags --libs)
@@ -94,7 +94,7 @@ $(tree_structure):
 $(tests): %_test: tests/%_test.c $(lib).so
 	$(CC) $(CFLAGS) -o $@ $< -L. -lcushions
 
-custom_stream variadic_macro cp: %: example/%.c
+untar custom_stream variadic_macro cp: %: example/%.c
 	$(CC) $(CFLAGS) -o $@ $^
 
 cpw:example/cp.c $(lib).so
