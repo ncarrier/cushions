@@ -49,7 +49,7 @@ examples := bzip2_expand cpw cp curl_fopen custom_stream variadic_macro \
 # build infos for handlers
 handler_pattern := handlers_dir/$(lib)_%_handler.so
 handler_src_pattern := handlers/%_handler.c
-handler_deps := $(handler_src_pattern) $(lib).so
+handler_deps := $(handler_src_pattern)
 hdlr_names := bzip2 curl lzo mem sock tar
 handlers := $(foreach h,$(hdlr_names),$(subst %,$(h),$(handler_pattern)))
 bzip2_extra_flags := -lbz2
@@ -57,6 +57,8 @@ curl_extra_flags := $(shell curl-config --cflags --libs)
 lzo_extra_flags := -llzo2
 mem_extra_flags :=
 sock_extra_flags :=
+tar_extra_flags :=
+
 $(lib).a_src := $(filter-out src/cushions_handlers.c,$($(lib)_src)) \
 	$(foreach h,$(hdlr_names),$(subst %,$(h),$(handler_src_pattern)))
 $(lib).a_obj := $($(lib).a_src:.c=.o)
@@ -94,8 +96,11 @@ $(tree_structure):
 $(tests): %_test: tests/%_test.c $(lib).so
 	$(CC) $(CFLAGS) -o $@ $< -L. -lcushions
 
-untar custom_stream variadic_macro cp: %: example/%.c
-	$(CC) $(CFLAGS) -o $@ $^
+custom_stream variadic_macro cp: %: example/%.c
+	$(CC) $(CFLAGS) -o $@ $<
+
+untar: example/untar.c handlers/tar.c
+	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers
 
 cpw:example/cp.c $(lib).so
 	$(CC) $(CFLAGS) -o $@ $< -Wl,--wrap=fopen -L. -lcushions
@@ -115,8 +120,12 @@ $(lib).so:$($(lib)_src)
 $(lib).a:$($(lib).a_obj)
 	$(AR) crs $@ $^
 
+ifneq ($(notdir $(CC)), cc_wrapper.sh)
+$(handlers): $(handler_pattern): $(lib).so
+endif
+handlers_dir/$(lib)_tar_handler.so: handlers/tar.c
 $(handlers): $(handler_pattern): $(handler_deps)
-	$(CC) $(CFLAGS) -o $@ $< $(DYN_FLAGS) $($*_extra_flags) -L. -lcushions
+	$(CC) $(CFLAGS) -o $@ $^ $(DYN_FLAGS) $($*_extra_flags)
 
 setenv := $(here)/misc/setenv.sh
 check:$(tests) $(handlers) cpw
