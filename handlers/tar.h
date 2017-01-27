@@ -102,6 +102,6 @@ struct tar_out {
 	struct tar_out_ops o;
 };
 
-void tar_out_init(struct tar_out *to);
+int tar_out_init(struct tar_out *to, const char *dest);
 
 #endif /* HANDLERS_TAR_H_ */

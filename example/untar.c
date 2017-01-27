@@ -35,12 +35,17 @@ int main(int argc, char *argv[])
 	char buf[BUF_SIZE];
 	char *p;
 	unsigned consumed;
+	const char *dest;
 
 	if (argc < 2)
-		error(EXIT_FAILURE, 0, "usage: untar tar_file\n");
+		error(EXIT_FAILURE, 0, "usage: untar tar_file [dest]\n");
 	path = argv[1];
+	dest = argc == 3 ? argv[2] : ".";
 
-	tar_out_init(&to);
+
+	ret = tar_out_init(&to, dest);
+	if (ret < 0)
+		error(EXIT_FAILURE, -ret, "tar_out_init");
 	f = fopen(path, "rbe");
 	if (f == NULL)
 		error(EXIT_FAILURE, 0, "fopen %s: %s", path, strerror(errno));
@@ -72,6 +77,9 @@ int main(int argc, char *argv[])
 			if (!to.o.is_empty(&to))
 				error(EXIT_FAILURE, 0, "truncated archive");
 	} while (!eof && ret != TAR_OUT_END);
+
+	if (ret != TAR_OUT_END)
+		error(EXIT_FAILURE, 0, "truncated archive");
 
 	to.o.cleanup(&to);
 

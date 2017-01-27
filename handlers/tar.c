@@ -278,14 +278,9 @@ static bool tar_out_is_empty(const struct tar_out *to)
 	return to->cur == 0;
 }
 
-static void tar_out_cleanup(struct tar_out *to)
-{
-	if (to->file != NULL)
-		file_cleanup(&to->file);
-	tar_out_init(to);
-}
+static void tar_out_cleanup(struct tar_out *to);
 
-void tar_out_init(struct tar_out *to)
+static void tar_out_reset(struct tar_out *to)
 {
 	memset(to, 0, sizeof(*to));
 
@@ -296,4 +291,18 @@ void tar_out_init(struct tar_out *to)
 			.process_block = tar_out_process_block,
 			.store_data = tar_out_store_data,
 	};
+}
+
+static void tar_out_cleanup(struct tar_out *to)
+{
+	if (to->file != NULL)
+		file_cleanup(&to->file);
+	tar_out_reset(to);
+}
+
+int tar_out_init(struct tar_out *to, const char *dest)
+{
+	tar_out_reset(to);
+
+	return 0;
 }

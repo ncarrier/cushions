@@ -57,6 +57,7 @@ static FILE *tar_cushions_fopen(struct cushions_handler *handler,
 		const char *path, const char *full_path, const char *scheme,
 		const struct cushions_handler_mode *mode)
 {
+	int ret;
 	int old_errno;
 	struct tar_cushions_file *tar_c_file;
 
@@ -82,7 +83,12 @@ static FILE *tar_cushions_fopen(struct cushions_handler *handler,
 		goto err;
 	} else {
 		tar_c_file->direction = WRITE;
-		tar_out_init(&tar_c_file->out);
+		ret = tar_out_init(&tar_c_file->out, path);
+		if (ret < 0) {
+			old_errno = ret;
+			LOGPE("tar_out_init", ret);
+			goto err;
+		}
 	}
 
 	return fopencookie(tar_c_file, mode->mode,
