@@ -130,7 +130,7 @@ $(handlers): $(handler_pattern): $(handler_deps)
 setenv := $(here)/misc/setenv.sh
 check:$(tests) $(handlers) cpw
 	$(foreach t,$(tests),$(setenv) ./$(t))
-	$(foreach t,$(wildcard $(here)tests/*_test.sh), $(setenv) $(t))
+	$(foreach t,$(wildcard $(here)tests/*_test.sh), $(setenv) $(t);)
 	@echo "*** All test passed"
 
 clean:
