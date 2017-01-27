@@ -182,6 +182,19 @@ static int tar_out_create_link(struct tar_out *to)
 	return 0;
 }
 
+static int tar_out_create_symlink(struct tar_out *to)
+{
+	int ret;
+	struct header *h;
+
+	h = &to->header;
+	ret = symlinkat(h->link_name, to->dest, h->path);
+	if (ret < 0)
+		return -errno;
+
+	return 0;
+}
+
 static int tar_out_set_metadata(struct tar_out *to)
 {
 	// TODO set uid and gid
@@ -212,6 +225,9 @@ static int tar_out_create_node(struct tar_out *to)
 		break;
 
 	case TYPE_FLAG_SYMLINK:
+		ret = tar_out_create_symlink(to);
+		break;
+
 	case TYPE_FLAG_CHAR:
 	case TYPE_FLAG_BLOCK:
 	case TYPE_FLAG_FIFO:
