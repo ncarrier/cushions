@@ -23,6 +23,25 @@ static void file_cleanup(FILE **file)
 	*file = NULL;
 }
 
+static enum type_flag char_to_type_flag(char flag)
+{
+	switch (flag) {
+	case TYPE_FLAG_REGULAR_OBSOLETE:
+	case TYPE_FLAG_REGULAR         :
+	case TYPE_FLAG_LINK            :
+	case TYPE_FLAG_SYMLINK         :
+	case TYPE_FLAG_CHAR            :
+	case TYPE_FLAG_BLOCK           :
+	case TYPE_FLAG_DIRECTORY       :
+	case TYPE_FLAG_FIFO            :
+	case TYPE_FLAG_CONTIGUOUS      :
+		return (enum type_flag)flag;
+
+	default:
+		return 'z';
+	}
+}
+
 static int tar_out_convert_header(struct tar_out *to)
 {
 	struct header *h;
@@ -58,8 +77,7 @@ static int tar_out_convert_header(struct tar_out *to)
 	h->checksum = strtoul(hr->checksum, &endptr, 8);
 	if (*hr->checksum == '\0' || *endptr != '\0')
 		return -EINVAL;
-	// TODO proper conversion function
-	h->type_flag = (enum type_flag)hr->type_flag;
+	h->type_flag = char_to_type_flag(hr->type_flag);
 	memcpy(h->link_name, hr->link_name, sizeof(hr->link_name));
 	memcpy(h->version, hr->version, sizeof(hr->version));
 	snprintf(h->uname, sizeof(h->uname), "%s", hr->uname);

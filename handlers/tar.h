@@ -56,6 +56,8 @@ enum type_flag {
 	TYPE_FLAG_DIRECTORY        = '5',
 	TYPE_FLAG_FIFO             = '6',
 	TYPE_FLAG_CONTIGUOUS       = '7',
+
+	TYPE_FLAG_INVALID          = 'z',
 };
 
 struct header {
