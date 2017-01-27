@@ -2,6 +2,7 @@
 
 build_dir=${PWD}
 wdir=${build_dir}/$(basename $0)/
+rm -rf ${wdir}
 mkdir -p ${wdir}
 
 on_exit() {
@@ -29,10 +30,6 @@ echo titi > ${wdir}test_dir/tata/toto
 cd ${wdir}
 tar cf test_dir.tar test_dir
 mkdir extracted_dir
-# TODO dest support isn't yet implement, we're forced to cd to where we want to
-# extract
-cd extracted_dir
-${build_dir}/cpw ../test_dir.tar tar://extracted_dir
-cd -
+${build_dir}/cpw test_dir.tar tar://extracted_dir
 diff test_dir extracted_dir/test_dir
 
