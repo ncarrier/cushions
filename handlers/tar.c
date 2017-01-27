@@ -6,6 +6,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+#include <unistd.h>
+
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
@@ -167,6 +169,19 @@ static int tar_out_create_directory(struct tar_out *to)
 	return 0;
 }
 
+static int tar_out_create_link(struct tar_out *to)
+{
+	int ret;
+	struct header *h;
+
+	h = &to->header;
+	ret = linkat(to->dest, h->link_name, to->dest, h->path, 0);
+	if (ret < 0)
+		return -errno;
+
+	return 0;
+}
+
 static int tar_out_set_metadata(struct tar_out *to)
 {
 	// TODO set uid and gid
@@ -193,6 +208,9 @@ static int tar_out_create_node(struct tar_out *to)
 		break;
 
 	case TYPE_FLAG_LINK:
+		ret = tar_out_create_link(to);
+		break;
+
 	case TYPE_FLAG_SYMLINK:
 	case TYPE_FLAG_CHAR:
 	case TYPE_FLAG_BLOCK:

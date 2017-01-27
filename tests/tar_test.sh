@@ -18,8 +18,8 @@ mkdir ${wdir}test_dir
 dd if=/dev/urandom of=${wdir}test_dir/tutu bs=1024 count=1024
 mkdir ${wdir}test_dir/tata
 echo titi > ${wdir}test_dir/tata/toto
+ln ${wdir}test_dir/tata/toto ${wdir}/test_dir/tete
 # TODO add test files for :
-# TYPE_FLAG_LINK
 # TYPE_FLAG_SYMLINK
 # TYPE_FLAG_CHAR
 # TYPE_FLAG_BLOCK
