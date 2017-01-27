@@ -92,6 +92,7 @@ struct tar_out_ops {
 };
 
 struct tar_out {
+	int dest;
 	struct block block;
 	struct header header;
 	unsigned cur;

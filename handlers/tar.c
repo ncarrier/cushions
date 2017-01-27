@@ -1,3 +1,6 @@
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif /* _GNU_SOURCE */
 #include <sys/param.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -117,21 +120,15 @@ static const char *type_flag_to_str(enum type_flag type_flag)
 
 static int tar_out_create_regular_file(struct tar_out *to)
 {
-	int ret;
 	struct header *h;
 	int fd;
 
 	h = &to->header;
 
-//	TODO use openat and fdopen
-	to->file = fopen(h->path, "wbex");
+	fd = openat(to->dest, h->path, O_CLOEXEC | O_EXCL | O_CREAT | O_WRONLY,
+			h->mode);
+	to->file = fdopen(fd, "wbex");
 	if (to->file == NULL)
-		return -errno;
-	fd = fileno(to->file);
-	if (fd == -1)
-		return -errno;
-	ret = fchmod(fd, h->mode);
-	if (ret == -1)
 		return -errno;
 	to->remaining = h->size;
 
@@ -145,7 +142,7 @@ static int tar_out_create_directory(struct tar_out *to)
 
 	h = &to->header;
 
-	ret = mkdirat(AT_FDCWD, h->path, h->mode);
+	ret = mkdirat(to->dest, h->path, h->mode);
 	if (ret < 0)
 		return ret;
 
@@ -278,14 +275,11 @@ static bool tar_out_is_empty(const struct tar_out *to)
 	return to->cur == 0;
 }
 
-static void tar_out_cleanup(struct tar_out *to);
-
 static void tar_out_reset(struct tar_out *to)
 {
 	memset(to, 0, sizeof(*to));
 
 	to->o = (struct tar_out_ops) {
-			.cleanup = tar_out_cleanup,
 			.is_empty = tar_out_is_empty,
 			.is_full = tar_out_is_full,
 			.process_block = tar_out_process_block,
@@ -293,16 +287,19 @@ static void tar_out_reset(struct tar_out *to)
 	};
 }
 
-static void tar_out_cleanup(struct tar_out *to)
+int tar_out_init(struct tar_out *to, const char *dest)
+{
+	tar_out_reset(to);
+	to->dest = open(dest, O_DIRECTORY | O_PATH | O_CLOEXEC);
+	if (to->dest == -1)
+		return -errno;
+
+	return 0;
+}
+
+void tar_out_cleanup(struct tar_out *to)
 {
 	if (to->file != NULL)
 		file_cleanup(&to->file);
 	tar_out_reset(to);
-}
-
-int tar_out_init(struct tar_out *to, const char *dest)
-{
-	tar_out_reset(to);
-
-	return 0;
 }
