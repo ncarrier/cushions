@@ -1,6 +1,7 @@
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif /* _GNU_SOURCE */
+#include <sys/sysmacros.h>
 #include <sys/param.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -111,6 +112,7 @@ static bool tar_out_is_write_ongoing(const struct tar_out *to)
 {
 	return to->file != NULL;
 }
+
 static const char *type_flag_to_str(enum type_flag type_flag)
 {
 	switch (type_flag) {
@@ -140,7 +142,7 @@ static const char *type_flag_to_str(enum type_flag type_flag)
 
 static int tar_out_create_regular_file(struct tar_out *to)
 {
-	struct header *h;
+	const struct header *h;
 	int fd;
 
 	h = &to->header;
@@ -155,10 +157,10 @@ static int tar_out_create_regular_file(struct tar_out *to)
 	return 0;
 }
 
-static int tar_out_create_directory(struct tar_out *to)
+static int tar_out_create_directory(const struct tar_out *to)
 {
 	int ret;
-	struct header *h;
+	const struct header *h;
 
 	h = &to->header;
 
@@ -169,10 +171,10 @@ static int tar_out_create_directory(struct tar_out *to)
 	return 0;
 }
 
-static int tar_out_create_link(struct tar_out *to)
+static int tar_out_create_link(const struct tar_out *to)
 {
 	int ret;
-	struct header *h;
+	const struct header *h;
 
 	h = &to->header;
 	ret = linkat(to->dest, h->link_name, to->dest, h->path, 0);
@@ -182,14 +184,44 @@ static int tar_out_create_link(struct tar_out *to)
 	return 0;
 }
 
-static int tar_out_create_symlink(struct tar_out *to)
+static int tar_out_create_symlink(const struct tar_out *to)
 {
 	int ret;
-	struct header *h;
+	const struct header *h;
 
 	h = &to->header;
 	ret = symlinkat(h->link_name, to->dest, h->path);
 	if (ret < 0)
+		return -errno;
+
+	return 0;
+}
+
+static int tar_out_create_device(const struct tar_out *to)
+{
+	int ret;
+	const struct header *h;
+	dev_t dev;
+	mode_t mode;
+
+	h = &to->header;
+	dev = makedev(h->devmajor, h->devminor);
+	mode = (h->type_flag == TYPE_FLAG_CHAR ? S_IFCHR : S_IFBLK) | h->mode;
+	ret = mknodat(to->dest, to->header.path, mode, dev);
+	if (ret == -1)
+		return -errno;
+
+	return 0;
+}
+
+static int tar_out_create_fifo(const struct tar_out *to)
+{
+	int ret;
+	const struct header *h;
+
+	h = &to->header;
+	ret = mkfifoat(to->dest, to->header.path, h->mode);
+	if (ret == -1)
 		return -errno;
 
 	return 0;
@@ -209,6 +241,7 @@ static int tar_out_create_node(struct tar_out *to)
 
 	h = &to->header;
 
+	fprintf(stderr, "**** %s\n", type_flag_to_str(h->type_flag));
 	switch (h->type_flag) {
 	case TYPE_FLAG_REGULAR_OBSOLETE:
 	case TYPE_FLAG_REGULAR:
@@ -230,10 +263,12 @@ static int tar_out_create_node(struct tar_out *to)
 
 	case TYPE_FLAG_CHAR:
 	case TYPE_FLAG_BLOCK:
+		ret = tar_out_create_device(to);
+		break;
+
 	case TYPE_FLAG_FIFO:
-		fprintf(stderr, "type flag '%s' not yet supported",
-				type_flag_to_str(h->type_flag));
-		return 0;
+		ret = tar_out_create_fifo(to);
+		break;
 
 	default:
 		return -EINVAL;

@@ -20,10 +20,10 @@ mkdir ${wdir}test_dir/tata
 echo titi > ${wdir}test_dir/tata/toto
 ln ${wdir}test_dir/tata/toto ${wdir}/test_dir/tete
 ln -s tata/toto ${wdir}/test_dir/foo
-# TODO add test files for :
-# TYPE_FLAG_CHAR
-# TYPE_FLAG_BLOCK
-# TYPE_FLAG_FIFO
+# these 3 tests don't work since they confuse diff plus mknod requires cap_mknod
+# mkfifo ${wdir}/test_dir/fifo
+# sudo mknod ${wdir}/test_dir/block b 1 2
+# sudo mknod ${wdir}/test_dir/char c 3 4
 
 # archive extraction, cd to wdir since we don't want absolute dirs in archive
 cd ${wdir}
