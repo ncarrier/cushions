@@ -35,7 +35,7 @@ static int tar_close(void *c)
 	struct tar_cushions_file *tar_c_file = c;
 
 	if (tar_c_file->direction == WRITE)
-		tar_c_file->out.o.cleanup(&tar_c_file->out);
+		tar_out_cleanup(&tar_c_file->out);
 	memset(tar_c_file, 0, sizeof(*tar_c_file));
 	free(tar_c_file);
 

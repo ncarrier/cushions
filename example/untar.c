@@ -28,7 +28,8 @@ int main(int argc, char *argv[])
 {
 	int ret;
 	size_t size;
-	struct tar_out to;
+	struct tar_out __attribute__((cleanup(tar_out_cleanup))) to = {
+			.file = NULL };
 	const char *path;
 	FILE __attribute__((cleanup(file_cleanup)))*f = NULL;
 	bool eof;
@@ -81,7 +82,7 @@ int main(int argc, char *argv[])
 	if (ret != TAR_OUT_END)
 		error(EXIT_FAILURE, 0, "truncated archive");
 
-	to.o.cleanup(&to);
+	tar_out_cleanup(&to);
 
 	return EXIT_SUCCESS;
 }

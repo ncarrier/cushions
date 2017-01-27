@@ -85,7 +85,6 @@ struct block {
 struct tar_out;
 
 struct tar_out_ops {
-	void (*cleanup)(struct tar_out *to);
 	bool (*is_empty)(const struct tar_out *to);
 	bool (*is_full)(const struct tar_out *to);
 	int (*process_block)(struct tar_out *to);
@@ -103,5 +102,7 @@ struct tar_out {
 };
 
 int tar_out_init(struct tar_out *to, const char *dest);
+
+void tar_out_cleanup(struct tar_out *to);
 
 #endif /* HANDLERS_TAR_H_ */
