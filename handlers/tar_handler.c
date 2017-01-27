@@ -5,31 +5,27 @@
 #include <string.h>
 #include <stdbool.h>
 
-#include <tar.h>
-//#include <bzlib.h>
+#include "tar.h"
 
 #define LOG_TAG tar_handler
 #include <cushions_handler.h>
 
-//#define BUFFER_SIZE 0x400
-//
 struct tar_cushions_handler {
 	struct cushions_handler handler;
 	cookie_io_functions_t tar_func;
 };
 
-//enum direction {
-//	READ,
-//	WRITE,
-//};
-//
+enum direction {
+	READ,
+	WRITE,
+};
+
 struct tar_cushions_file {
-//	int error;
-//	FILE *file;
-//	BZFILE *bz;
-//	char buffer[BUFFER_SIZE];
-//	bool eof;
-//	enum direction direction;
+	union {
+		struct tar_out out;
+	};
+	enum direction direction;
+	bool eof;
 };
 
 static struct tar_cushions_handler tar_cushions_handler;
@@ -38,15 +34,8 @@ static int tar_close(void *c)
 {
 	struct tar_cushions_file *tar_c_file = c;
 
-//	if (tar_c_file->bz != NULL) {
-//		if (tar_c_file->direction == READ)
-//			BZ2_bzReadClose(&tar_c_file->error, tar_c_file->bz);
-//		else
-//			BZ2_bzWriteClose(&tar_c_file->error, tar_c_file->bz, 0,
-//					NULL, NULL);
-//	}
-//	if (tar_c_file->file != NULL)
-//		fclose(tar_c_file->file);
+	if (tar_c_file->direction == WRITE)
+		tar_c_file->out.o.cleanup(&tar_c_file->out);
 	memset(tar_c_file, 0, sizeof(*tar_c_file));
 	free(tar_c_file);
 
@@ -78,6 +67,7 @@ static FILE *tar_cushions_fopen(struct cushions_handler *handler,
 		return NULL;
 	}
 
+	// TODO use path as the directory destination
 	tar_c_file = calloc(1, sizeof(*tar_c_file));
 	if (tar_c_file == NULL) {
 		old_errno = errno;
@@ -85,41 +75,19 @@ static FILE *tar_cushions_fopen(struct cushions_handler *handler,
 		errno = old_errno;
 		return NULL;
 	}
-//	tar_c_file->file = cushions_fopen(path, mode->mode);
-//	if (tar_c_file->file == NULL) {
-//		old_errno = errno;
-//		LOGPE("cushions_fopen", errno);
-//		goto err;
-//	}
-//	if (mode->read) {
-//		tar_c_file->direction = READ;
-//		tar_c_file->bz = BZ2_bzReadOpen(&tar_c_file->error,
-//				tar_c_file->file, 0, 0, NULL, 0);
-//		if (tar_c_file->bz == NULL) {
-//			old_errno = EIO;
-//			LOGE("BZ2_bzReadOpen error %s(%d)",
-//					BZ2_bzerror(tar_c_file->bz,
-//							&tar_c_file->error),
-//					tar_c_file->error);
-//			goto err;
-//		}
-//	} else {
-//		tar_c_file->direction = WRITE;
-//		tar_c_file->bz = BZ2_bzWriteOpen(&tar_c_file->error,
-//				tar_c_file->file, 9, 0, 0);
-//		if (tar_c_file->bz == NULL) {
-//			old_errno = EIO;
-//			LOGE("BZ2_bzWriteOpen error %s(%d)",
-//					BZ2_bzerror(tar_c_file->bz,
-//							&tar_c_file->error),
-//					tar_c_file->error);
-//			goto err;
-//		}
-//	}
+	if (mode->read) {
+		tar_c_file->direction = READ;
+		old_errno = ENOSYS;
+		LOGE("reading from directory to tar archive not supported yet");
+		goto err;
+	} else {
+		tar_c_file->direction = WRITE;
+		tar_out_init(&tar_c_file->out);
+	}
 
 	return fopencookie(tar_c_file, mode->mode,
 			tar_cushions_handler.tar_func);
-//err:
+err:
 
 	tar_close(tar_c_file);
 
@@ -127,51 +95,46 @@ static FILE *tar_cushions_fopen(struct cushions_handler *handler,
 	return NULL;
 }
 
-static ssize_t tar_read(void *c, char *buf, size_t size)
-{
-	int ret;
-//	struct tar_cushions_file *tar_c_file = c;
-
-//	if (tar_c_file->eof)
-//		return 0;
+//static ssize_t tar_read(void *c, char *buf, size_t size)
+//{
+//	int ret;
 //
-//	ret = BZ2_bzRead(&tar_c_file->error, tar_c_file->bz, buf, size);
-//	if (tar_c_file->error < BZ_OK) {
-//		LOGE("BZ2_bzRead error %s(%d)",
-//				BZ2_bzerror(tar_c_file->bz, &tar_c_file->error),
-//				tar_c_file->error);
-//		errno = EIO;
-//		return -1;
-//	}
-//	if (tar_c_file->error == BZ_STREAM_END)
-//		tar_c_file->eof = true;
-
-	ret = 0; // TODO
-	return ret;
-}
+//	return ret;
+//}
 
 static ssize_t tar_write(void *cookie, const char *buf, size_t size)
 {
-//	struct tar_cushions_file *tar_c_file = cookie;
+	struct tar_cushions_file *tar_c_file = cookie;
+	unsigned consumed;
+	unsigned total_consumed;
+	struct tar_out *to = &tar_c_file->out;
+	int ret;
+	const char *p;
 
-//	if (tar_c_file->eof)
-//		return 0;
-//
-//	/* buf parameter of BZ2_bzWrite isn't const, don't know why... */
-//	BZ2_bzWrite(&tar_c_file->error, tar_c_file->bz, (void *)buf, size);
-//	if (tar_c_file->error < BZ_OK) {
-//		LOGE("BZ2_bzWrite error %s(%d)",
-//				BZ2_bzerror(tar_c_file->bz, &tar_c_file->error),
-//				tar_c_file->error);
-//		errno = EIO;
-//		return 0;
-//	}
-//	if (tar_c_file->error == BZ_STREAM_END) {
-//		tar_c_file->eof = true;
-//		return 0;
-//	}
-//
-	return size;
+	if (tar_c_file->eof)
+		return 0;
+
+	total_consumed = 0;
+	p = buf;
+	do {
+		consumed = to->o.store_data(to, p, size);
+		if (to->o.is_full(to)) {
+			ret = to->o.process_block(to);
+			if (ret < 0) {
+				errno = -ret;
+				return 0;
+			}
+			if (ret == TAR_OUT_END) {
+				tar_c_file->eof = true;
+				break;
+			}
+		}
+		p += consumed;
+		total_consumed += consumed;
+		size -= consumed;
+	} while (size > 0);
+
+	return total_consumed;
 }
 
 static struct tar_cushions_handler tar_cushions_handler = {
@@ -180,7 +143,7 @@ static struct tar_cushions_handler tar_cushions_handler = {
 		.fopen = tar_cushions_fopen,
 	},
 	.tar_func = {
-		.read  = tar_read,
+//		.read  = tar_read,
 		.write = tar_write,
 		.close = tar_close
 	},
