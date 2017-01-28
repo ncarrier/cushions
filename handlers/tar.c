@@ -347,9 +347,11 @@ static int tar_out_create_node(struct tar_out *to)
 	if (ret < 0)
 		return ret;
 
-	ret = tar_out_set_ids(to);
-	if (ret < 0)
-		return ret;
+	if (to->set_ids) {
+		ret = tar_out_set_ids(to);
+		if (ret < 0)
+			return ret;
+	}
 
 	return set_metadata ? set_mtime(to->dest, h->path, h->mtime) : 0;
 }
@@ -503,6 +505,7 @@ int tar_out_init(struct tar_out *to, const char *dest)
 	to->dest = open(dest, O_DIRECTORY | O_PATH | O_CLOEXEC);
 	if (to->dest == -1)
 		return -errno;
+	to->set_ids = getuid() == 0;
 
 	return 0;
 }

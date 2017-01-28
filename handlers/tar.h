@@ -106,6 +106,7 @@ struct tar_out {
 	struct tar_out_directory *directories;
 	unsigned nb_directories;
 	unsigned cur_directory;
+	bool set_ids;
 };
 
 int tar_out_init(struct tar_out *to, const char *dest);
