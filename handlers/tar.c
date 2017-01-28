@@ -304,21 +304,21 @@ static int tar_out_create_node(struct tar_out *to)
 {
 	int ret;
 	struct header *h;
-	bool set_metadata;
+	bool do_set_mtime;
 
 	h = &to->header;
-	set_metadata = true;
+	do_set_mtime = true;
 	switch (h->type_flag) {
 	case TYPE_FLAG_REGULAR_OBSOLETE:
 	case TYPE_FLAG_REGULAR:
 	case TYPE_FLAG_CONTIGUOUS:
 		/* metadata setting must be done after the last modification */
-		set_metadata = false;
+		do_set_mtime = false;
 		ret = tar_out_create_regular_file(to);
 		break;
 
 	case TYPE_FLAG_DIRECTORY:
-		set_metadata = false;
+		do_set_mtime = false;
 		ret = tar_out_create_directory(to);
 		break;
 
@@ -353,7 +353,7 @@ static int tar_out_create_node(struct tar_out *to)
 			return ret;
 	}
 
-	return set_metadata ? set_mtime(to->dest, h->path, h->mtime) : 0;
+	return do_set_mtime ? set_mtime(to->dest, h->path, h->mtime) : 0;
 }
 
 static bool tar_out_header_is_valid(const struct tar_out *to)
