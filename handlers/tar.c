@@ -228,10 +228,26 @@ static int tar_out_create_fifo(const struct tar_out *to)
 	return 0;
 }
 
-static int tar_out_set_metadata(struct tar_out *to)
+static int tar_out_set_metadata(const struct tar_out *to)
 {
+	int ret;
+	const struct timespec times[2] = {
+			[0] = {
+					.tv_sec = 0,
+					.tv_nsec = UTIME_OMIT,
+			},
+			[1] = {
+					.tv_sec = to->header.mtime,
+					.tv_nsec = 0,
+			},
+	};
+
+	ret = utimensat(to->dest, to->header.path, times, AT_SYMLINK_NOFOLLOW);
+	if (ret < 0) {
+		perror("utimensat");
+		return -errno;
+	}
 	// TODO set uid and gid
-	// TODO set h->mtime
 	return 0;
 }
 
@@ -239,13 +255,16 @@ static int tar_out_create_node(struct tar_out *to)
 {
 	int ret;
 	struct header *h;
+	bool set_metadata;
 
 	h = &to->header;
-
+	set_metadata = true;
 	switch (h->type_flag) {
 	case TYPE_FLAG_REGULAR_OBSOLETE:
 	case TYPE_FLAG_REGULAR:
 	case TYPE_FLAG_CONTIGUOUS:
+		/* metadata setting must be done after the last modification */
+		set_metadata = false;
 		ret = tar_out_create_regular_file(to);
 		break;
 
@@ -278,7 +297,7 @@ static int tar_out_create_node(struct tar_out *to)
 	if (ret < 0)
 		return ret;
 
-	return tar_out_set_metadata(to);
+	return set_metadata ? tar_out_set_metadata(to) : 0;
 }
 
 static bool tar_out_header_is_valid(const struct tar_out *to)
@@ -338,8 +357,12 @@ static int tar_out_process_data(struct tar_out *to)
 	}
 	to->remaining -= to_write;
 
-	if (tar_out_file_is_finished(to))
+	if (tar_out_file_is_finished(to)) {
 		file_cleanup(&(to->file));
+		ret = tar_out_set_metadata(to);
+		if (ret < 0)
+			return ret;
+	}
 
 	return 0;
 }
