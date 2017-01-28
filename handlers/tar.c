@@ -6,6 +6,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <pwd.h>
+#include <grp.h>
 
 #include <unistd.h>
 
@@ -63,6 +65,7 @@ static int tar_out_convert_header(struct tar_out *to)
 				NAME_LEN, hr->name);
 	else
 		memcpy(h->path, hr->name, sizeof(hr->name));
+	// TODO sanitize paths (just remove leading '/'s ?)
 	h->mode = strtoul(hr->mode, &endptr, 8);
 	if (*hr->mode == '\0' || *endptr != '\0')
 		return -EINVAL;
@@ -194,7 +197,7 @@ static int tar_out_create_directory(struct tar_out *to)
 
 	ret = mkdirat(to->dest, h->path, h->mode);
 	if (ret < 0)
-		return ret;
+		return -errno;
 
 	return tar_out_store_directory(to);
 }
@@ -276,14 +279,24 @@ static int set_mtime(int destfd, const char *path, unsigned long long mtime)
 	return 0;
 }
 
-static int tar_out_set_metadata(const struct tar_out *to)
+static int tar_out_set_ids(const struct tar_out *to)
 {
 	int ret;
+	uid_t uid;
+	gid_t gid;
+	struct passwd *pwd;
+	struct group *grp;
 
-	ret = set_mtime(to->dest, to->header.path, to->header.mtime);
+	pwd = getpwnam(to->header.uname);
+	grp = getgrnam(to->header.gname);
+	uid = pwd == NULL ? to->header.uid : pwd->pw_uid;
+	gid = pwd == NULL ? to->header.gid : grp->gr_gid;
+
+	ret = fchownat(to->dest, to->header.path, uid, gid,
+			AT_SYMLINK_NOFOLLOW);
 	if (ret < 0)
-		return ret;
-	// TODO set uid and gid, but not here, it can be done early for dirs
+		perror("fchownat");
+
 	return 0;
 }
 
@@ -305,6 +318,7 @@ static int tar_out_create_node(struct tar_out *to)
 		break;
 
 	case TYPE_FLAG_DIRECTORY:
+		set_metadata = false;
 		ret = tar_out_create_directory(to);
 		break;
 
@@ -333,7 +347,11 @@ static int tar_out_create_node(struct tar_out *to)
 	if (ret < 0)
 		return ret;
 
-	return set_metadata ? tar_out_set_metadata(to) : 0;
+	ret = tar_out_set_ids(to);
+	if (ret < 0)
+		return ret;
+
+	return set_metadata ? set_mtime(to->dest, h->path, h->mtime) : 0;
 }
 
 static bool tar_out_header_is_valid(const struct tar_out *to)
@@ -395,7 +413,7 @@ static int tar_out_process_data(struct tar_out *to)
 
 	if (tar_out_file_is_finished(to)) {
 		file_cleanup(&(to->file));
-		ret = tar_out_set_metadata(to);
+		ret = set_mtime(to->dest, to->header.path, to->header.mtime);
 		if (ret < 0)
 			return ret;
 	}
