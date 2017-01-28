@@ -241,7 +241,6 @@ static int tar_out_create_node(struct tar_out *to)
 
 	h = &to->header;
 
-	fprintf(stderr, "**** %s\n", type_flag_to_str(h->type_flag));
 	switch (h->type_flag) {
 	case TYPE_FLAG_REGULAR_OBSOLETE:
 	case TYPE_FLAG_REGULAR:
@@ -271,7 +270,9 @@ static int tar_out_create_node(struct tar_out *to)
 		break;
 
 	default:
-		return -EINVAL;
+		fprintf(stderr, "unsupported archive member type '%c'\n",
+				to->raw_header.type_flag);
+		return 0;
 	}
 	if (ret < 0)
 		return ret;
