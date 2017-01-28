@@ -24,6 +24,8 @@ ln -s tata/toto ${wdir}/test_dir/foo
 # mkfifo ${wdir}/test_dir/fifo
 # sudo mknod ${wdir}/test_dir/block b 1 2
 # sudo mknod ${wdir}/test_dir/char c 3 4
+touch -t 198302080000 ${wdir}test_dir/tutu
+touch -t 198212080000 ${wdir}test_dir/tata
 
 # archive extraction, cd to wdir since we don't want absolute dirs in archive
 cd ${wdir}
