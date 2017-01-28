@@ -324,7 +324,7 @@ static void tar_out_consume_block(struct tar_out *to)
 	to->cur = 0;
 }
 
-static bool tar_block_is_zero(const struct tar_out *to)
+static bool tar_out_block_is_zero(const struct tar_out *to)
 {
 	static const char zero_block[BLOCK_SIZE];
 
@@ -335,7 +335,7 @@ static int tar_out_process_block(struct tar_out *to)
 {
 	int ret;
 
-	if (tar_block_is_zero(to)) {
+	if (tar_out_block_is_zero(to)) {
 		/* end processing at the second zero block found */
 		if (to->zero_block_found)
 			return TAR_OUT_END;
