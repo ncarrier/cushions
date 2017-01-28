@@ -30,14 +30,14 @@ static enum type_flag char_to_type_flag(char flag)
 {
 	switch (flag) {
 	case TYPE_FLAG_REGULAR_OBSOLETE:
-	case TYPE_FLAG_REGULAR         :
-	case TYPE_FLAG_LINK            :
-	case TYPE_FLAG_SYMLINK         :
-	case TYPE_FLAG_CHAR            :
-	case TYPE_FLAG_BLOCK           :
-	case TYPE_FLAG_DIRECTORY       :
-	case TYPE_FLAG_FIFO            :
-	case TYPE_FLAG_CONTIGUOUS      :
+	case TYPE_FLAG_REGULAR:
+	case TYPE_FLAG_LINK:
+	case TYPE_FLAG_SYMLINK:
+	case TYPE_FLAG_CHAR:
+	case TYPE_FLAG_BLOCK:
+	case TYPE_FLAG_DIRECTORY:
+	case TYPE_FLAG_FIFO:
+	case TYPE_FLAG_CONTIGUOUS:
 		return (enum type_flag)flag;
 
 	default:
@@ -113,6 +113,7 @@ static bool tar_out_is_write_ongoing(const struct tar_out *to)
 	return to->file != NULL;
 }
 
+__attribute__((unused))
 static const char *type_flag_to_str(enum type_flag type_flag)
 {
 	switch (type_flag) {
