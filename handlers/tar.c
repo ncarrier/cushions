@@ -52,7 +52,7 @@ static int tar_out_convert_header(struct tar_out *to)
 	char *endptr;
 
 	h = &to->header;
-	hr = &to->block.header;
+	hr = &to->raw_header;
 
 	/* TODO fields may be unused */
 
@@ -102,7 +102,7 @@ static int tar_out_store_data(struct tar_out *to, const char *buf, size_t size)
 
 	room = BLOCK_SIZE - to->cur;
 	consumed = MIN(room, size);
-	memcpy(to->block.data + to->cur, buf, consumed);
+	memcpy(to->data + to->cur, buf, consumed);
 	to->cur += consumed;
 
 	return consumed;
@@ -305,7 +305,7 @@ static int tar_out_process_data(struct tar_out *to)
 
 	to_write = MIN(to->remaining, BLOCK_SIZE);
 
-	sret = fwrite(to->block.data, to_write, 1, to->file);
+	sret = fwrite(to->data, to_write, 1, to->file);
 	if (sret < 1) {
 		ret = errno;
 		return ferror(to->file) ? ret : EIO;
@@ -326,7 +326,7 @@ static bool tar_block_is_zero(const struct tar_out *to)
 {
 	static const char zero_block[BLOCK_SIZE];
 
-	return memcmp(to->block.data, zero_block, BLOCK_SIZE) == 0;
+	return memcmp(to->data, zero_block, BLOCK_SIZE) == 0;
 }
 
 static int tar_out_process_block(struct tar_out *to)

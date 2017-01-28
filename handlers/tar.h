@@ -77,13 +77,6 @@ struct header {
 	unsigned long devminor;
 };
 
-struct block {
-	union {
-		struct block_header_raw header;
-		uint8_t data[BLOCK_SIZE];
-	};
-} __attribute__((packed));
-
 struct tar_out;
 
 struct tar_out_ops {
@@ -94,14 +87,17 @@ struct tar_out_ops {
 };
 
 struct tar_out {
+	union {
+		struct block_header_raw raw_header;
+		uint8_t data[BLOCK_SIZE];
+	};
 	int dest;
-	struct block block;
-	struct header header;
 	unsigned cur;
 	FILE *file;
 	unsigned remaining;
-	bool zero_block_found;
 	struct tar_out_ops o;
+	struct header header;
+	bool zero_block_found;
 };
 
 int tar_out_init(struct tar_out *to, const char *dest);
