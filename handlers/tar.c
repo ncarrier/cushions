@@ -16,6 +16,7 @@
 #include "tar.h"
 
 #define HDR_FMT "%100s%Lo\0"
+#define INITIAL_DIR_NB 8
 
 static void file_cleanup(FILE **file)
 {
@@ -158,7 +159,33 @@ static int tar_out_create_regular_file(struct tar_out *to)
 	return 0;
 }
 
-static int tar_out_create_directory(const struct tar_out *to)
+static int tar_out_store_directory(struct tar_out *to)
+{
+	struct tar_out_directory *temp;
+	struct tar_out_directory *dir;
+
+	/* grow buffer */
+	if (to->cur_directory == to->nb_directories) {
+		if (to->nb_directories == 0)
+			to->nb_directories = INITIAL_DIR_NB;
+		else
+			to->nb_directories <<= 1;
+		temp = realloc(to->directories,
+				to->nb_directories * sizeof(*to->directories));
+		if (temp == NULL)
+			return -errno;
+		to->directories = temp;
+	}
+
+	dir = to->directories + to->cur_directory;
+	dir->mtime = to->header.mtime;
+	snprintf(dir->path, PATH_LEN, "%s", to->header.path);
+	to->cur_directory++;
+
+	return 0;
+}
+
+static int tar_out_create_directory(struct tar_out *to)
 {
 	int ret;
 	const struct header *h;
@@ -169,7 +196,7 @@ static int tar_out_create_directory(const struct tar_out *to)
 	if (ret < 0)
 		return ret;
 
-	return 0;
+	return tar_out_store_directory(to);
 }
 
 static int tar_out_create_link(const struct tar_out *to)
@@ -228,7 +255,7 @@ static int tar_out_create_fifo(const struct tar_out *to)
 	return 0;
 }
 
-static int tar_out_set_metadata(const struct tar_out *to)
+static int set_mtime(int destfd, const char *path, unsigned long long mtime)
 {
 	int ret;
 	const struct timespec times[2] = {
@@ -237,17 +264,26 @@ static int tar_out_set_metadata(const struct tar_out *to)
 					.tv_nsec = UTIME_OMIT,
 			},
 			[1] = {
-					.tv_sec = to->header.mtime,
+					.tv_sec = mtime,
 					.tv_nsec = 0,
 			},
 	};
 
-	ret = utimensat(to->dest, to->header.path, times, AT_SYMLINK_NOFOLLOW);
-	if (ret < 0) {
+	ret = utimensat(destfd, path, times, AT_SYMLINK_NOFOLLOW);
+	if (ret < 0)
 		perror("utimensat");
-		return -errno;
-	}
-	// TODO set uid and gid
+
+	return 0;
+}
+
+static int tar_out_set_metadata(const struct tar_out *to)
+{
+	int ret;
+
+	ret = set_mtime(to->dest, to->header.path, to->header.mtime);
+	if (ret < 0)
+		return ret;
+	// TODO set uid and gid, but not here, it can be done early for dirs
 	return 0;
 }
 
@@ -378,14 +414,34 @@ static bool tar_out_block_is_zero(const struct tar_out *to)
 	return memcmp(to->data, zero_block, BLOCK_SIZE) == 0;
 }
 
+static int tar_out_fix_directories_mtime(struct tar_out *to)
+{
+	int ret;
+	struct tar_out_directory *dir;
+
+	while (to->cur_directory-- != 0) {
+		dir = to->directories + to->cur_directory;
+		ret = set_mtime(to->dest, dir->path, dir->mtime);
+		if (ret < 0)
+			return ret;
+	}
+
+	return 0;
+}
+
 static int tar_out_process_block(struct tar_out *to)
 {
 	int ret;
 
 	if (tar_out_block_is_zero(to)) {
 		/* end processing at the second zero block found */
-		if (to->zero_block_found)
+		if (to->zero_block_found) {
+			ret = tar_out_fix_directories_mtime(to);
+			if (ret < 0)
+				return ret;
+
 			return TAR_OUT_END;
+		}
 		to->zero_block_found = true;
 	} else {
 		to->zero_block_found = false;
@@ -437,5 +493,7 @@ void tar_out_cleanup(struct tar_out *to)
 {
 	if (to->file != NULL)
 		file_cleanup(&to->file);
+	if (to->directories == NULL)
+		free(to->directories);
 	tar_out_reset(to);
 }

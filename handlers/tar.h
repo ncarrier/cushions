@@ -86,6 +86,11 @@ struct tar_out_ops {
 	int (*store_data)(struct tar_out *to, const char *buf, size_t size);
 };
 
+struct tar_out_directory {
+	unsigned long long mtime;
+	char path[PATH_LEN];
+};
+
 struct tar_out {
 	union {
 		struct block_header_raw raw_header;
@@ -98,6 +103,9 @@ struct tar_out {
 	struct tar_out_ops o;
 	struct header header;
 	bool zero_block_found;
+	struct tar_out_directory *directories;
+	unsigned nb_directories;
+	unsigned cur_directory;
 };
 
 int tar_out_init(struct tar_out *to, const char *dest);
