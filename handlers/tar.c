@@ -281,11 +281,35 @@ static int tar_out_create_node(struct tar_out *to)
 	return tar_out_set_metadata(to);
 }
 
+static bool tar_out_header_is_valid(const struct tar_out *to)
+{
+	unsigned long cs;
+	const uint8_t *p;
+	const uint8_t *stop;
+	const struct block_header_raw *rh;
+
+	/* test the checksum */
+	stop = to->data + 512;
+	rh = &to->raw_header;
+	for (p = to->data; p < stop; p++) {
+		if (p >= (uint8_t *)rh->checksum &&
+				p < (uint8_t *)&rh->type_flag)
+			cs += ' ';
+		else
+			cs += *p;
+	}
+
+	// TODO check other fields
+
+	return cs == to->header.checksum;
+}
+
 static int tar_out_process_header(struct tar_out *to)
 {
 	int ret;
 
-	// TODO verify header
+	if (tar_out_header_is_valid(to))
+		return -EINVAL;
 
 	ret = tar_out_convert_header(to);
 	if (ret < 0)
