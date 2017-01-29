@@ -60,7 +60,8 @@ sock_extra_flags :=
 tar_extra_flags :=
 
 $(lib).a_src := $(filter-out src/cushions_handlers.c,$($(lib)_src)) \
-	$(foreach h,$(hdlr_names),$(subst %,$(h),$(handler_src_pattern)))
+	$(foreach h,$(hdlr_names),$(subst %,$(h),$(handler_src_pattern))) \
+	handlers/tar.c
 $(lib).a_obj := $($(lib).a_src:.c=.o)
 
 world := $(handlers) $(tests) $(examples) $(lib).so $(lib).a
