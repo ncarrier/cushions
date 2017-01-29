@@ -18,13 +18,20 @@ static void cleanup_file(FILE **f)
 	*f = NULL;
 }
 
+static FILE *src = NULL;
+static FILE *dest = NULL;
+
+static void cleanup(void)
+{
+	cleanup_file(&dest);
+	cleanup_file(&src);
+}
+
 static int old_main(int argc, char *argv[])
 {
 	int ret;
 	const char *src_path;
 	const char *dest_path;
-	FILE __attribute__((cleanup(cleanup_file)))*src = NULL;
-	FILE __attribute__((cleanup(cleanup_file)))*dest = NULL;
 	size_t sread;
 	size_t swritten;
 	char buf[BUFFER_SIZE];
@@ -44,6 +51,7 @@ static int old_main(int argc, char *argv[])
 	ret = errno;
 	if (src == NULL)
 		error(EXIT_FAILURE, 0, "fopen %s: %s", src_path, strerror(ret));
+	atexit(cleanup);
 	dest = fopen(dest_path, "wb");
 	ret = errno;
 	if (dest == NULL)
@@ -66,9 +74,6 @@ static int old_main(int argc, char *argv[])
 				error(EXIT_FAILURE, errno, "EOF on dest");
 		}
 	} while (!eof);
-
-	fflush(dest);
-	fflush(src);
 
 	return EXIT_SUCCESS;
 }
