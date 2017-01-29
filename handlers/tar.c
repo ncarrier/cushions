@@ -383,12 +383,12 @@ static int tar_out_process_header(struct tar_out *to)
 {
 	int ret;
 
-	if (tar_out_header_is_valid(to))
-		return -EINVAL;
-
 	ret = tar_out_convert_header(to);
 	if (ret < 0)
 		return ret;
+
+	if (!tar_out_header_is_valid(to))
+		return -EINVAL;
 
 	return tar_out_create_node(to);
 }
