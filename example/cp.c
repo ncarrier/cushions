@@ -29,7 +29,6 @@ static void cleanup(void)
 
 static int old_main(int argc, char *argv[])
 {
-	int ret;
 	const char *src_path;
 	const char *dest_path;
 	size_t sread;
@@ -48,15 +47,12 @@ static int old_main(int argc, char *argv[])
 	dest_path = argv[2];
 
 	src = fopen(src_path, "rb");
-	ret = errno;
 	if (src == NULL)
-		error(EXIT_FAILURE, 0, "fopen %s: %s", src_path, strerror(ret));
+		error(EXIT_FAILURE, errno, "fopen %s", src_path);
 	atexit(cleanup);
 	dest = fopen(dest_path, "wb");
-	ret = errno;
 	if (dest == NULL)
-		error(EXIT_FAILURE, errno, "fopen %s: %s", dest_path,
-				strerror(ret));
+		error(EXIT_FAILURE, errno, "fopen %s", dest_path);
 
 	do {
 		sread = fread(buf, 1, BUFFER_SIZE, src);
@@ -71,7 +67,7 @@ static int old_main(int argc, char *argv[])
 			if (ferror(dest))
 				error(EXIT_FAILURE, errno, "fwrite");
 			else
-				error(EXIT_FAILURE, errno, "EOF on dest");
+				error(EXIT_FAILURE, 0, "EOF on dest");
 		}
 	} while (!eof);
 
