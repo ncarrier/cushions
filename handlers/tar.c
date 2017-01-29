@@ -4,7 +4,6 @@
 #include <sys/sysmacros.h>
 #include <sys/param.h>
 #include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
 #include <pwd.h>
 #include <grp.h>
@@ -19,6 +18,16 @@
 
 #define HDR_FMT "%100s%Lo\0"
 #define INITIAL_DIR_NB 8
+#define DEFAULT_UMASK 0022
+
+static void string_cleanup(char **s)
+{
+	if (s == NULL || *s == NULL)
+		return;
+
+	free(*s);
+	*s = NULL;
+}
 
 static void file_cleanup(FILE **file)
 {
@@ -188,14 +197,12 @@ static int tar_out_store_directory(struct tar_out *to)
 	return 0;
 }
 
-static int tar_out_create_directory(struct tar_out *to)
+static int tar_out_create_directory(struct tar_out *to, int dest,
+		const char *path, unsigned long mode)
 {
 	int ret;
-	const struct header *h;
 
-	h = &to->header;
-
-	ret = mkdirat(to->dest, h->path, h->mode);
+	ret = mkdirat(dest, path, mode);
 	if (ret < 0)
 		return -errno;
 
@@ -300,6 +307,72 @@ static int tar_out_set_ids(const struct tar_out *to)
 	return 0;
 }
 
+static mode_t process_umask(void)
+{
+	int ret;
+	const char *status_path = "/proc/self/status";
+	FILE __attribute__((cleanup(file_cleanup)))*status_file = NULL;
+	unsigned umask;
+	char __attribute__((cleanup(string_cleanup)))*line = NULL;
+	size_t line_len = 0;
+
+	status_file = fopen(status_path, "rb");
+	if (NULL == status_file)
+		return DEFAULT_UMASK;
+
+	while (getline(&line, &line_len, status_file) != -1) {
+		if (strncmp("Umask:", line, 6) != 0)
+			continue;
+		ret = sscanf(line, "Umask:\t%o", &umask);
+		if (ret == 1)
+			return umask;
+	}
+
+	return DEFAULT_UMASK;
+}
+
+static int create_missing_path_components(struct tar_out *to)
+{
+	int ret;
+	char __attribute__((cleanup(string_cleanup)))*path = NULL;
+	char __attribute__((cleanup(string_cleanup)))*component = NULL;
+	char *sep;
+	size_t len;
+	int component_len;
+
+	path = strdup(to->header.path);
+	if (path == NULL)
+		return -errno;
+	len = strlen(path);
+	component = calloc(len + 1, sizeof(*component));
+
+	for (sep = strchr(path, '/'); sep != NULL; sep = strchr(sep + 1, '/')) {
+		component_len = sep - path;
+		/* path starts with '/', this is highly suspicious... */
+		if (component_len == 0)
+			continue;
+		/*
+		 * stop at the full node path, we can create it now
+		 * should not happen in fact, the last '/' should be before the
+		 * element we wanted to create in the first place, thanks to
+		 * canoricalize_file_name
+		 */
+		if ((unsigned)component_len >= len - (path[len - 1] == '/'))
+			break;
+		snprintf(component, len + 1, "%.*s", component_len, path);
+		ret = faccessat(to->dest, component, F_OK, AT_SYMLINK_NOFOLLOW);
+		if (ret == 0)
+			continue;
+
+		ret = tar_out_create_directory(to, to->dest, component,
+				to->default_dir_mode);
+		if (ret < 0)
+			return ret;
+	}
+
+	return 0;
+}
+
 static int tar_out_create_node(struct tar_out *to)
 {
 	int ret;
@@ -307,6 +380,10 @@ static int tar_out_create_node(struct tar_out *to)
 	bool do_set_mtime;
 
 	h = &to->header;
+	ret = create_missing_path_components(to);
+	if (ret < 0)
+		return ret;
+
 	do_set_mtime = true;
 	switch (h->type_flag) {
 	case TYPE_FLAG_REGULAR_OBSOLETE:
@@ -319,7 +396,7 @@ static int tar_out_create_node(struct tar_out *to)
 
 	case TYPE_FLAG_DIRECTORY:
 		do_set_mtime = false;
-		ret = tar_out_create_directory(to);
+		ret = tar_out_create_directory(to, to->dest, h->path, h->mode);
 		break;
 
 	case TYPE_FLAG_LINK:
@@ -366,6 +443,7 @@ static bool tar_out_header_is_valid(const struct tar_out *to)
 	/* test the checksum */
 	stop = to->data + 512;
 	rh = &to->raw_header;
+	cs = 0;
 	for (p = to->data; p < stop; p++) {
 		if (p >= (uint8_t *)rh->checksum &&
 				p < (uint8_t *)&rh->type_flag)
@@ -505,16 +583,26 @@ int tar_out_init(struct tar_out *to, const char *dest)
 	to->dest = open(dest, O_DIRECTORY | O_PATH | O_CLOEXEC);
 	if (to->dest == -1)
 		return -errno;
+
 	to->set_ids = getuid() == 0;
+
+	/* according to
+	 * http://pubs.opengroup.org/onlinepubs/009696799/utilities/mkdir.html
+	 * this is the mode a missing component directory will have when
+	 * mkdir -p is used, we replicate this here
+	 */
+	to->default_dir_mode = (0777 & ~process_umask()) | S_IWUSR | S_IXUSR;
 
 	return 0;
 }
 
 void tar_out_cleanup(struct tar_out *to)
 {
+	if (to->dest > 0)
+		close(to->dest);
 	if (to->file != NULL)
 		file_cleanup(&to->file);
-	if (to->directories == NULL)
+	if (to->directories != NULL)
 		free(to->directories);
 	tar_out_reset(to);
 }

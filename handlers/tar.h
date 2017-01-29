@@ -1,5 +1,7 @@
 #ifndef HANDLERS_TAR_H_
 #define HANDLERS_TAR_H_
+#include <sys/stat.h>
+
 #include <stdio.h>
 #include <inttypes.h>
 #include <stdbool.h>
@@ -107,6 +109,7 @@ struct tar_out {
 	unsigned nb_directories;
 	unsigned cur_directory;
 	bool set_ids;
+	mode_t default_dir_mode;
 };
 
 int tar_out_init(struct tar_out *to, const char *dest);
