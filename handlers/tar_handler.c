@@ -85,7 +85,7 @@ static FILE *tar_cushions_fopen(struct cushions_handler *handler,
 		tar_c_file->direction = WRITE;
 		ret = tar_out_init(&tar_c_file->out, path);
 		if (ret < 0) {
-			old_errno = ret;
+			old_errno = -ret;
 			LOGPE("tar_out_init", ret);
 			goto err;
 		}
