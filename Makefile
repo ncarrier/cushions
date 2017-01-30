@@ -107,7 +107,7 @@ coroutines: example/coroutines.c handlers/picoro.c
 	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers
 
 tar: example/tar.c handlers/tar.c
-	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers
+	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers -ltar
 
 cpw:example/cp.c $(lib).so
 	$(CC) $(CFLAGS) -o $@ $< -Wl,--wrap=fopen -L. -lcushions
