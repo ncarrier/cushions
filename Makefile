@@ -44,7 +44,7 @@ $(lib)_src := $(wildcard $(here)src/*.c)
 $(lib)_src := $($(lib)_src:$(here)%=%)
 tests := dict_test mode_test params_test
 examples := bzip2_expand cpw cp curl_fopen custom_stream variadic_macro \
-	wrap_malloc untar tar
+	wrap_malloc untar tar coroutines
 
 # build infos for handlers
 handler_pattern := handlers_dir/$(lib)_%_handler.so
@@ -101,6 +101,9 @@ custom_stream variadic_macro cp: %: example/%.c
 	$(CC) $(CFLAGS) -o $@ $<
 
 untar: example/untar.c handlers/tar.c
+	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers
+
+coroutines: example/coroutines.c handlers/picoro.c
 	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers
 
 tar: example/tar.c handlers/tar.c
