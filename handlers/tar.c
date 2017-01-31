@@ -625,7 +625,6 @@ static int func_tar_in_open(const char *path, int flags, ...)
 	 * "opening" operation have already occurred before and the return
 	 * value is not significant
 	 */
-	printf("%s(%s, %d) -> 0\n", __func__, path, flags);
 
 	return 0;
 }
@@ -635,8 +634,6 @@ static int func_tar_in_close(int fd)
 	ssize_t sret = RESUME_ENDED;
 
 	yield(&sret);
-
-	printf("%s(%d) -> 0\n", __func__, fd);
 
 	return 0;
 }
@@ -670,8 +667,6 @@ static ssize_t func_tar_in_write(int fd, const void *buf, size_t size)
 			arg = yield(&sret);
 		}
 	} while (remaining != 0);
-
-	printf("%s(%d, %p, %zu) -> %zu\n", __func__, fd, buf, size, size);
 
 	return size;
 }
@@ -748,8 +743,6 @@ ssize_t tar_in_read(struct tar_in *ti, void *buf, size_t size)
 	/* make func_tar_in_close return */
 	if (*sret == RESUME_ENDED)
 		resume(ti->c, NULL);
-
-	printf("%s(%p, %zu) -> %zu\n", __func__, arg.buf, size, arg.cur);
 
 	return arg.cur;
 }
