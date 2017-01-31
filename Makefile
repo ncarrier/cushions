@@ -57,7 +57,7 @@ curl_extra_flags := $(shell curl-config --cflags --libs)
 lzo_extra_flags := -llzo2
 mem_extra_flags :=
 sock_extra_flags :=
-tar_extra_flags :=
+tar_extra_flags := -ltar
 
 $(lib).a_src := $(filter-out src/cushions_handlers.c,$($(lib)_src)) \
 	$(foreach h,$(hdlr_names),$(subst %,$(h),$(handler_src_pattern))) \
@@ -130,7 +130,7 @@ $(lib).a:$($(lib).a_obj)
 ifneq ($(notdir $(CC)), cc_wrapper.sh)
 $(handlers): $(handler_pattern): $(lib).so
 endif
-handlers_dir/$(lib)_tar_handler.so: handlers/tar.c
+handlers_dir/$(lib)_tar_handler.so: handlers/picoro.c handlers/tar.c
 $(handlers): $(handler_pattern): $(handler_deps)
 	$(CC) $(CFLAGS) -o $@ $^ $(DYN_FLAGS) $($*_extra_flags)
 
