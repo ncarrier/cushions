@@ -735,6 +735,10 @@ ssize_t tar_in_read(struct tar_in *ti, void *buf, size_t size)
 	};
 	ssize_t *sret;
 
+	if (!resumable(ti->c)) {
+		errno = 0;
+		return 0;
+	}
 	do {
 		sret = resume(ti->c, &arg);
 		if (sret == NULL)
