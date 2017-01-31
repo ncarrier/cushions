@@ -88,22 +88,22 @@ static int tar_out_convert_header(struct tar_out *to)
 		memcpy(h->path, hr->name, sizeof(hr->name));
 	// TODO sanitize paths (just remove leading '/'s ?)
 	h->mode = strtoul(hr->mode, &endptr, 8);
-	if (*hr->mode == '\0' || *endptr != '\0')
+	if (*hr->mode == '\0')
 		return -EINVAL;
 	h->uid = strtoul(hr->uid, &endptr, 8);
-	if (*hr->uid == '\0' || *endptr != '\0')
+	if (*hr->uid == '\0')
 		return -EINVAL;
 	h->gid = strtoul(hr->gid, &endptr, 8);
-	if (*hr->gid == '\0' || *endptr != '\0')
+	if (*hr->gid == '\0')
 		return -EINVAL;
 	h->size = strtoull(hr->size, &endptr, 8);
-	if (*hr->size == '\0' || *endptr != '\0')
+	if (*hr->size == '\0')
 		return -EINVAL;
 	h->mtime = strtoull(hr->mtime, &endptr, 8);
-	if (*hr->mtime == '\0' || *endptr != '\0')
+	if (*hr->mtime == '\0')
 		return -EINVAL;
 	h->checksum = strtoul(hr->checksum, &endptr, 8);
-	if (*hr->checksum == '\0' || *endptr != '\0')
+	if (*hr->checksum == '\0')
 		return -EINVAL;
 	h->type_flag = char_to_type_flag(hr->type_flag);
 	memcpy(h->link_name, hr->link_name, sizeof(hr->link_name));
