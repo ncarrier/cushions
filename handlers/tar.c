@@ -671,7 +671,7 @@ static ssize_t func_tar_in_write(int fd, const void *buf, size_t size)
 		}
 	} while (remaining != 0);
 
-	printf("%s(%d, %p, %zu) -> %zd\n", __func__, fd, buf, size, sret);
+	printf("%s(%d, %p, %zu) -> %zu\n", __func__, fd, buf, size, size);
 
 	return size;
 }
