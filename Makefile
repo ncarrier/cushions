@@ -106,7 +106,7 @@ untar: example/untar.c handlers/tar.c
 coroutines: example/coroutines.c handlers/picoro.c
 	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers
 
-tar: example/tar.c handlers/tar.c
+tar: example/tar.c handlers/picoro.c
 	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers -ltar
 
 cpw:example/cp.c $(lib).so
