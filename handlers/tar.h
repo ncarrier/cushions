@@ -6,6 +6,10 @@
 #include <inttypes.h>
 #include <stdbool.h>
 
+#include <libtar.h>
+
+#include "picoro.h"
+
 #define TAR_OUT_END 1
 
 #define BLOCK_SIZE 512
@@ -79,6 +83,7 @@ struct header {
 	unsigned long devminor;
 };
 
+/* tar_out API, for reading from a tar archive to a tree structure */
 struct tar_out;
 
 struct tar_out_ops {
@@ -115,5 +120,22 @@ struct tar_out {
 int tar_out_init(struct tar_out *to, const char *dest);
 
 void tar_out_cleanup(struct tar_out *to);
+
+/* tar_out API, for reading from a tree structure to a tar archive */
+#define TAR_IN_DEFAULT_MODE 0644
+
+struct tar_in {
+	TAR *tar;
+	coro c;
+	char *src;
+	/* simply linked list at first, may be more elaborate later */
+	struct tar_in *next;
+};
+
+int tar_in_init(struct tar_in *ti, const char *src);
+
+ssize_t tar_in_read(struct tar_in *ti, void *buf, size_t size);
+
+void tar_in_cleanup(struct tar_in *ti);
 
 #endif /* HANDLERS_TAR_H_ */

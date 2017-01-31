@@ -30,7 +30,7 @@ struct tar_cushions_file {
 
 static struct tar_cushions_handler tar_cushions_handler;
 
-static int tar_close(void *c)
+static int tar_handler_close(void *c)
 {
 	struct tar_cushions_file *tar_c_file = c;
 
@@ -95,7 +95,7 @@ static FILE *tar_cushions_fopen(struct cushions_handler *handler,
 			tar_cushions_handler.tar_func);
 err:
 
-	tar_close(tar_c_file);
+	tar_handler_close(tar_c_file);
 
 	errno = old_errno;
 	return NULL;
@@ -151,7 +151,7 @@ static struct tar_cushions_handler tar_cushions_handler = {
 	.tar_func = {
 //		.read  = tar_read,
 		.write = tar_write,
-		.close = tar_close
+		.close = tar_handler_close
 	},
 };
 

@@ -100,13 +100,13 @@ $(tests): %_test: tests/%_test.c $(lib).so
 custom_stream variadic_macro cp: %: example/%.c
 	$(CC) $(CFLAGS) -o $@ $<
 
-untar: example/untar.c handlers/tar.c
-	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers
+untar: example/untar.c handlers/tar.c handlers/picoro.c
+	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers -l tar
 
 coroutines: example/coroutines.c handlers/picoro.c
 	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers
 
-tar: example/tar.c handlers/picoro.c
+tar: example/tar.c handlers/picoro.c handlers/tar.c
 	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers -ltar
 
 cpw:example/cp.c $(lib).so
