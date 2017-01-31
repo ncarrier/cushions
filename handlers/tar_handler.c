@@ -23,6 +23,7 @@ enum direction {
 struct tar_cushions_file {
 	union {
 		struct tar_out out;
+		struct tar_in in;
 	};
 	enum direction direction;
 	bool eof;
@@ -36,6 +37,8 @@ static int tar_handler_close(void *c)
 
 	if (tar_c_file->direction == WRITE)
 		tar_out_cleanup(&tar_c_file->out);
+	else
+		tar_in_cleanup(&tar_c_file->in);
 	memset(tar_c_file, 0, sizeof(*tar_c_file));
 	free(tar_c_file);
 
@@ -68,7 +71,6 @@ static FILE *tar_cushions_fopen(struct cushions_handler *handler,
 		return NULL;
 	}
 
-	// TODO use path as the directory destination
 	tar_c_file = calloc(1, sizeof(*tar_c_file));
 	if (tar_c_file == NULL) {
 		old_errno = errno;
@@ -78,17 +80,15 @@ static FILE *tar_cushions_fopen(struct cushions_handler *handler,
 	}
 	if (mode->read) {
 		tar_c_file->direction = READ;
-		old_errno = ENOSYS;
-		LOGE("reading from directory to tar archive not supported yet");
-		goto err;
+		ret = tar_in_init(&tar_c_file->in, path);
 	} else {
 		tar_c_file->direction = WRITE;
 		ret = tar_out_init(&tar_c_file->out, path);
-		if (ret < 0) {
-			old_errno = -ret;
-			LOGPE("tar_out_init", ret);
-			goto err;
-		}
+	}
+	if (ret < 0) {
+		old_errno = -ret;
+		LOGPE("tar_XX_init", ret);
+		goto err;
 	}
 
 	return fopencookie(tar_c_file, mode->mode,
@@ -101,12 +101,12 @@ err:
 	return NULL;
 }
 
-//static ssize_t tar_read(void *c, char *buf, size_t size)
-//{
-//	int ret;
-//
-//	return ret;
-//}
+static ssize_t tar_read(void *c, char *buf, size_t size)
+{
+	struct tar_cushions_file *tar_c_file = c;
+
+	return tar_in_read(&tar_c_file->in, buf, size);
+}
 
 static ssize_t tar_write(void *cookie, const char *buf, size_t size)
 {
@@ -149,7 +149,7 @@ static struct tar_cushions_handler tar_cushions_handler = {
 		.fopen = tar_cushions_fopen,
 	},
 	.tar_func = {
-//		.read  = tar_read,
+		.read  = tar_read,
 		.write = tar_write,
 		.close = tar_handler_close
 	},
