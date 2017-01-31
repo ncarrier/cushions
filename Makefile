@@ -61,7 +61,7 @@ tar_extra_flags :=
 
 $(lib).a_src := $(filter-out src/cushions_handlers.c,$($(lib)_src)) \
 	$(foreach h,$(hdlr_names),$(subst %,$(h),$(handler_src_pattern))) \
-	handlers/tar.c
+	handlers/tar.c handlers/picoro.c
 $(lib).a_obj := $($(lib).a_src:.c=.o)
 
 world := $(handlers) $(tests) $(examples) $(lib).so $(lib).a
