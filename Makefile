@@ -42,7 +42,7 @@ else
 # causes this
 # I suspect picoro's use of long jumps, given that valgrind complains a lot
 # about uninitialize values read
-CFLAGS += -O1 -g3 \
+CFLAGS += -O0 -g3 \
     -fno-inline-functions
 endif
 
