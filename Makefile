@@ -156,8 +156,29 @@ clean:
 			$(lib).pc \
 			world.d
 
-.PHONY: clean all world examples tests check
 
 $(lib).pc: $(lib).pc.in
 	sed -e "s|PPP_PREFIX_PPP|$(prefix)|g" \
 		-e "s/PPP_VERSION_PPP/$(version)/g" $^ > $@
+
+install: all $(lib).pc
+	install --directory $(prefix)/lib/cushions_handlers/
+	install --mode=755 $(handlers) $(prefix)/lib/cushions_handlers/
+
+	install -D --mode=755 $(lib).a $(prefix)/lib/
+
+	install -D --mode=755 $(lib).so $(prefix)/lib/
+
+	install --directory $(prefix)/include/cushions/
+	install --mode=644 $(here)include/cushions/* $(prefix)/include/cushions
+
+	install --directory $(prefix)/lib/pkgconfig/
+	install -D --mode=644 $(lib).pc $(prefix)/lib/pkgconfig/
+
+uninstall:
+	rm -rf $(prefix)/include/cushions \
+		$(prefix)/lib/cushions_handlers/ \
+		$(prefix)/lib/$(lib).a \
+		$(prefix)/lib/$(lib).so
+
+.PHONY: clean all world examples tests check install uninstall
