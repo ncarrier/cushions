@@ -163,6 +163,7 @@ package: $(package)
 
 $(package):all $(lib).pc
 	checkinstall \
+		--fstrans=no \
 		--type=debian \
 		--deldoc=yes \
 		--deldesc=yes \
