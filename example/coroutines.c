@@ -22,7 +22,7 @@ static void *cr(void *arg)
 
 int main(int argc, char *argv[])
 {
-	coro c;
+	struct coro *c;
 	int *j;
 	int i;
 

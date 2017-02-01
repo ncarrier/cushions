@@ -40,7 +40,7 @@ static struct coro *idle;
  * A coroutine can be passed to resume() if
  * it is not on the running or idle lists.
  */
-bool resumable(coro c)
+bool resumable(struct coro *c)
 {
 	return c != NULL && c->next == NULL;
 }
@@ -48,7 +48,7 @@ bool resumable(coro c)
 /*
  * Add a coroutine to a list and return the previous head of the list.
  */
-static void push(coro *list, coro c)
+static void push(struct coro **list, struct coro *c)
 {
 	c->next = *list;
 	*list = c;
@@ -57,9 +57,9 @@ static void push(coro *list, coro c)
 /*
  * Remove a coroutine from a list and return it.
  */
-static coro pop(coro *list)
+static struct coro *pop(struct coro **list)
 {
-	coro c = *list;
+	struct coro *c = *list;
 	*list = c->next;
 	c->next = NULL;
 
@@ -71,7 +71,7 @@ static coro pop(coro *list)
  * The current coroutine's state is saved in "me" and the
  * target coroutine is at the head of the "running" list.
  */
-static void *pass(coro me, void *arg)
+static void *pass(struct coro *me, void *arg)
 {
 	int ret;
 	static void *saved;
@@ -98,7 +98,7 @@ void *resume(struct coro *c, void *arg)
 __attribute__((noinline))
 void *yield(void *arg)
 {
-	coro c;
+	struct coro *c;
 
 	c = pop(&running);
 
@@ -117,9 +117,9 @@ static void coroutine_main(void *arg);
  * idle. When there are idle coroutines, we pass one the function
  * pointer and return the activated coroutine's address.
  */
-coro coroutine(void *fun(void *arg))
+struct coro *coroutine(void *fun(void *arg))
 {
-	coro c;
+	struct coro *c;
 
 	if (idle == NULL && setjmp(running->state) == 0)
 		coroutine_start();
@@ -169,7 +169,7 @@ static void coroutine_main(void *arg)
 	void *(*fun)(void *);
 	struct coro me;
 	void *y;
-	coro c;
+	struct coro *c;
 
 	push(&idle, &me);
 	fun = pass(&me, arg);

@@ -126,7 +126,7 @@ void tar_out_cleanup(struct tar_out *to);
 
 struct tar_in {
 	TAR *tar;
-	coro c;
+	struct coro *c;
 	char *src;
 	/* simply linked list at first, may be more elaborate later */
 	struct tar_in *next;

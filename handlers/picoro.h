@@ -10,7 +10,7 @@
 #define PICORO_H
 #include <stdbool.h>
 
-typedef struct coro *coro;
+struct coro;
 
 /*
  * Create a coroutine that will run fun(). The coroutine starts off suspended.
@@ -19,20 +19,20 @@ typedef struct coro *coro;
  * coroutine yielded, except that the coroutine is then no longer resumable
  * and may be discarded.
  */
-coro coroutine(void *fun(void *arg));
+struct coro *coroutine(void *fun(void *arg));
 
 /*
  * Returns false when the coroutine has run to completion
  * or when it is blocked inside resume().
  */
-bool resumable(coro c);
+bool resumable(struct coro *c);
 
 /*
  * Transfer control to another coroutine. The second argument is returned by
  * yield() inside the target coroutine (except for the first time resume() is
  * called). A coroutine that is blocked inside resume() is not resumable.
  */
-void *resume(coro c, void *arg);
+void *resume(struct coro *c, void *arg);
 
 /*
  * Transfer control back to the coroutine that resumed this one. The argument
