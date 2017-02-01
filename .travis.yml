@@ -8,6 +8,8 @@ before_install:
 script:
   - make world
   - make check
+  - make DEBUG=1 world
+  - make DEBUG=1 check
   - make clean
   - for t in all bzip2_expand clean cp cpw curl_fopen custom_stream dict_test examples libcushions.a libcushion.so mode_test params_test tests variadic_macro world wrap_malloc untar; do make -j 5 $t; make clean; done
   - git status
