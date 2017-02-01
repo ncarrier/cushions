@@ -33,15 +33,16 @@ CFLAGS += \
 ifeq ($(DEBUG),1)
 CFLAGS += -g3 -O0 -Werror
 else
-# the -finline-functions, implied by -03, makes the tar tests segfault, with
+# the -finline-functions, implied by -O3, makes the tar tests segfault, with
 # gcc (Debian 6.2.1-5) 6.2.1 20161124 and with
-# gcc (Ubuntu/Linaro 4.6.3-1ubuntu5) 4.6.3, it provokes an
+# gcc (Ubuntu/Linaro 4.6.3-1ubuntu5) 4.6.3, -O3 provokes a :
 # *** longjmp causes uninitialized stack frame ***: \
 #	/home/travis/build/ncarrier/cushions/cpw terminated
-# error
+# error, work must be done to see which is the precise optimization flag which
+# causes this
 # I suspect picoro's use of long jumps, given that valgrind complains a lot
 # about uninitialize values read
-CFLAGS += -O3 -g3 \
+CFLAGS += -O2 -g3 \
     -fno-inline-functions
 endif
 
