@@ -8,6 +8,7 @@
 
 #ifndef PICORO_H
 #define PICORO_H
+#include <stdbool.h>
 
 typedef struct coro *coro;
 
@@ -24,7 +25,7 @@ coro coroutine(void *fun(void *arg));
  * Returns false when the coroutine has run to completion
  * or when it is blocked inside resume().
  */
-int resumable(coro c);
+bool resumable(coro c);
 
 /*
  * Transfer control to another coroutine. The second argument is returned by

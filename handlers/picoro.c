@@ -10,6 +10,13 @@
 
 #include "picoro.h"
 
+#define STACK_SIZE (16 * 1024)
+
+struct coro {
+	struct coro *next;
+	jmp_buf state;
+};
+
 /*
  * Each coroutine has a jmp_buf to hold its context when suspended.
  *
@@ -25,23 +32,24 @@
  * coroutine_main(). After initialization it is never NULL except
  * briefly while coroutine_main() forks a new idle coroutine.
  */
-static struct coro {
-	struct coro *next;
-	jmp_buf state;
-} first, *running = &first, *idle;
+static struct coro first;
+static struct coro *running = &first;
+static struct coro *idle;
 
 /*
  * A coroutine can be passed to resume() if
  * it is not on the running or idle lists.
  */
-int resumable(coro c) {
-	return(c != NULL && c->next == NULL);
+bool resumable(coro c)
+{
+	return c != NULL && c->next == NULL;
 }
 
 /*
  * Add a coroutine to a list and return the previous head of the list.
  */
-static void push(coro *list, coro c) {
+static void push(coro *list, coro c)
+{
 	c->next = *list;
 	*list = c;
 }
@@ -49,11 +57,13 @@ static void push(coro *list, coro c) {
 /*
  * Remove a coroutine from a list and return it.
  */
-static coro pop(coro *list) {
+static coro pop(coro *list)
+{
 	coro c = *list;
 	*list = c->next;
 	c->next = NULL;
-	return(c);
+
+	return c;
 }
 
 /*
@@ -61,26 +71,39 @@ static coro pop(coro *list) {
  * The current coroutine's state is saved in "me" and the
  * target coroutine is at the head of the "running" list.
  */
-static void *pass(coro me, void *arg) {
+static void *pass(coro me, void *arg)
+{
+	int ret;
 	static void *saved;
+
 	saved = arg;
-	if(!setjmp(me->state))
+
+	ret = setjmp(me->state);
+	if (ret == 0)
 		longjmp(running->state, 1);
-	return(saved);
+
+	return saved;
 }
 
-void *resume(coro c, void *arg) {
+{
 	assert(resumable(c));
+
 	push(&running, c);
-	return(pass(c->next, arg));
+
+	return pass(c->next, arg);
 }
 
-void *yield(void *arg) {
-	return(pass(pop(&running), arg));
+{
+	coro c;
+
+	c = pop(&running);
+
+	return pass(c, arg);
 }
 
 /* Declare for mutual recursion. */
-void coroutine_start(void), coroutine_main(void*);
+static void coroutine_start(void);
+static void coroutine_main(void *arg);
 
 /*
  * The coroutine constructor function.
@@ -90,10 +113,15 @@ void coroutine_start(void), coroutine_main(void*);
  * idle. When there are idle coroutines, we pass one the function
  * pointer and return the activated coroutine's address.
  */
-coro coroutine(void *fun(void *arg)) {
-	if(idle == NULL && !setjmp(running->state))
+coro coroutine(void *fun(void *arg))
+{
+	coro c;
+
+	if (idle == NULL && setjmp(running->state) == 0)
 		coroutine_start();
-	return(resume(pop(&idle), fun));
+	c = pop(&idle);
+
+	return resume(c, fun);
 }
 
 /*
@@ -130,17 +158,25 @@ coro coroutine(void *fun(void *arg)) {
  * The conversion between the function pointer and a void pointer is not
  * allowed by ANSI C but we do it anyway.
  */
-void coroutine_main(void *ret) {
-	void *(*fun)(void *arg);
+{
+	int ret;
+	void *(*fun)(void *);
 	struct coro me;
+	void *y;
+	coro c;
+
 	push(&idle, &me);
-	fun = pass(&me, ret);
-	if(!setjmp(running->state))
+	fun = pass(&me, arg);
+	ret = setjmp(running->state);
+	if (ret == 0)
 		coroutine_start();
-	for(;;) {
-		ret = fun(yield(&me));
-		push(&idle, pop(&running));
-		fun = pass(&me, ret);
+
+	while (true) {
+		y = yield(&me);
+		arg = fun(y);
+		c = pop(&running);
+		push(&idle, c);
+		fun = pass(&me, arg);
 	}
 }
 
@@ -148,9 +184,8 @@ void coroutine_main(void *ret) {
  * Allocate space for the current stack to grow before creating the
  * initial stack frame for the next coroutine.
  */
-void coroutine_start(void) {
-	char stack[16 * 1024];
+{
+	char stack[STACK_SIZE];
+
 	coroutine_main(stack);
 }
-
-/* eof */
