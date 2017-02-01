@@ -9,6 +9,7 @@ version := $(shell git describe --always --tags --dirty)
 ifndef prefix
 prefix := /usr/
 endif
+arch := $(shell dpkg --print-architecture)
 
 # quirk for Wformat-signedness support
 GCCVERSIONGTEQ5 := $(shell expr `gcc -dumpversion | cut -f1 -d.` \>= 5)
@@ -68,6 +69,7 @@ $(lib).a_src := $(filter-out src/cushions_handlers.c,$($(lib)_src)) \
 	$(foreach h,$(hdlr_names),$(subst %,$(h),$(handler_src_pattern))) \
 	handlers/tar.c handlers/picoro.c
 $(lib).a_obj := $($(lib).a_src:.c=.o)
+package := $(lib)_$(version)-1_$(arch).deb
 
 world := $(handlers) $(tests) $(examples) $(lib).so $(lib).a
 
@@ -154,8 +156,27 @@ clean:
 			$($(lib).a_obj) \
 			$(tests) \
 			$(lib).pc \
+			$(package) \
 			world.d
 
+package: $(package)
+
+$(package):all $(lib).pc
+	checkinstall \
+		--type=debian \
+		--deldoc=yes \
+		--deldesc=yes \
+		--deldesc=yes \
+		--backup=no \
+		--install=no \
+		--pkgname=$(lib) \
+		--pkgversion=$(version) \
+		--arch=$(arch) \
+		--stripso=$(if $(DEBUG),no,yes) \
+		--maintainer=carrier.nicolas0@gmail.com \
+		--requires="libcurl3,libtar0,liblzo2-2,libbz2-1.0" \
+		--default \
+		make -f $(here)/Makefile -j DEBUG=$(DEBUG) install
 
 $(lib).pc: $(lib).pc.in
 	sed -e "s|PPP_PREFIX_PPP|$(prefix)|g" \
@@ -181,4 +202,4 @@ uninstall:
 		$(prefix)/lib/$(lib).a \
 		$(prefix)/lib/$(lib).so
 
-.PHONY: clean all world examples tests check install uninstall
+.PHONY: clean all world examples tests check install uninstall package
