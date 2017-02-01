@@ -1,3 +1,4 @@
+doc / manpage
 rewrite tar_out using libtar and picoro, as for tar_in
 write test cases for all handlers
 add support for codecheck and at least one static analysis tool (scan-build ?)
