@@ -8,6 +8,7 @@ before_install:
 script:
   - make world
   - make check
+  - make clean
   - make DEBUG=1 world
   - make DEBUG=1 check
   - make clean
