@@ -1,0 +1,13 @@
+prefix=PPP_PREFIX_PPP
+exec_prefix=${prefix}
+includedir=${prefix}/include
+libdir=${exec_prefix}/lib
+
+Name: libcushions
+Description: Custom stream handlers integrated by overriding native symbols.
+Version: PPP_VERSION_PPP
+Cflags: -I${includedir}
+Libs: -L${libdir} -lcushions
+Libs.private: -lbz2 -ldl -ltar -llzo2
+Requires.private: libcurl
+URL: https://github.com/ncarrier/cushions/
