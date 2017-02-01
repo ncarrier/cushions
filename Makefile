@@ -184,17 +184,17 @@ $(lib).pc: $(lib).pc.in
 
 install: all $(lib).pc
 	install --directory $(prefix)/lib/cushions_handlers/
-	install --mode=755 $(handlers) $(prefix)/lib/cushions_handlers/
+	install --mode=0755 $(handlers) $(prefix)/lib/cushions_handlers/
 
-	install -D --mode=755 $(lib).a $(prefix)/lib/
+	install -D --mode=0755 $(lib).a $(prefix)/lib/
 
-	install -D --mode=755 $(lib).so $(prefix)/lib/
+	install -D --mode=0755 $(lib).so $(prefix)/lib/
 
 	install --directory $(prefix)/include/cushions/
-	install --mode=644 $(here)include/cushions/* $(prefix)/include/cushions
+	install --mode=0644 $(here)include/cushions/* $(prefix)/include/cushions
 
 	install --directory $(prefix)/lib/pkgconfig/
-	install -D --mode=644 $(lib).pc $(prefix)/lib/pkgconfig/
+	install -D --mode=0644 $(lib).pc $(prefix)/lib/pkgconfig/
 
 uninstall:
 	rm -rf $(prefix)/include/cushions \
