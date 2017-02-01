@@ -250,8 +250,8 @@ err:
 
 static int store(struct lzo_cushions_file *f, const char *buf, size_t size)
 {
-	int written;
-	int remaining;
+	size_t written;
+	size_t remaining;
 
 	if (f->cur >= B_SIZE)
 		return -ENOMEM;
