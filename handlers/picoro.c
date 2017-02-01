@@ -59,7 +59,9 @@ static void push(struct coro **list, struct coro *c)
  */
 static struct coro *pop(struct coro **list)
 {
-	struct coro *c = *list;
+	struct coro *c;
+
+	c = *list;
 	*list = c->next;
 	c->next = NULL;
 
@@ -135,7 +137,7 @@ struct coro *coroutine(void *fun(void *arg))
  * ensure it remains non-NULL. Then we immediately suspend ourself
  * waiting for the first function we are to run. (The head of the
  * running list is the coroutine that forked us.) We pass the stack
- * pointer to prevent it from being optimised away. The first time we
+ * pointer to prevent it from being optimized away. The first time we
  * are called we will return to the fork in the coroutine()
  * constructor function (above); on subsequent calls we will resume
  * the parent coroutine_main(). In both cases the passed value is
@@ -157,8 +159,6 @@ struct coro *coroutine(void *fun(void *arg))
  * function which will put us back on the running list and pass us a
  * new function to call.
  *
- * We do not declare coroutine_main() static to try to stop it being inlined.
- *
  * The conversion between the function pointer and a void pointer is not
  * allowed by ANSI C but we do it anyway.
  */
@@ -167,7 +167,7 @@ static void coroutine_main(void *arg)
 {
 	int ret;
 	void *(*fun)(void *);
-	struct coro me;
+	struct coro me = { 0 };
 	void *y;
 	struct coro *c;
 
@@ -193,7 +193,7 @@ static void coroutine_main(void *arg)
 __attribute__((noinline))
 static void coroutine_start(void)
 {
-	char stack[STACK_SIZE];
+	char stack[STACK_SIZE] =  { 0 };
 
 	coroutine_main(stack);
 }
