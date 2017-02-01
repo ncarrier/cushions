@@ -33,4 +33,12 @@ tar cf test_dir.tar test_dir
 mkdir extracted_dir
 ${build_dir}/cpw test_dir.tar tar://extracted_dir
 diff test_dir extracted_dir/test_dir
+rm -rf test_dir.tar extracted_dir/*
+
+# archive creation
+${build_dir}/cpw tar://test_dir test_dir.tar
+cd extracted_dir
+tar xf ../test_dir.tar
+cd -
+diff test_dir extracted_dir/test_dir
 
