@@ -5,6 +5,11 @@ ifeq ($(CC),cc)
 CC := gcc
 endif
 
+version := $(shell git describe --always --tags --dirty)
+ifndef prefix
+prefix := /usr/
+endif
+
 # quirk for Wformat-signedness support
 GCCVERSIONGTEQ5 := $(shell expr `gcc -dumpversion | cut -f1 -d.` \>= 5)
 
@@ -148,6 +153,11 @@ clean:
 			$(lib).a \
 			$($(lib).a_obj) \
 			$(tests) \
+			$(lib).pc \
 			world.d
 
 .PHONY: clean all world examples tests check
+
+$(lib).pc: $(lib).pc.in
+	sed -e "s|PPP_PREFIX_PPP|$(prefix)|g" \
+		-e "s/PPP_VERSION_PPP/$(version)/g" $^ > $@
