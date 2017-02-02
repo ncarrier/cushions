@@ -64,11 +64,11 @@ curl_extra_flags := $(shell curl-config --cflags --libs)
 lzo_extra_flags := -llzo2
 mem_extra_flags :=
 sock_extra_flags :=
-tar_extra_flags := -ltar
+tar_extra_flags := -ltar -Wl,--wrap=__longjmp_chk -ldl
 
 $(lib).a_src := $(filter-out src/cushions_handlers.c,$($(lib)_src)) \
 	$(foreach h,$(hdlr_names),$(subst %,$(h),$(handler_src_pattern))) \
-	handlers/tar.c handlers/picoro.c
+	handlers/tar.c handlers/picoro.c handlers/longjmp.c
 $(lib).a_obj := $($(lib).a_src:.c=.o)
 package := $(lib)_$(version)-1_$(arch).deb
 
@@ -108,14 +108,14 @@ $(tests): %_test: tests/%_test.c $(lib).so
 custom_stream variadic_macro cp: %: example/%.c
 	$(CC) $(CFLAGS) -o $@ $<
 
-untar: example/untar.c handlers/tar.c handlers/picoro.c
-	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers -l tar
+untar: example/untar.c handlers/tar.c handlers/picoro.c handlers/longjmp.c
+	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers $(tar_extra_flags)
 
-coroutines: example/coroutines.c handlers/picoro.c
-	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers
+coroutines: example/coroutines.c handlers/picoro.c handlers/longjmp.c
+	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers -Wl,--wrap=__longjmp_chk -ldl
 
-tar: example/tar.c handlers/picoro.c handlers/tar.c
-	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers -ltar
+tar: example/tar.c handlers/picoro.c handlers/tar.c handlers/longjmp.c
+	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers $(tar_extra_flags)
 
 cpw:example/cp.c $(lib).so
 	$(CC) $(CFLAGS) -o $@ $< -Wl,--wrap=fopen -L. -lcushions
@@ -138,7 +138,7 @@ $(lib).a:$($(lib).a_obj)
 ifneq ($(notdir $(CC)), cc_wrapper.sh)
 $(handlers): $(handler_pattern): $(lib).so
 endif
-handlers_dir/$(lib)_tar_handler.so: handlers/picoro.c handlers/tar.c
+handlers_dir/$(lib)_tar_handler.so: handlers/picoro.c handlers/tar.c handlers/longjmp.c
 $(handlers): $(handler_pattern): $(handler_deps)
 	$(CC) $(CFLAGS) -o $@ $^ $(DYN_FLAGS) $($*_extra_flags)
 
