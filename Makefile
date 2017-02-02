@@ -29,7 +29,7 @@ CFLAGS += \
 	-Wold-style-definition \
 	-Wstrict-prototypes \
 	-Wunused-variable \
-	-U_FORTIFY_SOURCE
+	-D_FORTIFY_SOURCE=2
 
 ifeq ($(DEBUG),1)
 CFLAGS += -g3 -O0 -Werror
