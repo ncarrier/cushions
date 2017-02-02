@@ -708,7 +708,7 @@ int tar_in_init(struct tar_in *ti, const char *src)
 	ti->src = strdup(src);
 	if (ti->src == NULL)
 		return -errno;
-	ret = tar_open(&ti->tar, src, &tar_in_ops, O_WRONLY | O_CREAT,
+	ret = tar_open(&ti->tar, ti->src, &tar_in_ops, O_WRONLY | O_CREAT,
 			TAR_IN_DEFAULT_MODE,
 			TAR_GNU);
 	if (ret < 0) {
