@@ -108,7 +108,6 @@ __attribute__((noinline)) void *yield(void *arg)
 
 /* Declare for mutual recursion. */
 static void coroutine_start(void);
-static void coroutine_main(void *arg);
 
 /*
  * The coroutine constructor function.
