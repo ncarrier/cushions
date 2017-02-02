@@ -1,5 +1,7 @@
 # cushions - custom stream handlers integrated by overriding native symbols
 
+[![Build Status](https://travis-ci.org/ncarrier/cushions.svg?branch=master)](https://travis-ci.org/ncarrier/cushions)
+
 ## Overview
 
 **libcushions** aims at adding support for url-like schemes to the glibc's
