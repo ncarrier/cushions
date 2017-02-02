@@ -119,7 +119,7 @@ static void coroutine_main(void *arg);
  * idle. When there are idle coroutines, we pass one the function
  * pointer and return the activated coroutine's address.
  */
-struct coro *coroutine(void *fun(void *arg))
+struct coro *coroutine(coro_fun fun)
 {
 	struct coro *c;
 
@@ -166,7 +166,7 @@ __attribute__((noinline))
 static void coroutine_main(void *arg)
 {
 	int ret;
-	void *(*fun)(void *);
+	coro_fun fun;
 	struct coro me = { 0 };
 	void *y;
 	struct coro *c;

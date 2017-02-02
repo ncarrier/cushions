@@ -12,6 +12,8 @@
 
 struct coro;
 
+typedef void *(*coro_fun)(void *);
+
 /*
  * Create a coroutine that will run fun(). The coroutine starts off suspended.
  * When it is first resumed, the argument to resume() is passed to fun().
@@ -19,7 +21,7 @@ struct coro;
  * coroutine yielded, except that the coroutine is then no longer resumable
  * and may be discarded.
  */
-struct coro *coroutine(void *fun(void *arg));
+struct coro *coroutine(coro_fun fun);
 
 /*
  * Returns false when the coroutine has run to completion
