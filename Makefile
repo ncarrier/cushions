@@ -185,6 +185,7 @@ $(lib).pc: $(lib).pc.in
 		-e "s/PPP_VERSION_PPP/$(version)/g" $^ > $@
 
 install: all $(lib).pc
+	mkdir -p $(prefix)/share/doc/libcushions
 	mkdir -p $(prefix)/lib/cushions_handlers/
 	mkdir -p $(prefix)/include/cushions/
 	mkdir -p $(prefix)/lib/pkgconfig/
