@@ -11,7 +11,7 @@
 
 #include "picoro.h"
 
-#define STACK_SIZE (16 * 1024)
+#define STACK_SIZE (32 * 1024)
 
 struct coro {
 	struct coro *next;
