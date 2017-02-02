@@ -88,8 +88,7 @@ static void *pass(struct coro *me, void *arg)
 	return saved;
 }
 
-__attribute__((noinline))
-void *resume(struct coro *c, void *arg)
+__attribute__((noinline)) void *resume(struct coro *c, void *arg)
 {
 	assert(resumable(c));
 
@@ -98,8 +97,7 @@ void *resume(struct coro *c, void *arg)
 	return pass(c->next, arg);
 }
 
-__attribute__((noinline))
-void *yield(void *arg)
+__attribute__((noinline)) void *yield(void *arg)
 {
 	struct coro *c;
 
@@ -163,8 +161,7 @@ struct coro *coroutine(coro_fun fun)
  * The conversion between the function pointer and a void pointer is not
  * allowed by ANSI C but we do it anyway.
  */
-__attribute__((noinline))
-static void coroutine_main(void *arg)
+__attribute__((noinline)) static void coroutine_main(void *arg)
 {
 	int ret;
 	volatile coro_fun fun;
@@ -192,8 +189,7 @@ static void coroutine_main(void *arg)
  * Allocate space for the current stack to grow before creating the
  * initial stack frame for the next coroutine.
  */
-__attribute__((noinline))
-static void coroutine_start(void)
+__attribute__((noinline)) static void coroutine_start(void)
 {
 	char stack[STACK_SIZE] =  { 0 };
 
