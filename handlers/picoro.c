@@ -7,6 +7,7 @@
 #include <assert.h>
 #include <setjmp.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "picoro.h"
 
@@ -167,7 +168,7 @@ static void coroutine_main(void *arg)
 {
 	int ret;
 	coro_fun fun;
-	struct coro me = { 0 };
+	struct coro me;
 	void *y;
 	struct coro *c;
 
