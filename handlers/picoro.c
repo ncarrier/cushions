@@ -167,7 +167,7 @@ __attribute__((noinline))
 static void coroutine_main(void *arg)
 {
 	int ret;
-	coro_fun fun;
+	volatile coro_fun fun;
 	struct coro me;
 	void *y;
 	struct coro *c;
