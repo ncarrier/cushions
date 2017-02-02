@@ -28,7 +28,8 @@ CFLAGS += \
 	-Wno-unused-parameter \
 	-Wold-style-definition \
 	-Wstrict-prototypes \
-	-Wunused-variable
+	-Wunused-variable \
+	-U_FORTIFY_SOURCE
 
 ifeq ($(DEBUG),1)
 CFLAGS += -g3 -O0 -Werror
