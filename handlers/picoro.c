@@ -171,6 +171,7 @@ static void coroutine_main(void *arg)
 	void *y;
 	struct coro *c;
 
+	memset(&me, 0, sizeof(me));
 	push(&idle, &me);
 	fun = pass(&me, arg);
 	ret = setjmp(running->state);
