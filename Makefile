@@ -51,7 +51,7 @@ $(lib)_src := $(wildcard $(here)src/*.c)
 $(lib)_src := $($(lib)_src:$(here)%=%)
 tests := dict_test mode_test params_test
 examples := bzip2_expand cpw cp curl_fopen custom_stream variadic_macro \
-	wrap_malloc untar tar coroutines
+	wrap_malloc untar tar coroutines coroutines_libcoro
 
 # build infos for handlers
 handler_pattern := handlers_dir/$(lib)_%_handler.so
@@ -113,6 +113,10 @@ untar: example/untar.c handlers/tar.c handlers/picoro.c handlers/longjmp.c
 
 coroutines: example/coroutines.c handlers/picoro.c handlers/longjmp.c
 	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers -Wl,--wrap=__longjmp_chk -ldl
+
+coroutines_libcoro: example/coroutines_libcoro.c handlers/coro.c
+	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers -DCORO_UCONTEXT=1 \
+		-Wno-strict-prototypes #-DHAVE_UCONTEXT_H -DHAVE_SETJMP_H -DHAVE_SIGALTSTACK
 
 tar: example/tar.c handlers/picoro.c handlers/tar.c handlers/longjmp.c
 	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers $(tar_extra_flags)
