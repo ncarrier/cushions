@@ -51,7 +51,7 @@ $(lib)_src := $(wildcard $(here)src/*.c)
 $(lib)_src := $($(lib)_src:$(here)%=%)
 tests := dict_test mode_test params_test
 examples := bzip2_expand cpw cp curl_fopen custom_stream variadic_macro \
-	wrap_malloc untar tar coroutines coroutines_libcoro
+	wrap_malloc untar tar coroutines_libcoro
 
 # build infos for handlers
 handler_pattern := handlers_dir/$(lib)_%_handler.so
@@ -68,7 +68,7 @@ tar_extra_flags := -ltar
 
 $(lib).a_src := $(filter-out src/cushions_handlers.c,$($(lib)_src)) \
 	$(foreach h,$(hdlr_names),$(subst %,$(h),$(handler_src_pattern))) \
-	handlers/tar.c handlers/picoro.c
+	handlers/tar.c handlers/coro.c
 $(lib).a_obj := $($(lib).a_src:.c=.o)
 package := $(lib)_$(version)-1_$(arch).deb
 
@@ -108,17 +108,14 @@ $(tests): %_test: tests/%_test.c $(lib).so
 custom_stream variadic_macro cp: %: example/%.c
 	$(CC) $(CFLAGS) -o $@ $<
 
-untar: example/untar.c handlers/tar.c handlers/picoro.c
+untar: example/untar.c handlers/tar.c handlers/coro.c
 	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers -l tar
-
-coroutines: example/coroutines.c handlers/picoro.c
-	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers
 
 coroutines_libcoro: example/coroutines_libcoro.c handlers/coro.c
 	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers -DCORO_UCONTEXT=1 \
 		-Wno-strict-prototypes #-DHAVE_UCONTEXT_H -DHAVE_SETJMP_H -DHAVE_SIGALTSTACK
 
-tar: example/tar.c handlers/picoro.c handlers/tar.c
+tar: example/tar.c handlers/coro.c handlers/tar.c
 	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers -ltar
 
 cpw:example/cp.c $(lib).so
@@ -142,7 +139,7 @@ $(lib).a:$($(lib).a_obj)
 ifneq ($(notdir $(CC)), cc_wrapper.sh)
 $(handlers): $(handler_pattern): $(lib).so
 endif
-handlers_dir/$(lib)_tar_handler.so: handlers/picoro.c handlers/tar.c
+handlers_dir/$(lib)_tar_handler.so: handlers/coro.c handlers/tar.c
 $(handlers): $(handler_pattern): $(handler_deps)
 	$(CC) $(CFLAGS) -o $@ $^ $(DYN_FLAGS) $($*_extra_flags)
 
