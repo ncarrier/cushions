@@ -396,7 +396,7 @@ void __attribute__ ((__noinline__))
 #endif
 coro_transfer (coro_context *prev, coro_context *next);
 
-# define coro_destroy(ctx) (void *)(ctx)
+# define coro_destroy(ctx) do { } while (0)
 
 #elif CORO_PTHREAD
 
@@ -418,7 +418,7 @@ void coro_destroy (coro_context *ctx);
 struct coro_context
 {
   void *fiber;
-  /* only used for initialisation */
+  /* only used for initialization */
   coro_func coro;
   void *arg;
 };
