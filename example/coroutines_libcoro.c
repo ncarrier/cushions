@@ -38,7 +38,7 @@ static void coroutine_cleanup(struct coroutine *c)
 
 static void cr(void *arg)
 {
-	struct coroutine  *c = arg;
+	struct coroutine *c = arg;
 
 	while (true) {
 		printf("*i = %d\n", c->i);
