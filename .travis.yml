@@ -7,7 +7,7 @@ before_install:
 
 script:
   - make world
-  - ./coroutines
+  - ./coroutines_libcoro
   - make check
   - make clean
   - make DEBUG=1 world
