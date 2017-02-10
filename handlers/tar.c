@@ -11,26 +11,17 @@
 #include <unistd.h>
 
 #include <string.h>
+#include <errno.h>
 #include <stdlib.h>
 #include <errno.h>
 #include <assert.h>
 
+#include <callback.h>
+
 #include "tar.h"
 
-#define HDR_FMT "%100s%Lo\0"
 #define INITIAL_DIR_NB 8
 #define DEFAULT_UMASK 0022
-
-#define RESUME_CONTINUE 1
-#define RESUME_FULLFILLED 2
-#define RESUME_ENDED 3
-
-struct tar_in_coroutine_arg {
-	void *buf;
-	size_t size;
-	size_t cur;
-	struct tar_in *ti;
-};
 
 static void string_cleanup(char **s)
 {
@@ -621,20 +612,11 @@ void tar_out_cleanup(struct tar_out *to)
 
 static int func_tar_in_open(const char *path, int flags, ...)
 {
-	/*
-	 * "opening" operation have already occurred before and the return
-	 * value is not significant
-	 */
-
 	return 0;
 }
 
 static int func_tar_in_close(int fd)
 {
-	ssize_t sret = RESUME_ENDED;
-
-	yield(&sret);
-
 	return 0;
 }
 
@@ -644,59 +626,100 @@ static ssize_t func_tar_in_read(int fd, void *buf, size_t size)
 	return 0;
 }
 
-static ssize_t func_tar_in_write(int fd, const void *buf, size_t size)
+#if __SIZEOF_INT__ == __SIZEOF_SIZE_T__
+#define va_arg_size_t va_arg_uint
+#define va_start_ssize_t va_start_int
+#define va_return_ssize_t va_return_int
+#elif __SIZEOF_LONG__ == __SIZEOF_SIZE_T__
+#define va_arg_size_t va_arg_ulong
+#define va_start_ssize_t va_start_long
+#define va_return_ssize_t va_return_long
+#elif __SIZEOF_LONG_LONG__ == __SIZEOF_SIZE_T__
+#define va_arg_size_t va_arg_ulonglong
+#define va_start_ssize_t va_start_longlong
+#define va_return_ssize_t va_return_longlong
+#endif
+
+static ssize_t do_tar_in_write(struct tar_in *ti, int fd, const void *buf,
+		size_t size)
 {
-	ssize_t sret;
-	struct tar_in_coroutine_arg *arg;
 	unsigned consumed;
 	unsigned needed;
 	size_t remaining;
 
 	remaining = size;
 	do {
-		sret = RESUME_CONTINUE;
-		arg = yield(&sret);
-		needed = arg->size - arg->cur;
+		needed = ti->size - ti->cur;
 		consumed = MIN(needed, remaining);
-		memcpy((char *)arg->buf + arg->cur, buf, consumed);
-		arg->cur += consumed;
+		memcpy((char *)ti->buf + ti->cur, buf, consumed);
+		ti->cur += consumed;
 		remaining -= consumed;
-		buf = ((char *)buf + consumed);
-		if (arg->cur == arg->size) {
-			sret = RESUME_FULLFILLED;
-			arg = yield(&sret);
-		}
+		buf = (char *)buf + consumed;
+		if (ti->cur == ti->size)
+			coro_transfer(&ti->coro, &ti->parent);
 	} while (remaining != 0);
 
 	return size;
 }
 
-tartype_t tar_in_ops = {
+static void callback_tar_in_write(void *data, va_alist alist)
+{
+	int fd;
+	const void *buf;
+	size_t size;
+
+	ssize_t sret;
+
+	va_start_ssize_t(alist);
+	fd = va_arg_int(alist);
+	buf = va_arg_ptr(alist, const void *);
+	size = va_arg_size_t(alist);
+
+	sret = do_tar_in_write(data, fd, buf, size);
+
+	va_return_ssize_t(alist, sret);
+}
+
+/* used for partial initialization only */
+static tartype_t tar_in_ops = {
 	.openfunc = func_tar_in_open,
 	.closefunc = func_tar_in_close,
 	.readfunc = func_tar_in_read,
-	.writefunc = func_tar_in_write,
 };
 
-static void *tar_in_serialize(void *arg)
+static void do_tar_in_serialize(struct tar_in *ti)
 {
-	struct tar_in_coroutine_arg *a = arg;
-	struct tar_in *ti = a->ti;
 	int ret;
 
 	ret = tar_append_tree(ti->tar, ti->src, basename(ti->src));
-	if (ret < 0)
-		return NULL;
+	if (ret < 0) {
+		ti->err = errno;
+		return;
+	}
 	ret = tar_append_eof(ti->tar);
-	if (ret < 0)
-		return NULL;
+	if (ret < 0) {
+		ti->err = errno;
+		return;
+	}
 	ret = tar_close(ti->tar);
-	if (ret < 0)
-		return NULL;
+	if (ret < 0) {
+		ti->err = errno;
+		return;
+	}
 
-	errno = 0;
+	ti->err = 0;
+	ti->eof = true;
 
-	return NULL;
+	return;
+}
+
+static void tar_in_serialize(void *arg)
+{
+	struct tar_in *ti = arg;
+
+	do_tar_in_serialize(arg);
+
+	coro_transfer(&ti->coro, &ti->parent);
 }
 
 int tar_in_init(struct tar_in *ti, const char *src)
@@ -705,49 +728,51 @@ int tar_in_init(struct tar_in *ti, const char *src)
 
 	memset(ti, 0, sizeof(*ti));
 
+	ti->ops = tar_in_ops;
 	ti->src = strdup(src);
 	if (ti->src == NULL)
 		return -errno;
-	ret = tar_open(&ti->tar, ti->src, &tar_in_ops, O_WRONLY | O_CREAT,
-			TAR_IN_DEFAULT_MODE,
-			TAR_GNU);
+
+	ti->ops.writefunc = (writefunc_t) alloc_callback(
+			&callback_tar_in_write, ti);
+	if (ti->ops.writefunc == NULL)
+		return -ENOMEM;
+	ret = tar_open(&ti->tar, ti->src, &ti->ops, O_WRONLY | O_CREAT,
+			TAR_IN_DEFAULT_MODE, TAR_GNU);
 	if (ret < 0) {
 		string_cleanup(&ti->src);
 		return -errno;
 	}
-	ti->c = coroutine(tar_in_serialize);
+	coro_create(&ti->parent, NULL, NULL, NULL, 0);
+	ret = coro_stack_alloc(&ti->stack, 0);
+	if (ret != 1)
+		return -ENOMEM;
+	coro_create(&ti->coro, tar_in_serialize, ti, ti->stack.sptr,
+			ti->stack.ssze);
 
 	return 0;
 }
 
 ssize_t tar_in_read(struct tar_in *ti, void *buf, size_t size)
 {
-	struct tar_in_coroutine_arg arg = {
-			.buf = buf,
-			.size = size,
-			.ti = ti,
-			.cur = 0,
-	};
-	ssize_t *sret;
+	ti->buf = buf;
+	ti->size = size;
+	ti->cur = 0;
 
-	if (!resumable(ti->c)) {
-		errno = 0;
+	if (ti->eof)
 		return 0;
-	}
+
 	do {
-		sret = resume(ti->c, &arg);
-		if (sret == NULL)
-			return errno == 0 ? 0 : -1;
-	} while (*sret == RESUME_CONTINUE);
+		coro_transfer(&ti->parent, &ti->coro);
+	} while (!ti->eof && ti->err == 0 && ti->cur != ti->size);
 
-	/* make func_tar_in_close return */
-	if (*sret == RESUME_ENDED)
-		resume(ti->c, NULL);
-
-	return arg.cur;
+	return ti->cur;
 }
 
 void tar_in_cleanup(struct tar_in *ti)
 {
+	coro_stack_free(&ti->stack);
+	coro_destroy(&ti->coro);
+	coro_destroy(&ti->parent);
 	string_cleanup(&ti->src);
 }

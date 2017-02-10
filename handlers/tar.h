@@ -8,7 +8,7 @@
 
 #include <libtar.h>
 
-#include "picoro.h"
+#include "coro.h"
 
 #define TAR_OUT_END 1
 
@@ -126,10 +126,22 @@ void tar_out_cleanup(struct tar_out *to);
 
 struct tar_in {
 	TAR *tar;
-	struct coro *c;
+	struct coro_context coro;
+	struct coro_stack stack;
+	/* parent (root) coroutine */
+	struct coro_context parent;
 	char *src;
-	/* simply linked list at first, may be more elaborate later */
-	struct tar_in *next;
+	/* fake file descriptor */
+	int fd;
+
+	/* current read informations */
+	void *buf;
+	size_t size;
+	size_t cur;
+	tartype_t ops;
+
+	int err;
+	bool eof;
 };
 
 int tar_in_init(struct tar_in *ti, const char *src);

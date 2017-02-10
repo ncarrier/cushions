@@ -64,7 +64,7 @@ curl_extra_flags := $(shell curl-config --cflags --libs)
 lzo_extra_flags := -llzo2
 mem_extra_flags :=
 sock_extra_flags :=
-tar_extra_flags := -ltar
+tar_extra_flags := -ltar -DCORO_UCONTEXT=1 -lcallback
 
 $(lib).a_src := $(filter-out src/cushions_handlers.c,$($(lib)_src)) \
 	$(foreach h,$(hdlr_names),$(subst %,$(h),$(handler_src_pattern))) \
@@ -109,7 +109,7 @@ custom_stream variadic_macro cp: %: example/%.c
 	$(CC) $(CFLAGS) -o $@ $<
 
 untar: example/untar.c handlers/tar.c handlers/coro.c
-	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers -l tar
+	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers $(tar_extra_flags)
 
 callback: example/callback.c
 	$(CC) $(CFLAGS) -o $@ $^ -lcallback
@@ -119,7 +119,7 @@ coroutines_libcoro: example/coroutines_libcoro.c handlers/coro.c
 		-Wno-strict-prototypes #-DHAVE_UCONTEXT_H -DHAVE_SETJMP_H -DHAVE_SIGALTSTACK
 
 tar: example/tar.c handlers/coro.c handlers/tar.c
-	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers -ltar
+	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers $(tar_extra_flags)
 
 cpw:example/cp.c $(lib).so
 	$(CC) $(CFLAGS) -o $@ $< -Wl,--wrap=fopen -L. -lcushions
