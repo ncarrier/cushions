@@ -646,6 +646,8 @@ static ssize_t do_tar_in_write(struct tar_in *ti, int fd, const void *buf,
 	unsigned consumed;
 	unsigned needed;
 	size_t remaining;
+	/* for sjlj implements, avoids "clobbering" warnings */
+	const void *buf_copy = buf;
 
 	remaining = size;
 	do {
@@ -655,8 +657,11 @@ static ssize_t do_tar_in_write(struct tar_in *ti, int fd, const void *buf,
 		ti->cur += consumed;
 		remaining -= consumed;
 		buf = (char *)buf + consumed;
-		if (ti->cur == ti->size)
+		if (ti->cur == ti->size) {
+			buf_copy = buf;
 			coro_transfer(&ti->coro, &ti->parent);
+			buf = buf_copy;
+		}
 	} while (remaining != 0);
 
 	return size;
