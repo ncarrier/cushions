@@ -3,7 +3,7 @@ language: c
 before_install:
   - sudo apt-get -qq update
   - sudo apt-get install -y libbz2-dev liblzo2-dev lzop bzip2 libtar-dev
-        libcurl4-openssl-dev realpath checkinstall
+        libcurl4-openssl-dev realpath checkinstall libffcall1-dev
 
 script:
   - make world
