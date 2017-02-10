@@ -640,14 +640,18 @@ static ssize_t func_tar_in_read(int fd, void *buf, size_t size)
 #define va_return_ssize_t va_return_longlong
 #endif
 
+static void transfer_to_parent(struct tar_in *ti)
+{
+	/* not very useful in itself, but silences the "clobbered" warnings */
+	coro_transfer(&ti->coro, &ti->parent);
+}
+
 static ssize_t do_tar_in_write(struct tar_in *ti, int fd, const void *buf,
 		size_t size)
 {
 	unsigned consumed;
 	unsigned needed;
-	size_t remaining;
-	/* for sjlj implements, avoids "clobbering" warnings */
-	const void *buf_copy = buf;
+	volatile size_t remaining;
 
 	remaining = size;
 	do {
@@ -657,11 +661,8 @@ static ssize_t do_tar_in_write(struct tar_in *ti, int fd, const void *buf,
 		ti->cur += consumed;
 		remaining -= consumed;
 		buf = (char *)buf + consumed;
-		if (ti->cur == ti->size) {
-			buf_copy = buf;
-			coro_transfer(&ti->coro, &ti->parent);
-			buf = buf_copy;
-		}
+		if (ti->cur == ti->size)
+			transfer_to_parent(ti);
 	} while (remaining != 0);
 
 	return size;
