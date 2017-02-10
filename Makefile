@@ -64,7 +64,8 @@ curl_extra_flags := $(shell curl-config --cflags --libs)
 lzo_extra_flags := -llzo2
 mem_extra_flags :=
 sock_extra_flags :=
-tar_extra_flags := -ltar -DCORO_UCONTEXT=1 -lcallback
+tar_extra_flags := -ltar -DHAVE_UCONTEXT_H -DHAVE_SETJMP_H -DHAVE_SIGALTSTACK \
+	-lcallback
 
 $(lib).a_src := $(filter-out src/cushions_handlers.c,$($(lib)_src)) \
 	$(foreach h,$(hdlr_names),$(subst %,$(h),$(handler_src_pattern))) \
@@ -115,8 +116,8 @@ callback: example/callback.c
 	$(CC) $(CFLAGS) -o $@ $^ -lcallback
 
 coroutines_libcoro: example/coroutines_libcoro.c handlers/coro.c
-	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers -DCORO_UCONTEXT=1 \
-		-Wno-strict-prototypes #-DHAVE_UCONTEXT_H -DHAVE_SETJMP_H -DHAVE_SIGALTSTACK
+	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers -DHAVE_UCONTEXT_H \
+		-DHAVE_SETJMP_H -DHAVE_SIGALTSTACK
 
 tar: example/tar.c handlers/coro.c handlers/tar.c
 	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers $(tar_extra_flags)
