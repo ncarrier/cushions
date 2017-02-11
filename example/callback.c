@@ -17,7 +17,10 @@ static void function(void *data, va_alist alist)
 	va_start_int(alist);
 	prm = va_arg_int(alist);
 	printf("parameter prm is %d, my_type.c is %c\n", prm, t->c);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-value"
 	va_return_int(alist, -1);
+#pragma GCC diagnostic pop
 }
 
 int main(int argc, char *argv[])

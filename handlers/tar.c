@@ -683,7 +683,10 @@ static void callback_tar_in_write(void *data, va_alist alist)
 
 	sret = do_tar_in_write(data, fd, buf, size);
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-value"
 	va_return_ssize_t(alist, sret);
+#pragma GCC diagnostic pop
 }
 
 /* used for partial initialization only */
