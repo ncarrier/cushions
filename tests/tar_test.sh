@@ -6,7 +6,8 @@ rm -rf ${wdir}
 mkdir -p ${wdir}
 
 on_exit() {
-	rm -rf ${wdir}
+#rm -rf ${wdir}
+	echo on_exit
 }
 
 set -xeu
