@@ -1,15 +1,11 @@
-#define _GNU_SOURCE
 #include <sys/param.h>
-#include <unistd.h>
 #include <fcntl.h>
 
-#include <ctype.h>
 #include <string.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
-#include <assert.h>
 
 #include <error.h>
 
@@ -35,9 +31,9 @@ int main(int argc, char *argv[])
 	int ret;
 	const char *src_path;
 	const char *dest_path;
-	ssize_t sread;
 	char buf[BUFFER_SIZE];
-	bool eof = false;
+	bool eof;
+	ssize_t sread;
 	ssize_t swritten;
 
 	if (argc < 3)
@@ -53,6 +49,7 @@ int main(int argc, char *argv[])
 		error(EXIT_FAILURE, errno, "fopen(%s)", dest_path);
 	atexit(cleanup);
 
+	eof = false;
 	do {
 		sread = tar_in_read(&ti, buf, BUFFER_SIZE);
 		if (sread != BUFFER_SIZE) {
