@@ -1,88 +1,71 @@
 #include <sys/param.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
 
 #include <string.h>
-#include <stdlib.h>
 #include <stdbool.h>
-#include <errno.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
 
 #include <error.h>
 
 #include "tar.h"
 
-#define BUF_SIZE 100
+#define BUF_SIZE 500
 
-static void file_cleanup(FILE **file)
+static FILE *src;
+static struct tar_out to;
+
+static void cleanup(void)
 {
-	if (file == NULL || *file == NULL)
-		return;
+	if (src != NULL)
+		fclose(src);
 
-	fclose(*file);
-	*file = NULL;
+	src = NULL;
+
+	tar_out_cleanup(&to);
 }
 
 int main(int argc, char *argv[])
 {
 	int ret;
-	size_t size;
-	struct tar_out __attribute__((cleanup(tar_out_cleanup))) to = {
-			.file = NULL };
-	const char *path;
-	FILE __attribute__((cleanup(file_cleanup)))*f = NULL;
-	bool eof;
+	const char *src_path;
+	const char *dest_path;
 	char buf[BUF_SIZE];
-	char *p;
-	unsigned consumed;
-	const char *dest;
+	bool eof;
+	size_t sread;
+	ssize_t swritten;
 
 	if (argc < 2)
-		error(EXIT_FAILURE, 0, "usage: untar tar_file [dest]\n");
-	path = argv[1];
-	dest = argc == 3 ? argv[2] : ".";
+		error(EXIT_FAILURE, 0, "usage: untar tar_file [dest]");
+	src_path = argv[1];
+	dest_path = argc == 3 ? argv[2] : ".";
 
-
-	ret = tar_out_init(&to, dest);
+	ret = tar_out_init(&to, dest_path);
 	if (ret < 0)
 		error(EXIT_FAILURE, -ret, "tar_out_init");
-	f = fopen(path, "rbe");
-	if (f == NULL)
-		error(EXIT_FAILURE, 0, "fopen %s: %s", path, strerror(errno));
+	src = fopen(src_path, "rbe");
+	if (src == NULL)
+		error(EXIT_FAILURE, errno, "fopen(%s)", src_path);
+	atexit(cleanup);
 
 	eof = false;
 	do {
-		ret = 0;
-		size = fread(buf, 1, BUF_SIZE, f);
-		if (size < BUF_SIZE) {
+		sread = fread(buf, 1, BUF_SIZE, src);
+		if (sread < BUF_SIZE) {
 			ret = errno;
-			eof = feof(f);
+			eof = feof(src);
 			if (!eof)
 				error(EXIT_FAILURE, ret, "fread");
 		}
-		p = buf;
-		do {
-			consumed = to.o.store_data(&to, p, size);
-			if (to.o.is_full(&to)) {
-				ret = to.o.process_block(&to);
-				if (ret < 0)
-					error(EXIT_FAILURE, -ret, "process");
-				if (ret == TAR_OUT_END)
-					break;
-			}
-			p += consumed;
-			size -= consumed;
-		} while (size > 0);
-		if (eof)
-			if (!to.o.is_empty(&to))
-				error(EXIT_FAILURE, 0, "truncated archive");
-	} while (!eof && ret != TAR_OUT_END);
-
-	if (ret != TAR_OUT_END)
-		error(EXIT_FAILURE, 0, "truncated archive");
-
-	tar_out_cleanup(&to);
+		swritten = tar_out_write(&to, buf, sread);
+		if (swritten != sread) {
+			if (swritten < 0)
+				error(EXIT_FAILURE, -swritten, "tar_out_write");
+			else
+				error(EXIT_FAILURE, 0, "EOF on dest");
+		}
+	} while (!eof);
 
 	return EXIT_SUCCESS;
 }
