@@ -23,7 +23,7 @@ enum direction {
 struct tar_cushions_file {
 	union {
 		struct tar_out out;
-		struct tar_in in;
+		struct tar in;
 	};
 	enum direction direction;
 	bool eof;
@@ -38,7 +38,7 @@ static int tar_handler_close(void *c)
 	if (tar_c_file->direction == WRITE)
 		tar_out_cleanup(&tar_c_file->out);
 	else
-		tar_in_cleanup(&tar_c_file->in);
+		tar_cleanup(&tar_c_file->in);
 	memset(tar_c_file, 0, sizeof(*tar_c_file));
 	free(tar_c_file);
 
@@ -105,7 +105,7 @@ static ssize_t tar_read(void *c, char *buf, size_t size)
 {
 	struct tar_cushions_file *tar_c_file = c;
 
-	return tar_in_read(&tar_c_file->in, buf, size);
+	return tar_read(&tar_c_file->in, buf, size);
 }
 
 static ssize_t tar_write(void *cookie, const char *buf, size_t size)

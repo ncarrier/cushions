@@ -1,5 +1,4 @@
 #include <sys/param.h>
-#include <fcntl.h>
 
 #include <string.h>
 #include <stdbool.h>
@@ -13,7 +12,7 @@
 
 #define BUFFER_SIZE 500
 
-static struct tar_in ti;
+static struct tar ti;
 static FILE *dest;
 
 static void cleanup(void)
@@ -23,7 +22,7 @@ static void cleanup(void)
 
 	dest = NULL;
 
-	tar_in_cleanup(&ti);
+	tar_cleanup(&ti);
 }
 
 int main(int argc, char *argv[])
@@ -41,7 +40,7 @@ int main(int argc, char *argv[])
 	dest_path = argv[1];
 	src_path = argv[2];
 
-	ret = tar_in_init(&ti, src_path);
+	ret = tar_init(&ti, src_path, TAR_READ);
 	if (ret < 0)
 		error(EXIT_FAILURE, -ret, "tar_in_init");
 	dest = fopen(dest_path, "wbe");
@@ -51,7 +50,7 @@ int main(int argc, char *argv[])
 
 	eof = false;
 	do {
-		sread = tar_in_read(&ti, buf, BUFFER_SIZE);
+		sread = tar_read(&ti, buf, BUFFER_SIZE);
 		if (sread != BUFFER_SIZE) {
 			if (sread < 0)
 				error(EXIT_FAILURE, -sread, "tar_in_read");

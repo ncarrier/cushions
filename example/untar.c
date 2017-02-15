@@ -14,7 +14,7 @@
 #define BUF_SIZE 500
 
 static FILE *src;
-static struct tar_out to;
+static struct tar to;
 
 static void cleanup(void)
 {
@@ -23,7 +23,7 @@ static void cleanup(void)
 
 	src = NULL;
 
-	tar_out_cleanup(&to);
+	tar_cleanup(&to);
 }
 
 int main(int argc, char *argv[])
@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 	const char *dest_path;
 	char buf[BUF_SIZE];
 	bool eof;
-	size_t sread;
+	ssize_t sread;
 	ssize_t swritten;
 
 	if (argc < 2)
@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
 	src_path = argv[1];
 	dest_path = argc == 3 ? argv[2] : ".";
 
-	ret = tar_out_init(&to, dest_path);
+	ret = tar_init(&to, dest_path, TAR_WRITE);
 	if (ret < 0)
 		error(EXIT_FAILURE, -ret, "tar_out_init");
 	src = fopen(src_path, "rbe");
@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 			if (!eof)
 				error(EXIT_FAILURE, ret, "fread");
 		}
-		swritten = tar_out_write(&to, buf, sread);
+		swritten = tar_write(&to, buf, sread);
 		if (swritten != sread) {
 			if (swritten < 0)
 				error(EXIT_FAILURE, -swritten, "tar_out_write");
