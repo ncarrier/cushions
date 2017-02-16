@@ -1,4 +1,6 @@
 #define _GNU_SOURCE
+#include <fcntl.h>
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
@@ -15,32 +17,13 @@ struct tar_cushions_handler {
 	cookie_io_functions_t tar_func;
 };
 
-enum direction {
-	READ,
-	WRITE,
-};
-
-struct tar_cushions_file {
-	union {
-		struct tar_out out;
-		struct tar in;
-	};
-	enum direction direction;
-	bool eof;
-};
-
 static struct tar_cushions_handler tar_cushions_handler;
 
 static int tar_handler_close(void *c)
 {
-	struct tar_cushions_file *tar_c_file = c;
+	struct tar *tar = c;
 
-	if (tar_c_file->direction == WRITE)
-		tar_out_cleanup(&tar_c_file->out);
-	else
-		tar_cleanup(&tar_c_file->in);
-	memset(tar_c_file, 0, sizeof(*tar_c_file));
-	free(tar_c_file);
+	tar_cleanup(tar);
 
 	return 0;
 }
@@ -62,7 +45,7 @@ static FILE *tar_cushions_fopen(struct cushions_handler *handler,
 {
 	int ret;
 	int old_errno;
-	struct tar_cushions_file *tar_c_file;
+	struct tar *tar;
 
 	LOGD(__func__);
 
@@ -71,76 +54,51 @@ static FILE *tar_cushions_fopen(struct cushions_handler *handler,
 		return NULL;
 	}
 
-	tar_c_file = calloc(1, sizeof(*tar_c_file));
-	if (tar_c_file == NULL) {
+	tar = calloc(1, sizeof(*tar));
+	if (tar == NULL) {
 		old_errno = errno;
 		LOGPE("calloc", errno);
 		errno = old_errno;
 		return NULL;
 	}
-	if (mode->read) {
-		tar_c_file->direction = READ;
-		ret = tar_in_init(&tar_c_file->in, path);
-	} else {
-		tar_c_file->direction = WRITE;
-		ret = tar_out_init(&tar_c_file->out, path);
-	}
+	ret = tar_init(tar, path, mode->read ? TAR_READ : TAR_WRITE);
 	if (ret < 0) {
 		old_errno = -ret;
-		LOGPE("tar_XX_init", ret);
+		LOGPE("tar_init", ret);
 		goto err;
 	}
 
-	return fopencookie(tar_c_file, mode->mode,
-			tar_cushions_handler.tar_func);
+	return fopencookie(tar, mode->mode, tar_cushions_handler.tar_func);
 err:
 
-	tar_handler_close(tar_c_file);
+	tar_cleanup(tar);
 
 	errno = old_errno;
 	return NULL;
 }
 
-static ssize_t tar_read(void *c, char *buf, size_t size)
+static ssize_t tar_handler_read(void *cookie, char *buf, size_t size)
 {
-	struct tar_cushions_file *tar_c_file = c;
+	struct tar *tar = cookie;
 
-	return tar_read(&tar_c_file->in, buf, size);
+	if (!tar_is_direction_read(tar)) {
+		errno = EINVAL;
+		return -1;
+	}
+
+	return tar_read(tar, buf, size);
 }
 
-static ssize_t tar_write(void *cookie, const char *buf, size_t size)
+static ssize_t tar_handler_write(void *cookie, const char *buf, size_t size)
 {
-	struct tar_cushions_file *tar_c_file = cookie;
-	unsigned consumed;
-	unsigned total_consumed;
-	struct tar_out *to = &tar_c_file->out;
-	int ret;
-	const char *p;
+	struct tar *tar = cookie;
 
-	if (tar_c_file->eof)
+	if (tar_is_direction_read(tar)) {
+		errno = EINVAL;
 		return 0;
+	}
 
-	total_consumed = 0;
-	p = buf;
-	do {
-		consumed = to->o.store_data(to, p, size);
-		if (to->o.is_full(to)) {
-			ret = to->o.process_block(to);
-			if (ret < 0) {
-				errno = -ret;
-				return 0;
-			}
-			if (ret == TAR_OUT_END) {
-				tar_c_file->eof = true;
-				break;
-			}
-		}
-		p += consumed;
-		total_consumed += consumed;
-		size -= consumed;
-	} while (size > 0);
-
-	return total_consumed;
+	return tar_write(tar, buf, size);
 }
 
 static struct tar_cushions_handler tar_cushions_handler = {
@@ -149,8 +107,8 @@ static struct tar_cushions_handler tar_cushions_handler = {
 		.fopen = tar_cushions_fopen,
 	},
 	.tar_func = {
-		.read  = tar_read,
-		.write = tar_write,
+		.read  = tar_handler_read,
+		.write = tar_handler_write,
 		.close = tar_handler_close
 	},
 };
