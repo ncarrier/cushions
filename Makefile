@@ -185,7 +185,7 @@ $(package):all $(lib).pc
 		--default \
 		make -f $(here)/Makefile -j DEBUG=$(DEBUG) install
 
-$(lib).pc: $(lib).pc.in
+$(lib).pc: $(here)$(lib).pc.in
 	sed -e "s|PPP_PREFIX_PPP|$(prefix)|g" \
 		-e "s/PPP_VERSION_PPP/$(version)/g" $^ > $@
 
