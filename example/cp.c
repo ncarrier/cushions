@@ -7,7 +7,7 @@
 #include <error.h>
 
 #define USAGE "usage: cp source destination"
-#define BUFFER_SIZE 0x100
+#define BUFFER_SIZE 0x2000
 
 static void cleanup_file(FILE **f)
 {
