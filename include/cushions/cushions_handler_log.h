@@ -31,6 +31,7 @@ static const char *log_tag = STRINGIFY(LOG_TAG);
 
 CUSHIONS_API __attribute__((format(printf, 3, 4)))
 void cushions_handler_log(const char *tag, int level, const char *fmt, ...);
+CUSHIONS_API void log_set_color(bool enable);
 CUSHIONS_API void log_set_level(int level);
 
 #endif /* CUSHIONS_HANDLER_LOG_H */

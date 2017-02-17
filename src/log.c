@@ -5,9 +5,11 @@
 #define LOG_TAG log
 #include "cushions_handler_log.h"
 
-static int log_level = -1;
+#define LOG_TAG_FORMAT_NO_COLOR "[%2$c %3$10.10s] \0%1$c"
+#define LOG_TAG_FORMAT_COLOR "[\e[1;3%cm%c %10.10s\e[0m] "
 
-#define LOG_TAG_FORMAT "[\e[1;3%cm%c %10.10s\e[0m] "
+static int log_level = -1;
+static const char *tag_format = LOG_TAG_FORMAT_COLOR;
 
 static void ch_vlog(const char *tag, int level, const char *fmt, va_list ap)
 {
@@ -24,8 +26,11 @@ static void ch_vlog(const char *tag, int level, const char *fmt, va_list ap)
 	if (level < 0)
 		return;
 
-	fprintf(stderr, LOG_TAG_FORMAT, marks[level].c, marks[level].l, tag);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+	fprintf(stderr, tag_format, marks[level].c, marks[level].l, tag);
 	vfprintf(stderr, fmt, ap);
+#pragma GCC diagnostic pop
 	fputs("\n", stderr);
 }
 
@@ -41,6 +46,11 @@ void cushions_handler_log(const char *tag, int level, const char *fmt, ...)
 	va_start(ap, fmt);
 	ch_vlog(tag, level, fmt, ap);
 	va_end(ap);
+}
+
+void log_set_color(bool enable)
+{
+	tag_format = enable ? LOG_TAG_FORMAT_COLOR : LOG_TAG_FORMAT_NO_COLOR;
 }
 
 void log_set_level(int level)

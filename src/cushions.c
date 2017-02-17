@@ -173,11 +173,14 @@ FILE *cushions_handler_real_fopen(const char *path, const char *mode)
 
 static __attribute__((constructor)) void cushions_constructor(void)
 {
-	const char *env_log_level;
+	const char *env;
 
 	real_fopen = dlsym(RTLD_NEXT, "fopen");
 
-	env_log_level = getenv("CUSHIONS_LOG_LEVEL");
-	if (env_log_level != NULL)
-		log_set_level(atoi(env_log_level));
+	env = getenv("CUSHIONS_LOG_NO_COLOR");
+	if (env != NULL)
+		log_set_color(false);
+	env = getenv("CUSHIONS_LOG_LEVEL");
+	if (env != NULL)
+		log_set_level(atoi(env));
 }
