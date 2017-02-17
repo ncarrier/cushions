@@ -100,7 +100,8 @@ world:$(world)
 examples:$(examples)
 tests:$(tests)
 
-tree_structure := $(sort $(foreach s, $(world) $($(lib).a_obj),${CURDIR}/$(dir $(s))))
+tree_structure := $(sort $(foreach s, $(world) $($(lib).a_obj),${CURDIR}/$(dir \
+		$(s))))
 
 $(handlers) $($(lib).a_obj): | $(tree_structure)
 
