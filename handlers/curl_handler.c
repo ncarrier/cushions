@@ -59,13 +59,13 @@ struct curl_cushions_handler {
 		handler)
 
 static const struct ch_dict_node dict = CH_DICT(F(T(P(_))),
-                                          S(C(P(_)),
-                                            M(B(S(_),
-                                                _)),
-                                          F(T(P(_)))),
-                                          H(T(T(P(S(_),
-                                                  _)))),
-                                          T(F(T(P(_)))));
+                                                S(C(P(_)),
+                                                  M(B(S(_),
+                                                      _)),
+                                                F(T(P(_)))),
+                                                H(T(T(P(S(_),
+                                                        _)))),
+                                                T(F(T(P(_)))));
 
 struct curl_cushions_file {
 	CURL *curl;
