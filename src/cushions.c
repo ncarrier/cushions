@@ -11,13 +11,13 @@
 
 #include <cushions.h>
 
-#define LOG_TAG cushion
+#define CH_LOG_TAG cushion
 #include "cushions_handler.h"
 
 #define MAX_CUSHIONS_HANDLER 20
 #define SCHEME_END_PATTERN "://"
 
-static struct cushions_handler *handlers[MAX_CUSHIONS_HANDLER];
+static struct ch_handler *handlers[MAX_CUSHIONS_HANDLER];
 
 /* Function pointers to hold the value of the glibc functions */
 static FILE *(*real_fopen)(const char *path, const char *mode);
@@ -50,15 +50,15 @@ static int break_scheme(const char *path, char **scheme)
 	return prefix_length;
 }
 
-static bool handle_handles(struct cushions_handler *handler, const char *scheme)
+static bool handle_handles(struct ch_handler *handler, const char *scheme)
 {
 	if (handler->handles == NULL)
-		return string_matches_prefix(scheme, handler->name);
+		return ch_string_matches_prefix(scheme, handler->name);
 	else
 		return handler->handles(handler, scheme);
 }
 
-int cushions_handler_break_params(const char *input, char **path, char **envz,
+int ch_break_params(const char *input, char **path, char **envz,
 		size_t *envz_len)
 {
 	int ret;
@@ -97,12 +97,12 @@ FILE *cushions_fopen(const char *path, const char *m)
 {
 	int ret;
 	int i;
-	struct cushions_handler *h;
-	char __attribute__((cleanup(string_cleanup)))*scheme = NULL;
-	char __attribute__((cleanup(string_cleanup)))*envz = NULL;
+	struct ch_handler *h;
+	char __attribute__((cleanup(ch_string_cleanup)))*scheme = NULL;
+	char __attribute__((cleanup(ch_string_cleanup)))*envz = NULL;
 	unsigned offset;
-	struct cushions_handler_mode
-	__attribute__((cleanup(cushions_handler_mode_cleanup)))mode = {
+	struct ch_mode
+	__attribute__((cleanup(ch_mode_cleanup)))mode = {
 			.ccs = NULL,
 	};
 
@@ -125,7 +125,7 @@ FILE *cushions_fopen(const char *path, const char *m)
 			break;
 		if (handle_handles(h, scheme)) {
 			LOGI("%s handles scheme '%s'", h->name, scheme);
-			ret = cushions_handler_mode_from_string(&mode, m);
+			ret = ch_mode_from_string(&mode, m);
 			if (ret < 0) {
 				LOGPE("cushions_handler_mode_from_string", ret);
 				errno = -ret;
@@ -140,7 +140,7 @@ FILE *cushions_fopen(const char *path, const char *m)
 	return real_fopen(path, m);
 }
 
-int cushions_handler_register(struct cushions_handler *handler)
+int ch_handler_register(struct ch_handler *handler)
 {
 	int i;
 
@@ -166,7 +166,7 @@ FILE *__wrap_fopen(const char *path, const char *mode)
 	return cushions_fopen(path, mode);
 }
 
-FILE *cushions_handler_real_fopen(const char *path, const char *mode)
+FILE *ch_handler_real_fopen(const char *path, const char *mode)
 {
 	return real_fopen(path, mode);
 }
@@ -179,8 +179,8 @@ static __attribute__((constructor)) void cushions_constructor(void)
 
 	env = getenv("CUSHIONS_LOG_NO_COLOR");
 	if (env != NULL)
-		log_set_color(false);
+		ch_log_set_color(false);
 	env = getenv("CUSHIONS_LOG_LEVEL");
 	if (env != NULL)
-		log_set_level(atoi(env));
+		ch_log_set_level(atoi(env));
 }

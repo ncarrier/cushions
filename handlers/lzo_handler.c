@@ -13,7 +13,7 @@
 
 #include <lzo/lzo1x.h>
 
-#define LOG_TAG lzo_handler
+#define CH_LOG_TAG lzo_handler
 #include <cushions_handler.h>
 
 /* hardcode the mode, we don't have information on the original file */
@@ -36,7 +36,7 @@
 #define LZOP_METHOD_LZO1X_1_15 2
 
 struct lzo_cushions_handler {
-	struct cushions_handler handler;
+	struct ch_handler handler;
 	cookie_io_functions_t lzo_func;
 };
 
@@ -199,9 +199,9 @@ static int fill_and_write_header(const struct lzo_cushions_file *lzo_c_file)
 	return 0;
 }
 
-static FILE *lzo_cushions_fopen(struct cushions_handler *handler,
+static FILE *lzo_cushions_fopen(struct ch_handler *handler,
 		const char *path, const char *full_path, const char *scheme,
-		const struct cushions_handler_mode *mode)
+		const struct ch_mode *mode)
 {
 	int ret;
 	int old_errno;
@@ -329,7 +329,7 @@ static __attribute__((constructor)) void lzo_cushions_handler_constructor(
 
 	lzo_init();
 
-	ret = cushions_handler_register(&lzo_cushions_handler.handler);
+	ret = ch_handler_register(&lzo_cushions_handler.handler);
 	if (ret < 0)
 		LOGW("cushions_handler_register(lzo_cushions_handler): %s",
 				strerror(-ret));

@@ -7,7 +7,7 @@
 
 #define ARRAY_SIZE(a) (sizeof((a)) / sizeof(*(a)))
 
-static const struct dict_node dict = DICT(F(T(P(_))),
+static const struct ch_dict_node dict = CH_DICT(F(T(P(_))),
                                           S(C(P(_)),
                                             M(B(S(_),
                                                   _)),
@@ -51,7 +51,7 @@ int main(void)
 	bool result;
 
 	printf("strings in dictionary:\n");
-	dict_foreach_word(&dict, print_cb, NULL);
+	ch_dict_foreach_word(&dict, print_cb, NULL);
 
 	for (t = tests; (size_t)(t - tests) < ARRAY_SIZE(tests); t++) {
 		result = dict_contains(&dict, t->string);

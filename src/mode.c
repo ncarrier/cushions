@@ -2,12 +2,12 @@
 #include <stdio.h>
 #include <errno.h>
 
-#define LOG_TAG mode
+#define CH_LOG_TAG mode
 #include "cushions_handler.h"
 
 #define CODED_CHARACTER_SET_ANCHOR ",ccs="
 
-int cushions_handler_mode_from_string(struct cushions_handler_mode *mode,
+int ch_mode_from_string(struct ch_mode *mode,
 		const char *s)
 {
 	char *ccs;
@@ -83,12 +83,12 @@ int cushions_handler_mode_from_string(struct cushions_handler_mode *mode,
 
 	return 0;
 err:
-	cushions_handler_mode_cleanup(mode);
+	ch_mode_cleanup(mode);
 
 	return -EINVAL;
 }
 
-int cushions_handler_mode_to_string(const struct cushions_handler_mode *mode,
+int ch_mode_to_string(const struct ch_mode *mode,
 		char **str)
 {
 	int ret;
@@ -129,16 +129,16 @@ int cushions_handler_mode_to_string(const struct cushions_handler_mode *mode,
 	return 0;
 }
 
-void cushions_handler_mode_cleanup(struct cushions_handler_mode *mode)
+void ch_mode_cleanup(struct ch_mode *mode)
 {
 	if (mode == NULL)
 		return;
 
-	string_cleanup(&mode->mode);
-	string_cleanup(&mode->ccs);
+	ch_string_cleanup(&mode->mode);
+	ch_string_cleanup(&mode->ccs);
 }
 
-void cushions_handler_mode_dump(const struct cushions_handler_mode *mode)
+void ch_mode_dump(const struct ch_mode *mode)
 {
 	if (mode == NULL)
 		return;

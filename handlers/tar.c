@@ -36,7 +36,7 @@
 #define va_return_ssize_t va_return_longlong
 #endif
 
-static void string_cleanup(char **s)
+static void ch_string_cleanup(char **s)
 {
 	if (s == NULL || *s == NULL)
 		return;
@@ -222,7 +222,7 @@ int tar_init(struct tar *tar, const char *path, enum tar_direction direction)
 	ret = tar_open(&tar->tar, tar->path, &tar->ops, flag, DEFAULT_MODE,
 			TAR_GNU);
 	if (ret < 0) {
-		string_cleanup(&tar->path);
+		ch_string_cleanup(&tar->path);
 		return -errno;
 	}
 	coro_create(&tar->parent, NULL, NULL, NULL, 0);
@@ -271,5 +271,5 @@ void tar_cleanup(struct tar *tar)
 	coro_stack_free(&tar->stack);
 	coro_destroy(&tar->coro);
 	coro_destroy(&tar->parent);
-	string_cleanup(&tar->path);
+	ch_string_cleanup(&tar->path);
 }

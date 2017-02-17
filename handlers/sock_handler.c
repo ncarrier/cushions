@@ -18,11 +18,11 @@
 #include <errno.h>
 #include <stdbool.h>
 
-#define LOG_TAG sock_handler
+#define CH_LOG_TAG sock_handler
 #include <cushions_handler.h>
 
 struct sock_cushions_handler {
-	struct cushions_handler handler;
+	struct ch_handler handler;
 };
 
 #define UNIX_PATH_MAX 108
@@ -293,10 +293,10 @@ static FILE *pimp_client(const char *address, int flags)
 	return client;
 }
 
-static FILE *server_socket(struct cushions_handler *handler, const char *path,
-		const struct cushions_handler_mode *mode)
+static FILE *server_socket(struct ch_handler *handler, const char *path,
+		const struct ch_mode *mode)
 {
-	int __attribute__((cleanup(fd_cleanup)))server = -1;
+	int __attribute__((cleanup(ch_fd_cleanup)))server = -1;
 
 	server = pimp_server(path, 0, 1);
 	if (server == -1)
@@ -305,15 +305,15 @@ static FILE *server_socket(struct cushions_handler *handler, const char *path,
 	return pimp_accept(server, 0);
 }
 
-static FILE *client_socket(struct cushions_handler *handler, const char *path,
-		const struct cushions_handler_mode *mode)
+static FILE *client_socket(struct ch_handler *handler, const char *path,
+		const struct ch_mode *mode)
 {
 	return pimp_client(path, 0);
 }
 
-static FILE *sock_cushions_fopen(struct cushions_handler *handler,
+static FILE *sock_cushions_fopen(struct ch_handler *handler,
 		const char *path, const char *full_path, const char *scheme,
-		const struct cushions_handler_mode *mode)
+		const struct ch_mode *mode)
 {
 	LOGD(__func__);
 
@@ -323,7 +323,7 @@ static FILE *sock_cushions_fopen(struct cushions_handler *handler,
 		return client_socket(handler, path, mode);
 }
 
-static bool sock_handler_handles(struct cushions_handler *handler,
+static bool sock_handler_handles(struct ch_handler *handler,
 		const char *s)
 {
 	return (*s == 's' || *s == 'c') && strcmp(s + 1, "sock") == 0;
@@ -344,7 +344,7 @@ static __attribute__((constructor)) void sock_cushions_handler_constructor(
 
 	LOGI(__func__);
 
-	ret = cushions_handler_register(&sock_cushions_handler.handler);
+	ret = ch_handler_register(&sock_cushions_handler.handler);
 	if (ret < 0)
 		LOGW("cushions_handler_register(sock_cushions_handler): %s",
 				strerror(-ret));

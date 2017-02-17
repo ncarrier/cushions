@@ -31,16 +31,16 @@
 
 static void cushions_handler_mode_from_stringTEST(void)
 {
-	struct cushions_handler_mode mode;
-	struct cushions_handler_mode ref;
+	struct ch_mode mode;
+	struct ch_mode ref;
 	const char *test_mode;
 
 	fprintf(stderr, "%s\n", __func__);
 
 	fprintf(stderr, "test string %s\n", test_mode = "rb+cmxe");
-	assert(cushions_handler_mode_from_string(&mode, test_mode) == 0);
-	cushions_handler_mode_dump(&mode);
-	ref = (struct cushions_handler_mode){
+	assert(ch_mode_from_string(&mode, test_mode) == 0);
+	ch_mode_dump(&mode);
+	ref = (struct ch_mode){
 		.read = 1,
 		.beginning = 1,
 		.end = 0,
@@ -57,20 +57,20 @@ static void cushions_handler_mode_from_stringTEST(void)
 	};
 	masserteq(mode, ref);
 	assert_str_equal(mode.mode, test_mode);
-	cushions_handler_mode_cleanup(&mode);
+	ch_mode_cleanup(&mode);
 
 	fprintf(stderr, "test string %s\n", test_mode = "rb+cmxe,ccs=blabla");
-	assert(cushions_handler_mode_from_string(&mode, test_mode) == 0);
-	cushions_handler_mode_dump(&mode);
+	assert(ch_mode_from_string(&mode, test_mode) == 0);
+	ch_mode_dump(&mode);
 	ref.ccs = "blabla";
 	masserteq(mode, ref);
 	assert_str_equal(mode.mode, test_mode);
-	cushions_handler_mode_cleanup(&mode);
+	ch_mode_cleanup(&mode);
 
 	fprintf(stderr, "test string %s\n", test_mode = "a");
-	assert(cushions_handler_mode_from_string(&mode, test_mode) == 0);
-	cushions_handler_mode_dump(&mode);
-	ref = (struct cushions_handler_mode){
+	assert(ch_mode_from_string(&mode, test_mode) == 0);
+	ch_mode_dump(&mode);
+	ref = (struct ch_mode){
 		.read = 0,
 		.beginning = 0,
 		.end = 1,
@@ -87,36 +87,36 @@ static void cushions_handler_mode_from_stringTEST(void)
 	};
 	masserteq(mode, ref);
 	assert_str_equal(mode.mode, test_mode);
-	cushions_handler_mode_cleanup(&mode);
+	ch_mode_cleanup(&mode);
 
 	fprintf(stderr, "test string %s\n", test_mode = "a,ccs=");
-	assert(cushions_handler_mode_from_string(&mode, test_mode) == 0);
-	cushions_handler_mode_dump(&mode);
+	assert(ch_mode_from_string(&mode, test_mode) == 0);
+	ch_mode_dump(&mode);
 	ref.ccs = "";
 	masserteq(mode, ref);
 	assert_str_equal(mode.mode, test_mode);
-	cushions_handler_mode_cleanup(&mode);
+	ch_mode_cleanup(&mode);
 
 	fprintf(stderr, "test string %s\n", test_mode = "ad,ccs=");
-	assert(cushions_handler_mode_from_string(&mode, test_mode) != 0);
+	assert(ch_mode_from_string(&mode, test_mode) != 0);
 
-	assert(cushions_handler_mode_from_string(NULL, "a") != 0);
-	assert(cushions_handler_mode_from_string(&mode, NULL) != 0);
-	assert(cushions_handler_mode_from_string(&mode, "") != 0);
-	assert(cushions_handler_mode_from_string(&mode, ",ccs=bla") != 0);
+	assert(ch_mode_from_string(NULL, "a") != 0);
+	assert(ch_mode_from_string(&mode, NULL) != 0);
+	assert(ch_mode_from_string(&mode, "") != 0);
+	assert(ch_mode_from_string(&mode, ",ccs=bla") != 0);
 
 	fprintf(stderr, "OK\n");
 }
 
 static void cushions_handler_mode_to_stringTEST(void)
 {
-	struct cushions_handler_mode mode;
-	struct cushions_handler_mode ref;
+	struct ch_mode mode;
+	struct ch_mode ref;
 	char *str;
 
 	fprintf(stderr, "%s\n", __func__);
 
-	ref = (struct cushions_handler_mode){
+	ref = (struct ch_mode){
 		.read = 0,
 		.beginning = 0,
 		.end = 1,
@@ -131,11 +131,11 @@ static void cushions_handler_mode_to_stringTEST(void)
 		.excl = 0,
 		.ccs = NULL,
 	};
-	assert(cushions_handler_mode_to_string(&ref, &str) == 0);
-	assert(cushions_handler_mode_from_string(&mode, str) == 0);
-	cushions_handler_mode_dump(&mode);
+	assert(ch_mode_to_string(&ref, &str) == 0);
+	assert(ch_mode_from_string(&mode, str) == 0);
+	ch_mode_dump(&mode);
 	masserteq(mode, ref);
-	cushions_handler_mode_cleanup(&mode);
+	ch_mode_cleanup(&mode);
 	free(str);
 
 	fprintf(stderr, "OK\n");

@@ -3,7 +3,7 @@
 #include <assert.h>
 #include <envz.h>
 
-#define LOG_TAG params_test
+#define CH_LOG_TAG params_test
 #include <cushions_handler.h>
 
 #define assert_str_equal(s1, s2) assert(strcmp((s1), (s2)) == 0)
@@ -18,7 +18,7 @@ int main(void)
 
 	input = "/tata/tutu/toto?plop=wizz;foo=bar;baz=";
 	LOGI("input is \"%s\"", input);
-	assert(cushions_handler_break_params(input, &path, &envz, &len) == 0);
+	assert(ch_break_params(input, &path, &envz, &len) == 0);
 	assert_str_equal(path, "/tata/tutu/toto");
 	assert_str_equal(envz_get(envz, len, "plop"), "wizz");
 	assert_str_equal(envz_get(envz, len, "foo"), "bar");
@@ -29,7 +29,7 @@ int main(void)
 
 	input = "/tata/tutu/toto?";
 	LOGI("input is \"%s\"", input);
-	assert(cushions_handler_break_params(input, &path, &envz, &len) == 0);
+	assert(ch_break_params(input, &path, &envz, &len) == 0);
 	assert_str_equal(path, "/tata/tutu/toto");
 	assert_null(envz);
 	assert(len == 0);
@@ -37,14 +37,14 @@ int main(void)
 
 	input = "";
 	LOGI("input is \"%s\"", input);
-	assert(cushions_handler_break_params(input, &path, &envz, &len) == 0);
+	assert(ch_break_params(input, &path, &envz, &len) == 0);
 	assert_null(envz);
 	assert_null(path);
 	assert(len == 0);
 
 	input = "?plop=wizz;foo=bar;baz";
 	LOGI("input is \"%s\"", input);
-	assert(cushions_handler_break_params(input, &path, &envz, &len) == 0);
+	assert(ch_break_params(input, &path, &envz, &len) == 0);
 	assert_str_equal(path, "");
 	assert_str_equal(envz_get(envz, len, "plop"), "wizz");
 	assert_str_equal(envz_get(envz, len, "foo"), "bar");

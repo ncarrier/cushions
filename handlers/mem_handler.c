@@ -3,15 +3,15 @@
 #include <errno.h>
 #include <inttypes.h>
 
-#define LOG_TAG mem_handler
+#define CH_LOG_TAG mem_handler
 #include <cushions_handler.h>
 
 struct mem_cushions_handler {
-	struct cushions_handler handler;
+	struct ch_handler handler;
 	cookie_io_functions_t mem_func;
 };
 
-#define to_mem_handler(h) container_of((h), struct mem_cushions_handler, \
+#define to_mem_handler(h) ch_container_of((h), struct mem_cushions_handler, \
 		handler)
 
 struct mem_cushions_file {
@@ -76,7 +76,7 @@ static int mem_close(void *cookie)
 	return 0;
 }
 
-static bool mode_is_valid(const struct cushions_handler_mode *mode)
+static bool mode_is_valid(const struct ch_mode *mode)
 {
 	if (mode->append || mode->read)
 		return false;
@@ -84,9 +84,9 @@ static bool mode_is_valid(const struct cushions_handler_mode *mode)
 	return mode->write;
 }
 
-static FILE *mem_cushions_fopen(struct cushions_handler *handler,
+static FILE *mem_cushions_fopen(struct ch_handler *handler,
 		const char *path, const char *full_path, const char *scheme,
-		const struct cushions_handler_mode *mode)
+		const struct ch_mode *mode)
 {
 	int old_errno;
 	struct mem_cushions_file *mf;
@@ -160,7 +160,7 @@ static __attribute__((constructor)) void mem_cushions_handler_constructor(
 
 	LOGI(__func__);
 
-	ret = cushions_handler_register(&mem_cushions_handler.handler);
+	ret = ch_handler_register(&mem_cushions_handler.handler);
 	if (ret < 0)
 		LOGW("cushions_handler_register(mem_cushions_handler): %s",
 				strerror(-ret));

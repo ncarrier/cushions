@@ -11,17 +11,17 @@
 #include <cushions_common.h>
 
 /* only used for STRINGIFY implementation */
-#define STRINGIFY_HELPER(s) #s
-#define STRINGIFY(s) STRINGIFY_HELPER(s)
+#define CH_STRINGIFY_HELPER(s) #s
+#define CH_STRINGIFY(s) CH_STRINGIFY_HELPER(s)
 
-#ifndef container_of
-#define container_of(ptr, type, member) ({ \
+#ifndef ch_container_of
+#define ch_container_of(ptr, type, member) ({ \
 	const typeof(((type *)NULL)->member)*__mptr = (ptr); \
 	(type *)((uintptr_t)__mptr - offsetof(type, member)); })
-#endif /* container_of */
+#endif /* ch_container_of */
 
-CUSHIONS_API bool string_matches_prefix(const char *string, const char *prefix);
-CUSHIONS_API void string_cleanup(char **s);
-CUSHIONS_API void fd_cleanup(int *fd);
+CUSHIONS_API bool ch_string_matches_prefix(const char *str, const char *prefix);
+CUSHIONS_API void ch_string_cleanup(char **s);
+CUSHIONS_API void ch_fd_cleanup(int *fd);
 
 #endif /* CUSHIONS_HANDLER_UTILS_H */

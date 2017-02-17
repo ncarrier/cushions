@@ -4,12 +4,12 @@
 
 #include "../include/cushions/cushions_handler_utils.h"
 
-bool string_matches_prefix(const char *string, const char *prefix)
+bool ch_string_matches_prefix(const char *string, const char *prefix)
 {
 	return strncmp(string, prefix, strlen(prefix)) == 0;
 }
 
-void string_cleanup(char **s)
+void ch_string_cleanup(char **s)
 {
 	if (s == NULL || *s == NULL)
 		return;
@@ -18,7 +18,7 @@ void string_cleanup(char **s)
 	*s = NULL;
 }
 
-void fd_cleanup(int *fd)
+void ch_fd_cleanup(int *fd)
 {
 	if (fd == NULL || *fd < 1)
 		return;

@@ -43,22 +43,22 @@
 
 #include <curl/curl.h>
 
-#define LOG_TAG curl_handler
+#define CH_LOG_TAG curl_handler
 #include <cushions_handler.h>
 
 #define BUFFER_SIZE 0x400
 
 struct curl_cushions_handler {
-	struct cushions_handler handler;
+	struct ch_handler handler;
 	cookie_io_functions_t curl_func;
 	/* global, should be mutexed for multithread context */
 	CURLM *multi_handle;
 };
 
-#define to_curl_handler(h) container_of(h, struct curl_cushions_handler, \
+#define to_curl_handler(h) ch_container_of(h, struct curl_cushions_handler, \
 		handler)
 
-static const struct dict_node dict = DICT(F(T(P(_))),
+static const struct ch_dict_node dict = CH_DICT(F(T(P(_))),
                                           S(C(P(_)),
                                             M(B(S(_),
                                                 _)),
@@ -137,9 +137,9 @@ static size_t write_callback(char *buffer, size_t size, size_t nitems,
 	return size;
 }
 
-static FILE *curl_cushions_fopen(struct cushions_handler *handler,
+static FILE *curl_cushions_fopen(struct ch_handler *handler,
 		const char *path, const char *full_path, const char *scheme,
-		const struct cushions_handler_mode *mode)
+		const struct ch_mode *mode)
 {
 	struct curl_cushions_file *file;
 	struct curl_cushions_handler *ch;
@@ -353,7 +353,7 @@ static ssize_t curl_read(void *c, char *buf, size_t size)
 	return size;
 }
 
-static bool curl_handler_handles(struct cushions_handler *handler,
+static bool curl_handler_handles(struct ch_handler *handler,
 		const char *scheme)
 {
 	return dict_contains(&dict, scheme);
@@ -386,7 +386,7 @@ static __attribute__((constructor)) void curl_cushions_handler_constructor(
 		return;
 	}
 
-	ret = cushions_handler_register(&curl_cushions_handler.handler);
+	ret = ch_handler_register(&curl_cushions_handler.handler);
 	if (ret < 0)
 		LOGW("cushions_handler_register(curl_cushions_handler): %s",
 				strerror(-ret));

@@ -9,7 +9,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define LOG_TAG cushions_handlers
+#define CH_LOG_TAG cushions_handlers
 #include "cushions_handler.h"
 
 #define MAX_HANDLER_PLUGINS 20

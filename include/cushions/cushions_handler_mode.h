@@ -8,7 +8,7 @@
 
 #include <cushions_common.h>
 
-struct cushions_handler_mode {
+struct ch_mode {
 	bool read:1;
 	bool beginning:1;
 	bool end:1;
@@ -26,15 +26,11 @@ struct cushions_handler_mode {
 	char *ccs;
 };
 
-CUSHIONS_API int cushions_handler_mode_from_string(
-		struct cushions_handler_mode *mode, const char *str);
-CUSHIONS_API int cushions_handler_mode_to_string(
-		const struct cushions_handler_mode *mode, char **str);
+CUSHIONS_API int ch_mode_from_string(struct ch_mode *mode, const char *str);
+CUSHIONS_API int ch_mode_to_string(const struct ch_mode *mode, char **str);
 /* must be called after mode_fnom_string to free resources */
-CUSHIONS_API void cushions_handler_mode_cleanup(
-		struct cushions_handler_mode *mode);
+CUSHIONS_API void ch_mode_cleanup(struct ch_mode *mode);
 /* for debug only */
-CUSHIONS_API void cushions_handler_mode_dump(
-		const struct cushions_handler_mode *mode);
+CUSHIONS_API void ch_mode_dump(const struct ch_mode *mode);
 
 #endif /* CUSHIONS_HANDLER_MODE_H_ */

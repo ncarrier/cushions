@@ -9,11 +9,11 @@
 
 #include "tar.h"
 
-#define LOG_TAG tar_handler
+#define CH_LOG_TAG tar_handler
 #include <cushions_handler.h>
 
 struct tar_cushions_handler {
-	struct cushions_handler handler;
+	struct ch_handler handler;
 	cookie_io_functions_t tar_func;
 };
 
@@ -28,7 +28,7 @@ static int tar_handler_close(void *c)
 	return 0;
 }
 
-static bool mode_is_valid(const struct cushions_handler_mode *mode)
+static bool mode_is_valid(const struct ch_mode *mode)
 {
 	if (mode->append)
 		return false;
@@ -39,9 +39,9 @@ static bool mode_is_valid(const struct cushions_handler_mode *mode)
 	return mode->read || mode->write;
 }
 
-static FILE *tar_cushions_fopen(struct cushions_handler *handler,
+static FILE *tar_cushions_fopen(struct ch_handler *handler,
 		const char *path, const char *full_path, const char *scheme,
-		const struct cushions_handler_mode *mode)
+		const struct ch_mode *mode)
 {
 	int ret;
 	int old_errno;
@@ -120,7 +120,7 @@ static __attribute__((constructor)) void tar_cushions_handler_constructor(
 
 	LOGI(__func__);
 
-	ret = cushions_handler_register(&tar_cushions_handler.handler);
+	ret = ch_handler_register(&tar_cushions_handler.handler);
 	if (ret < 0)
 		LOGW("cushions_handler_register(tar_cushions_handler): %s",
 				strerror(-ret));
