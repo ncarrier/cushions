@@ -11,6 +11,7 @@
 
 struct ch_handler;
 
+/* codecheck_ignore[NEW_TYPEDEFS,SPACING] */
 typedef FILE *(*ch_fopen)(struct ch_handler *handler, const char *path,
 		const char *full_path, const char *name,
 		const struct ch_mode *mode);
