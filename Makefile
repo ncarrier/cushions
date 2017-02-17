@@ -81,6 +81,8 @@ all:$(lib).so $(lib).a $(handlers)
 # is done by making the world target with a fake compiler and some bash extra
 # foo too
 ifneq ($(notdir $(CC)), cc_wrapper.sh)
+CFLAGS += \
+	-D__packed="__attribute__((packed))"
 world.d:$(shell find $(here) -name '*.h' -o -name '*.c')
 	@echo Generating header dependencies handling Makefile world.d
 	@rm -f $@
@@ -88,6 +90,9 @@ world.d:$(shell find $(here) -name '*.h' -o -name '*.c')
 		make -B -s -f $(here)Makefile world | \
 		sed "s/\(.*\)-o \([^ ]*\) \(.*\)/gcc \1\3 -MM -MT \2 >> $@/g" | \
 		sh
+else
+CFLAGS += \
+	-D__packed=
 endif
 -include world.d
 
@@ -149,6 +154,10 @@ $(handlers): $(handler_pattern): $(handler_deps)
 
 setenv := $(here)/misc/setenv.sh
 check:$(tests) $(handlers) cpw
+	$(here)/misc/checkpatch.pl \
+		--no-tree --no-summary --terse --show-types \
+		-f $$(find $(here) -name '*.c' -o -name '*.h' | \
+		grep -Ev 'curl_handler.c|dict_test.c')
 	$(foreach t,$(tests),$(setenv) ./$(t))
 	$(foreach t,$(wildcard $(here)tests/*_test.sh), $(setenv) $(t);)
 	@echo "*** All test passed"

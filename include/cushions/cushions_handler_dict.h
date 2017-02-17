@@ -26,7 +26,7 @@ struct ch_dict_node {
 #define CH_DICT_TERMINAL(ch) { .c = (ch), .next = NULL}
 #define CH_DICT_GUARD CH_DICT_TERMINAL(CH_DICT_EOT)
 #define CH_DICT_NODE(p, ...) { .c = p, .next = (struct ch_dict_node[]){ \
-	__VA_ARGS__, CH_DICT_GUARD}}
+	__VA_ARGS__, CH_DICT_GUARD} }
 
 #define CH_DICT(...) CH_DICT_NODE('\0', __VA_ARGS__)
 #define _ CH_DICT_TERMINAL('\0')

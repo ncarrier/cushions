@@ -81,7 +81,7 @@ static int load_cushions_handlers_plugin(const char *plugins_dir)
 	return 0;
 }
 
-__attribute__((constructor)) static int cushions_handlers_load(void)
+static __attribute__((constructor)) int cushions_handlers_load(void)
 {
 	int ret;
 	const char *env;
@@ -114,7 +114,7 @@ __attribute__((constructor)) static int cushions_handlers_load(void)
 	return 0;
 }
 
-__attribute__((destructor)) static void cushions_handlers_unload(void)
+static __attribute__((destructor)) void cushions_handlers_unload(void)
 {
 	int ret;
 	int i = MAX_HANDLER_PLUGINS;

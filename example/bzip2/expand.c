@@ -26,9 +26,9 @@ static void strfree(char **s)
 
 int main(int argc, char *argv[])
 {
-	FILE* src_file;
-	FILE* dst_file;
-	BZFILE* b;
+	FILE *src_file;
+	FILE *dst_file;
+	BZFILE *b;
 	int nBuf;
 	char buf[BUFFER_SIZE];
 	int bzerror;

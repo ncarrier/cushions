@@ -72,13 +72,13 @@ struct lzop_file_header {
 	uint32_t mtime_high;
 	uint8_t name_len;
 	uint32_t checksum;
-} __attribute__((packed));
+} __packed;
 
 struct lzop_block_header {
 	uint32_t block_size;
 	uint32_t compressed_block_size;
 	uint32_t block_checksum;
-} __attribute__((packed));
+} __packed;
 
 static struct lzo_cushions_handler lzo_cushions_handler;
 
@@ -92,7 +92,7 @@ static int write_compressed_block(struct lzo_cushions_file *file)
 
 	/* can't fail */
 	lzo1x_1_15_compress((const lzo_bytep)file->src, file->cur, file->dst,
-			&dst_len,file->wrkmem);
+			&dst_len, file->wrkmem);
 
 	final_size = dst_len < file->cur ? dst_len : file->cur;
 	header = (struct lzop_block_header) {
@@ -264,22 +264,22 @@ static int store(struct lzo_cushions_file *f, const char *buf, size_t size)
 	return written;
 }
 
-/**
- *        cookie_write_function_t *write
-              This function implements write operations for the stream.
-              When called, it receives three arguments:
-
-                  ssize_t write(void *cookie, const char *buf, size_t size);
-
-              The buf and size arguments are, respectively, a buffer of data
-              to be output to the stream and the size of that buffer.  As
-              its function result, the write function should return the
-              number of bytes copied from buf, or 0 on error.  (The function
-              must not return a negative value.)  The write function should
-              update the stream offset appropriately.
-
-              If *write is a null pointer, then output to the stream is
-              discarded.
+/*
+ * cookie_write_function_t *write
+ *            This function implements write operations for the stream.
+ *            When called, it receives three arguments:
+ *
+ *                ssize_t write(void *cookie, const char *buf, size_t size);
+ *
+ *            The buf and size arguments are, respectively, a buffer of data
+ *            to be output to the stream and the size of that buffer.  As
+ *            its function result, the write function should return the
+ *            number of bytes copied from buf, or 0 on error.  (The function
+ *            must not return a negative value.)  The write function should
+ *            update the stream offset appropriately.
+ *
+ *            If *write is a null pointer, then output to the stream is
+ *            discarded.
  */
 static ssize_t lzo_write(void *cookie, const char *buf, size_t size)
 {

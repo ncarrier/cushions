@@ -67,7 +67,7 @@ int ch_mode_from_string(struct ch_mode *mode,
 		mode->binary = 1;
 	if (needle == str)
 		goto err;
-	
+
 	if (strchr(str, 'c'))
 		mode->no_cancellation = 1;
 	if (strchr(str, 'e'))

@@ -119,7 +119,7 @@ int main(int argc, char *argv[])
 	mycookie.offset = 0;
 	mycookie.endpos = 0;
 
-	stream = fopencookie(&mycookie,"w+", memfile_func);
+	stream = fopencookie(&mycookie, "w+", memfile_func);
 	if (stream == NULL) {
 		perror("fopencookie");
 		exit(EXIT_FAILURE);
@@ -134,7 +134,7 @@ int main(int argc, char *argv[])
 		}
 
 	/* Read two bytes out of every five, until EOF */
-	for (p = 0; ; p += 5) {
+	for (p = 0;; p += 5) {
 		if (fseek(stream, p, SEEK_SET) == -1) {
 			perror("fseek");
 			exit(EXIT_FAILURE);

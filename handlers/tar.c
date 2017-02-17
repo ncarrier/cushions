@@ -95,6 +95,7 @@ static ssize_t do_tar_read_write(struct tar *tar, int fd, void *buf,
 {
 	unsigned consumed;
 	unsigned rest;
+	/* codecheck_ignore[VOLATILE] */
 	volatile size_t waited;
 
 	waited = size;

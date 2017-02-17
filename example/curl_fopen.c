@@ -76,16 +76,6 @@ struct fcurl_data {
 	int still_running; /* Is background url fetch still in progress */
 };
 
-typedef struct fcurl_data URL_FILE;
-
-/* exported functions */
-URL_FILE *url_fopen(const char *url, const char *operation);
-int url_fclose(URL_FILE *file);
-int url_feof(URL_FILE *file);
-size_t url_fread(void *ptr, size_t size, size_t nmemb, URL_FILE *file);
-char *url_fgets(char *ptr, size_t size, URL_FILE *file);
-void url_rewind(URL_FILE *file);
-
 /* we use a global one for convenience */
 CURLM *multi_handle;
 
@@ -96,10 +86,11 @@ static size_t write_callback(char *buffer, size_t size, size_t nitems,
 	char *newbuff;
 	size_t rembuff;
 
-	URL_FILE *url = (URL_FILE *) userp;
+	struct fcurl_data *url = userp;
 	size *= nitems;
 
-	rembuff = url->buffer_len - url->buffer_pos; /* remaining space in buffer */
+	/* remaining space in buffer */
+	rembuff = url->buffer_len - url->buffer_pos;
 
 	if (size > rembuff) {
 		/* not enough space in buffer */
@@ -122,7 +113,7 @@ static size_t write_callback(char *buffer, size_t size, size_t nitems,
 }
 
 /* use to attempt to fill the read buffer up to requested number of bytes */
-static int fill_buffer(URL_FILE *file, size_t want)
+static int fill_buffer(struct fcurl_data *file, size_t want)
 {
 	fd_set fdread;
 	fd_set fdwrite;
@@ -169,11 +160,14 @@ static int fill_buffer(URL_FILE *file, size_t want)
 			break;
 		}
 
-		/* On success the value of maxfd is guaranteed to be >= -1. We call
-		 select(maxfd + 1, ...); specially in case of (maxfd == -1) there are
-		 no fds ready yet so we call select(0, ...) --or Sleep() on Windows--
-		 to sleep 100ms, which is the minimum suggested value in the
-		 curl_multi_fdset() doc. */
+		/*
+		 * On success the value of maxfd is guaranteed to be >= -1. We
+		 * call select(maxfd + 1, ...); specially in case of
+		 * (maxfd == -1) there are no fds ready yet so we call
+		 * select(0, ...) --or Sleep() on Windows-- to sleep 100ms,
+		 * which is the minimum suggested value in the
+		 * curl_multi_fdset() doc.
+		 */
 
 		if (maxfd == -1) {
 #ifdef _WIN32
@@ -185,8 +179,11 @@ static int fill_buffer(URL_FILE *file, size_t want)
 			rc = select(0, NULL, NULL, NULL, &wait);
 #endif
 		} else {
-			/* Note that on some platforms 'timeout' may be modified by select().
-			 If you need access to the original value save a copy beforehand. */
+			/*
+			 * Note that on some platforms 'timeout' may be modified
+			 * by select().
+			 * If you need access to the original value save a copy
+			 * beforehand. */
 			rc = select(maxfd + 1, &fdread, &fdwrite, &fdexcep,
 					&timeout);
 		}
@@ -207,7 +204,7 @@ static int fill_buffer(URL_FILE *file, size_t want)
 }
 
 /* use to remove want bytes from the front of a files buffer */
-static int use_buffer(URL_FILE *file, size_t want)
+static int use_buffer(struct fcurl_data *file, size_t want)
 {
 	/* sort out buffer */
 	if ((file->buffer_pos - want) <= 0) {
@@ -226,21 +223,22 @@ static int use_buffer(URL_FILE *file, size_t want)
 	return 0;
 }
 
-URL_FILE *url_fopen(const char *url, const char *operation)
+static struct fcurl_data *url_fopen(const char *url, const char *operation)
 {
 	/* this code could check for URLs or types in the 'url' and
 	 basically use the real fopen() for standard files */
 
-	URL_FILE *file;
+	struct fcurl_data *file;
 	(void) operation;
 
-	file = malloc(sizeof(URL_FILE));
+	file = malloc(sizeof(struct fcurl_data));
 	if (!file)
 		return NULL;
 
-	memset(file, 0, sizeof(URL_FILE));
+	memset(file, 0, sizeof(struct fcurl_data));
 
-	if ((file->handle.file = fopen(url, operation)))
+	file->handle.file = fopen(url, operation);
+	if (file->handle.file != NULL)
 		file->type = CFTYPE_FILE; /* marked as URL */
 
 	else {
@@ -264,7 +262,10 @@ URL_FILE *url_fopen(const char *url, const char *operation)
 		if ((file->buffer_pos == 0) && (!file->still_running)) {
 			/* if still_running is 0 now, we should return NULL */
 
-			/* make sure the easy handle is not in the multi handle anymore */
+			/*
+			 * make sure the easy handle is not in the multi handle
+			 * anymore
+			 */
 			curl_multi_remove_handle(multi_handle,
 					file->handle.curl);
 
@@ -279,7 +280,7 @@ URL_FILE *url_fopen(const char *url, const char *operation)
 	return file;
 }
 
-int url_fclose(URL_FILE *file)
+static int url_fclose(struct fcurl_data *file)
 {
 	int ret = 0;/* default is good return */
 
@@ -289,7 +290,10 @@ int url_fclose(URL_FILE *file)
 		break;
 
 	case CFTYPE_CURL:
-		/* make sure the easy handle is not in the multi handle anymore */
+		/*
+		 * make sure the easy handle is not in the multi handle
+		 * anymore
+		 */
 		curl_multi_remove_handle(multi_handle, file->handle.curl);
 
 		/* cleanup */
@@ -308,7 +312,7 @@ int url_fclose(URL_FILE *file)
 	return ret;
 }
 
-int url_feof(URL_FILE *file)
+static int url_feof(struct fcurl_data *file)
 {
 	int ret = 0;
 
@@ -330,7 +334,8 @@ int url_feof(URL_FILE *file)
 	return ret;
 }
 
-size_t url_fread(void *ptr, size_t size, size_t nmemb, URL_FILE *file)
+static size_t url_fread(void *ptr, size_t size, size_t nmemb,
+		struct fcurl_data *file)
 {
 	size_t want;
 
@@ -370,9 +375,10 @@ size_t url_fread(void *ptr, size_t size, size_t nmemb, URL_FILE *file)
 	return want;
 }
 
-char *url_fgets(char *ptr, size_t size, URL_FILE *file)
+static char *url_fgets(char *ptr, size_t size, struct fcurl_data *file)
 {
-	size_t want = size - 1;/* always need to leave room for zero termination */
+	/* always need to leave room for zero termination */
+	size_t want = size - 1;
 	size_t loop;
 
 	switch (file->type) {
@@ -383,8 +389,10 @@ char *url_fgets(char *ptr, size_t size, URL_FILE *file)
 	case CFTYPE_CURL:
 		fill_buffer(file, want);
 
-		/* check if theres data in the buffer - if not fill either errored or
-		 * EOF */
+		/*
+		 * check if there's data in the buffer - if not fill either
+		 * errored or EOF
+		 */
 		if (!file->buffer_pos)
 			return NULL;
 
@@ -418,7 +426,7 @@ char *url_fgets(char *ptr, size_t size, URL_FILE *file)
 	return ptr;/*success */
 }
 
-void url_rewind(URL_FILE *file)
+static void url_rewind(struct fcurl_data *file)
 {
 	switch (file->type) {
 	case CFTYPE_FILE:
@@ -454,7 +462,7 @@ void url_rewind(URL_FILE *file)
  * they contain 0 chars */
 int main(int argc, char *argv[])
 {
-	URL_FILE *handle;
+	struct fcurl_data *handle;
 	FILE *outf;
 
 	size_t nread;

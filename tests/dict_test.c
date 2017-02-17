@@ -8,13 +8,13 @@
 #define ARRAY_SIZE(a) (sizeof((a)) / sizeof(*(a)))
 
 static const struct ch_dict_node dict = CH_DICT(F(T(P(_))),
-                                          S(C(P(_)),
-                                            M(B(S(_),
-                                                  _)),
-                                          F(T(P(_)))),
-                                          H(T(T(P(S(_),
-                                                  _)))),
-                                          T(F(T(P(_)))));
+                                                S(C(P(_)),
+                                                  M(B(S(_),
+                                                        _)),
+                                                F(T(P(_)))),
+                                                H(T(T(P(S(_),
+                                                        _)))),
+                                                T(F(T(P(_)))));
 
 static void print_cb(const char *string, void *data)
 {

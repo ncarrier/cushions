@@ -18,8 +18,8 @@ static void cleanup_file(FILE **f)
 	*f = NULL;
 }
 
-static FILE *src = NULL;
-static FILE *dest = NULL;
+static FILE *src;
+static FILE *dest;
 
 static void cleanup(void)
 {

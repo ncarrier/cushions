@@ -137,7 +137,8 @@ extern "C" {
  * -DCORO_FIBER
  *
  *    Slower, but probably more portable variant for the Microsoft operating
- *    system, using fibers. Ignores the passed stack and allocates it internally.
+ *    system, using fibers. Ignores the passed stack and allocates it
+ *    internally.
  *    Also, due to bugs in cygwin, this does not work with cygwin.
  *
  * -DCORO_IRIX
@@ -165,7 +166,8 @@ extern "C" {
 
 /*
  * Changes when the API changes incompatibly.
- * This is ONLY the API version - there is no ABI compatibility between releases.
+ * This is ONLY the API version - there is no ABI compatibility between
+ * releases.
  *
  * Changes in API version 2:
  * replaced bogus -DCORO_LOOSE with grammatically more correct -DCORO_LOSER
@@ -182,14 +184,13 @@ extern "C" {
 typedef void (*coro_func)(void *);
 
 /*
- * A coroutine state is saved in the following structure. Treat it as an
+ * A coroutine state is saved in the struct coro_context. Treat it as an
  * opaque type. errno and sigmask might be saved, but don't rely on it,
  * implement your own switching primitive if you need that.
  */
-typedef struct coro_context coro_context;
+struct coro_context;
 
-/*
- * This function creates a new coroutine. Apart from a pointer to an
+/* This function creates a new coroutine. Apart from a pointer to an
  * uninitialized coro_context, it expects a pointer to the entry function
  * and the single pointer value that is given to it as argument.
  *
@@ -201,12 +202,14 @@ typedef struct coro_context coro_context;
  *
  * This function is not reentrant, but putting a mutex around it
  * will work.
+ * @param ctx an uninitialised coro_context
+ * @param coro the coroutine code to be executed
+ * @param arg a single pointer passed to the coro
+ * @param sptr start of stack area
+ * @param ssze size of stack area in bytes
  */
-void coro_create (coro_context *ctx, /* an uninitialised coro_context */
-                  coro_func coro,    /* the coroutine code to be executed */
-                  void *arg,         /* a single pointer passed to the coro */
-                  void *sptr,        /* start of stack area */
-                  size_t ssze);      /* size of stack area in bytes */
+void coro_create(struct coro_context *ctx, coro_func coro, void *arg,
+		void *sptr, size_t ssze);
 
 /*
  * The following prototype defines the coroutine switching function. It is
@@ -215,7 +218,7 @@ void coro_create (coro_context *ctx, /* an uninitialised coro_context */
  * This function is thread-safe and reentrant.
  */
 #if 0
-void coro_transfer (coro_context *prev, coro_context *next);
+void coro_transfer(struct coro_context *prev, struct coro_context *next);
 #endif
 
 /*
@@ -228,7 +231,7 @@ void coro_transfer (coro_context *prev, coro_context *next);
  * This function is thread-safe and reentrant.
  */
 #if 0
-void coro_destroy (coro_context *ctx);
+void coro_destroy(struct coro_context *ctx);
 #endif
 
 /*****************************************************************************/
@@ -238,8 +241,8 @@ void coro_destroy (coro_context *ctx);
  * You can disable all of the stack management functions by
  * defining CORO_STACKALLOC to 0. Otherwise, they are enabled by default.
  *
- * If stack management is enabled, you can influence the implementation via these
- * symbols:
+ * If stack management is enabled, you can influence the implementation via
+ * these symbols:
  *
  * -DCORO_USE_VALGRIND
  *
@@ -248,13 +251,14 @@ void coro_destroy (coro_context *ctx);
  *
  * -DCORO_GUARDPAGES=n
  *
- *    libcoro will try to use the specified number of guard pages to protect against
- *    stack overflow. If n is 0, then the feature will be disabled. If it isn't
- *    defined, then libcoro will choose a suitable default. If guardpages are not
- *    supported on the platform, then the feature will be silently disabled.
+ *    libcoro will try to use the specified number of guard pages to protect
+ *    against stack overflow. If n is 0, then the feature will be disabled. If
+ *    it isn't defined, then libcoro will choose a suitable default. If
+ *    guardpages are not supported on the platform, then the feature will be
+ *    silently disabled.
  */
 #ifndef CORO_STACKALLOC
-# define CORO_STACKALLOC 1
+#define CORO_STACKALLOC 1
 #endif
 
 #if CORO_STACKALLOC
@@ -267,12 +271,11 @@ void coro_destroy (coro_context *ctx);
  * not actually do anything.
  */
 
-struct coro_stack
-{
-  void *sptr;
-  size_t ssze;
+struct coro_stack {
+	void *sptr;
+	size_t ssze;
 #if CORO_USE_VALGRIND
-  int valgrind_id;
+	int valgrind_id;
 #endif
 };
 
@@ -286,14 +289,14 @@ struct coro_stack
  *
  * If size is 0, then a "suitable" stack size is chosen (usually 1-2MB).
  */
-int coro_stack_alloc (struct coro_stack *stack, unsigned int size);
+int coro_stack_alloc(struct coro_stack *stack, unsigned int size);
 
 /*
  * Free the stack allocated by coro_stack_alloc again. It is safe to
  * call this function on the coro_stack structure even if coro_stack_alloc
  * failed.
  */
-void coro_stack_free (struct coro_stack *stack);
+void coro_stack_free(struct coro_stack *stack);
 
 #endif
 
@@ -304,14 +307,16 @@ void coro_stack_free (struct coro_stack *stack);
 /*****************************************************************************/
 
 #if !defined CORO_LOSER      && !defined CORO_UCONTEXT \
-    && !defined CORO_SJLJ    && !defined CORO_LINUX \
-    && !defined CORO_IRIX    && !defined CORO_ASM \
-    && !defined CORO_PTHREAD && !defined CORO_FIBER
-# if defined WINDOWS && (defined __i386__ || (__x86_64__ || defined _M_IX86 || defined _M_AMD64))
+	&& !defined CORO_SJLJ    && !defined CORO_LINUX \
+	&& !defined CORO_IRIX    && !defined CORO_ASM \
+	&& !defined CORO_PTHREAD && !defined CORO_FIBER
+# if defined WINDOWS && (defined __i386__ || (__x86_64__ || defined _M_IX86 || \
+		defined _M_AMD64))
 #  define CORO_ASM 1
 # elif defined WINDOWS || defined _WIN32
 #  define CORO_LOSER 1 /* you don't win with windoze */
-# elif __linux && (__i386__ || (__x86_64__ && !__ILP32__)) /*|| (__arm__ && __ARM_ARCH == 7)), not working */
+# elif __linux && (__i386__ || (__x86_64__ && !__ILP32__))
+/*|| (__arm__ && __ARM_ARCH == 7)), not working */
 #  define CORO_ASM 1
 # elif defined HAVE_UCONTEXT_H
 #  define CORO_UCONTEXT 1
@@ -328,65 +333,65 @@ error unknown or unsupported architecture
 
 # include <ucontext.h>
 
-struct coro_context
-{
-  ucontext_t uc;
+struct coro_context {
+	ucontext_t uc;
 };
 
-# define coro_transfer(p,n) swapcontext (&((p)->uc), &((n)->uc))
-# define coro_destroy(ctx) do {} while (0)
+#define coro_transfer(p, n) swapcontext(&((p)->uc), &((n)->uc))
+#define coro_destroy(ctx) do {} while (0)
 
 #elif CORO_SJLJ || CORO_LOSER || CORO_LINUX || CORO_IRIX
 
-# if defined(CORO_LINUX) && !defined(_GNU_SOURCE)
-#  define _GNU_SOURCE /* for glibc */
-# endif
+#if defined(CORO_LINUX) && !defined(_GNU_SOURCE)
+#define _GNU_SOURCE /* for glibc */
+#endif
 
 /* try to disable well-meant but buggy checks in some libcs */
-# ifdef _FORTIFY_SOURCE
-#  undef _FORTIFY_SOURCE
-#  undef __USE_FORTIFY_LEVEL /* helps some more when too much has been included already */
-# endif
+#ifdef _FORTIFY_SOURCE
+#undef _FORTIFY_SOURCE
+/* helps some more when too much has been included already */
+#undef __USE_FORTIFY_LEVEL
+#endif
 
-# if !CORO_LOSER
-#  include <unistd.h>
-# endif
+#if !CORO_LOSER
+#include <unistd.h>
+#endif
 
 /* solaris is hopelessly borked, it expands _XOPEN_UNIX to nothing */
-# if __sun
-#  undef _XOPEN_UNIX
-#  define _XOPEN_UNIX 1
-# endif
+#if __sun
+#undef _XOPEN_UNIX
+#define _XOPEN_UNIX 1
+#endif
 
-# include <setjmp.h>
+#include <setjmp.h>
 
-# if _XOPEN_UNIX > 0 || defined (_setjmp)
-#  define coro_jmp_buf      jmp_buf
-#  define coro_setjmp(env)  _setjmp (env)
-#  define coro_longjmp(env) _longjmp ((env), 1)
-# elif CORO_LOSER
-#  define coro_jmp_buf      jmp_buf
-#  define coro_setjmp(env)  setjmp (env)
-#  define coro_longjmp(env) longjmp ((env), 1)
-# else
-#  define coro_jmp_buf      sigjmp_buf
-#  define coro_setjmp(env)  sigsetjmp (env, 0)
-#  define coro_longjmp(env) siglongjmp ((env), 1)
-# endif
+#if _XOPEN_UNIX > 0 || defined(_setjmp)
+#define coro_jmp_buf      jmp_buf
+#define coro_setjmp(env)  _setjmp(env)
+#define coro_longjmp(env) _longjmp((env), 1)
+#elif CORO_LOSER
+#define coro_jmp_buf      jmp_buf
+#define coro_setjmp(env)  setjmp(env)
+#define coro_longjmp(env) longjmp((env), 1)
+#else
+#define coro_jmp_buf      sigjmp_buf
+#define coro_setjmp(env)  sigsetjmp(env, 0)
+#define coro_longjmp(env) siglongjmp((env), 1)
+#endif
 
-struct coro_context
-{
-  coro_jmp_buf env;
+struct coro_context {
+	coro_jmp_buf env;
 };
 
-# define coro_transfer(p,n) do { if (!coro_setjmp ((p)->env)) coro_longjmp ((n)->env); } while (0)
-# define coro_destroy(ctx) do {} while (0)
+#define coro_transfer(p, n) do { if (!coro_setjmp((p)->env)) \
+		coro_longjmp((n)->env); \
+	} while (0)
+#define coro_destroy(ctx) do {} while (0)
 
 #elif CORO_ASM
 
-struct coro_context
-{
-  void **sp; /* must be at offset 0 */
+struct coro_context {
+	void **sp; /* must be at offset 0 */
 };
 
 #if __i386__ || __x86_64__
@@ -394,37 +399,35 @@ void __attribute__ ((__noinline__, __regparm__(2)))
 #else
 void __attribute__ ((__noinline__))
 #endif
-coro_transfer (coro_context *prev, coro_context *next);
+coro_transfer(struct coro_context *prev, struct coro_context *next);
 
-# define coro_destroy(ctx) do { } while (0)
+#define coro_destroy(ctx) do { } while (0)
 
 #elif CORO_PTHREAD
 
-# include <pthread.h>
+#include <pthread.h>
 
 extern pthread_mutex_t coro_mutex;
 
-struct coro_context
-{
-  pthread_cond_t cv;
-  pthread_t id;
+struct coro_context {
+	pthread_cond_t cv;
+	pthread_t id;
 };
 
-void coro_transfer (coro_context *prev, coro_context *next);
-void coro_destroy (coro_context *ctx);
+void coro_transfer(struct coro_context *prev, struct coro_context *next);
+void coro_destroy(struct coro_context *ctx);
 
 #elif CORO_FIBER
 
-struct coro_context
-{
-  void *fiber;
-  /* only used for initialization */
-  coro_func coro;
-  void *arg;
+struct coro_context {
+	void *fiber;
+	/* only used for initialization */
+	coro_func coro;
+	void *arg;
 };
 
-void coro_transfer (coro_context *prev, coro_context *next);
-void coro_destroy (coro_context *ctx);
+void coro_transfer(struct coro_context *prev, struct coro_context *next);
+void coro_destroy(struct coro_context *ctx);
 
 #endif
 
