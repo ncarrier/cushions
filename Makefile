@@ -195,7 +195,7 @@ $(package):all $(lib).pc
 		--arch=$(arch) \
 		--stripso=$(if $(DEBUG),no,yes) \
 		--maintainer=carrier.nicolas0@gmail.com \
-		--requires="libcurl3,libtar0,liblzo2-2,libbz2-1.0" \
+		--requires="libcurl3,libtar0,liblzo2-2,libbz2-1.0,libffcall1" \
 		--default \
 		make -f $(here)/Makefile -j DEBUG=$(DEBUG) install
 
