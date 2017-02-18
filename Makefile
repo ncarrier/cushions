@@ -177,6 +177,7 @@ clean:
 			$(lib).pc \
 			$(package) \
 			world.d
+	rm -rf doc
 
 package: $(package)
 
