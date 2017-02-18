@@ -10,11 +10,13 @@ on_exit() {
 
 set -xeu
 
+cp=${CP_COMMAND:-./cpw}
+
 python -m SimpleHTTPServer &
 pid=$!
 
 trap on_exit EXIT
 
-./cpw http://localhost:8000/libcushions.so ${wdir}libcushions.so
+${cp} http://localhost:8000/libcushions.so ${wdir}libcushions.so
 cmp libcushions.so ${wdir}libcushions.so
 

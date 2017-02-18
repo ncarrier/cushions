@@ -9,12 +9,14 @@ on_exit() {
 
 set -xeu
 
+cp=${CP_COMMAND:-./cpw}
+
 trap on_exit EXIT
 
 dd if=/dev/urandom of=${wdir}tutu bs=1024 count=1024
 
 # compression
-./cpw ${wdir}tutu lzop://${wdir}tutu.lzo
+${cp} ${wdir}tutu lzop://${wdir}tutu.lzo
 lzop -dfo ${wdir}toto ${wdir}tutu.lzo
 cmp ${wdir}tutu ${wdir}toto
 

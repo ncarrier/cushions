@@ -11,6 +11,8 @@ on_exit() {
 
 set -xeu
 
+cp=${CP_COMMAND:-./cpw}
+
 trap on_exit EXIT
 
 # create test tree structure
@@ -31,12 +33,12 @@ touch -t 198212080000 ${wdir}test_dir/tata
 cd ${wdir}
 tar cf test_dir.tar test_dir
 mkdir extracted_dir
-${build_dir}/cpw test_dir.tar tar://extracted_dir
+${build_dir}/${cp} test_dir.tar tar://extracted_dir
 diff test_dir extracted_dir/test_dir
 rm -rf test_dir.tar extracted_dir/*
 
 # archive creation
-${build_dir}/cpw tar://test_dir test_dir.tar
+${build_dir}/${cp} tar://test_dir test_dir.tar
 cd extracted_dir
 tar xf ../test_dir.tar
 cd -

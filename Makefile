@@ -163,7 +163,11 @@ check:$(tests) $(handlers) cpw
 	@echo run some unit tests
 	$(foreach t,$(tests),$(setenv) ./$(t))
 	@echo run some functional tests
-	$(foreach t,$(wildcard $(here)tests/*_test.sh), $(setenv) $(t);)
+	$(foreach t,$(wildcard \
+		$(here)tests/*_test.sh),CP_COMMAND=./cpw $(setenv) $(t);)
+	$(foreach t,$(wildcard \
+		$(here)tests/*_test.sh),LD_PRELOAD=${CURDIR}/libcushions.so \
+		CP_COMMAND=./cp $(setenv) $(t);)
 	@echo "*** All test passed"
 
 clean:

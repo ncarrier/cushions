@@ -9,9 +9,11 @@ on_exit() {
 
 set -xeu
 
+cp=${CP_COMMAND:-./cpw}
+
 trap on_exit EXIT
 
 dd if=/dev/urandom of=${wdir}tutu bs=1024 count=1024
-./cpw ${wdir}tutu mem://${wdir}toto
+${cp} ${wdir}tutu mem://${wdir}toto
 cmp ${wdir}tutu ${wdir}toto
 
