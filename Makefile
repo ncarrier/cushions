@@ -202,6 +202,9 @@ $(lib).pc: $(here)$(lib).pc.in
 	sed -e "s|PPP_PREFIX_PPP|$(prefix)|g" \
 		-e "s/PPP_VERSION_PPP/$(version)/g" $^ > $@
 
+doc:
+	doxygen $(here)misc/Doxyfile
+
 install: all $(lib).pc
 	mkdir -p $(prefix)/share/doc/libcushions
 	mkdir -p $(prefix)/lib/cushions_handlers/
@@ -220,4 +223,4 @@ uninstall:
 		$(prefix)/lib/$(lib).a \
 		$(prefix)/lib/$(lib).so
 
-.PHONY: clean all world examples tests check install uninstall package
+.PHONY: clean all world examples tests check install uninstall package doc
