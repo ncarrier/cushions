@@ -50,8 +50,8 @@ lib := libcushions
 $(lib)_src := $(wildcard $(here)src/*.c)
 $(lib)_src := $($(lib)_src:$(here)%=%)
 tests := dict_test mode_test params_test
-examples := bzip2_expand cpw cp curl_fopen custom_stream variadic_macro \
-	wrap_malloc untar tar coroutines_libcoro callback
+examples := bzip2_expand callback coroutines_libcoro cpw cp curl_fopen \
+	custom_stream gzip untar tar variadic_macro wrap_malloc
 
 # build infos for handlers
 handler_pattern := handlers_dir/$(lib)_%_handler.so
@@ -61,6 +61,7 @@ hdlr_names := bzip2 curl lzo mem sock tar
 handlers := $(foreach h,$(hdlr_names),$(subst %,$(h),$(handler_pattern)))
 bzip2_extra_flags := -lbz2
 curl_extra_flags := $(shell curl-config --cflags --libs)
+gzip_extra_flags := $(shell pkg-config --libs zlib)
 lzo_extra_flags := -llzo2
 mem_extra_flags :=
 sock_extra_flags :=
@@ -117,6 +118,9 @@ custom_stream variadic_macro cp: %: example/%.c
 
 untar: example/untar.c handlers/tar.c handlers/coro.c
 	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers $(tar_extra_flags)
+
+gzip: example/gzip.c
+	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers $(gzip_extra_flags)
 
 callback: example/callback.c
 	$(CC) $(CFLAGS) -o $@ $^ -lcallback
