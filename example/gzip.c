@@ -52,8 +52,34 @@ static void file_cleanup(FILE **f)
 	*f = NULL;
 }
 
-static int gunzip(const char *path, FILE *file)
+static char *build_unzip_dest_path(const char *src_path)
 {
+	int ret;
+	char *res;
+	const char *needle;
+
+	needle = strrchr(src_path, '.');
+	if (needle == NULL || needle == src_path)
+		ret = asprintf(&res, "%s.unzip", src_path);
+	else
+		ret = asprintf(&res, "%.*s", (int) (needle - src_path),
+				src_path);
+	if (ret == -1) {
+		res = NULL;
+		errno = ENOMEM;
+	}
+
+	return res;
+}
+
+static int gunzip(const char *src_path, FILE *src_file)
+{
+	char __attribute__((cleanup(string_cleanup)))*dest_path = NULL;
+
+	dest_path = build_unzip_dest_path(src_path);
+	if (dest_path == NULL)
+		return -errno;
+
 	error(EXIT_FAILURE, 0, "gunzip operation not implemented");
 
 	return EXIT_SUCCESS;
@@ -98,8 +124,6 @@ static int gzip(const char *src_path, FILE *src_file)
 	unsigned char out[BUF_SIZE];
 	char __attribute__((cleanup(string_cleanup)))*dest_path = NULL;
 	FILE __attribute__((cleanup(file_cleanup)))*dest_file = NULL;
-
-	printf("%s\n", __func__);
 
 	dest_path = build_zip_dest_path(src_path);
 	if (dest_path == NULL)
