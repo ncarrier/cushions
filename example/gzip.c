@@ -178,8 +178,8 @@ int main(int argc, char *argv[])
 	int ret;
 	const char *progname;
 	bool compress;
-	int (*action)(const char *path, FILE *file);
-	FILE *file;
+	int (*action)(const char *path, FILE *src_file);
+	FILE __attribute__((cleanup(file_cleanup)))*src_file = NULL;
 	const char *path;
 
 	progname = basename(argv[0]);
@@ -188,12 +188,12 @@ int main(int argc, char *argv[])
 		error(EXIT_FAILURE, 0, "usage: %s file", progname);
 	path = argv[1];
 
-	file = fopen(path, "rbe");
-	if (file == NULL)
+	src_file = fopen(path, "rbe");
+	if (src_file == NULL)
 		error(EXIT_FAILURE, errno, "fopen");
 
 	action = compress ? gzip : gunzip;
-	ret = action(path, file);
+	ret = action(path, src_file);
 	if (ret < 0)
 		error(EXIT_FAILURE, -ret, "%s", progname);
 
