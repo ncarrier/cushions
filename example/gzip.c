@@ -26,9 +26,11 @@ static int zerr_to_errno(int err)
 	case Z_DATA_ERROR:
 	case Z_BUF_ERROR:
 	case Z_VERSION_ERROR:
+		/* codecheck_ignore[USE_NEGATIVE_ERRNO] */
 		return EINVAL;
 
 	case Z_MEM_ERROR:
+		/* codecheck_ignore[USE_NEGATIVE_ERRNO] */
 		return ENOMEM;
 
 	default:
@@ -40,6 +42,7 @@ static void string_cleanup(char **s)
 {
 	if (s == NULL || *s == NULL)
 		return;
+
 	free(*s);
 	*s = NULL;
 }
@@ -49,6 +52,7 @@ static void file_cleanup(FILE **f)
 	if (f == NULL || *f == NULL)
 		return;
 	fclose(*f);
+
 	*f = NULL;
 }
 
@@ -75,12 +79,48 @@ static char *build_unzip_dest_path(const char *src_path)
 static int gunzip(const char *src_path, FILE *src_file)
 {
 	char __attribute__((cleanup(string_cleanup)))*dest_path = NULL;
+	FILE __attribute__((cleanup(file_cleanup)))*dest_file = NULL;
+	int ret;
+	unsigned have;
+	unsigned char in[BUF_SIZE];
+	unsigned char out[BUF_SIZE];
+	size_t sret;
+	struct z_stream_s __attribute__((cleanup(inflateEnd))) strm = { 0 };
 
 	dest_path = build_unzip_dest_path(src_path);
 	if (dest_path == NULL)
 		return -errno;
 
-	error(EXIT_FAILURE, 0, "gunzip operation not implemented");
+	dest_file = fopen(dest_path, "wbex");
+	if (dest_file == NULL)
+		return -errno;
+
+	ret = inflateInit2(&strm, WB_WITH_GZIP_HEADER(15));
+	if (ret != Z_OK)
+		return -zerr_to_errno(ret);
+
+	do {
+		sret = fread(in, 1, BUF_SIZE, src_file);
+		if (sret < BUF_SIZE && ferror(src_file))
+			return -EIO;
+		strm.avail_in = sret;
+		if (strm.avail_in == 0)
+			break;
+		strm.next_in = in;
+
+		do {
+			strm.avail_out = BUF_SIZE;
+			strm.next_out = out;
+			ret = inflate(&strm, Z_NO_FLUSH);
+			if (ret < Z_OK)
+				return -zerr_to_errno(ret);
+			have = BUF_SIZE - strm.avail_out;
+			sret = fwrite(out, 1, have, dest_file);
+			if (sret != have)
+				return -EIO;
+		} while (strm.avail_out == 0);
+	} while (ret != Z_STREAM_END);
+
 
 	return EXIT_SUCCESS;
 }

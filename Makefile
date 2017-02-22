@@ -51,7 +51,7 @@ $(lib)_src := $(wildcard $(here)src/*.c)
 $(lib)_src := $($(lib)_src:$(here)%=%)
 tests := dict_test mode_test params_test
 examples := bzip2_expand callback coroutines_libcoro cpw cp curl_fopen \
-	custom_stream gzip untar tar variadic_macro wrap_malloc
+	custom_stream gzip gunzip untar tar variadic_macro wrap_malloc
 
 # build infos for handlers
 handler_pattern := handlers_dir/$(lib)_%_handler.so
@@ -121,6 +121,9 @@ untar: example/untar.c handlers/tar.c handlers/coro.c
 
 gzip: example/gzip.c
 	$(CC) $(CFLAGS) -o $@ $^ -I$(here)handlers $(gzip_extra_flags)
+
+gunzip: gzip
+	ln -fs $^ $@
 
 callback: example/callback.c
 	$(CC) $(CFLAGS) -o $@ $^ -lcallback
