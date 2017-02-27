@@ -1,2 +1,4 @@
 set print pretty on
 b main
+layout src
+focus cmd
