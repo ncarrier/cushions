@@ -26,7 +26,6 @@ enum direction {
 };
 
 struct gzip_cushions_file {
-	int error;
 	FILE *file;
 	unsigned char in[BUF_SIZE];
 	unsigned char out[BUF_SIZE];
@@ -34,6 +33,7 @@ struct gzip_cushions_file {
 	bool strm_initialized;
 	bool eof;
 	enum direction direction;
+	struct gz_header_s header;
 };
 
 static struct gzip_cushions_handler gzip_cushions_handler;
@@ -103,19 +103,6 @@ static FILE *gzip_cushions_fopen(struct ch_handler *handler,
 	int ret;
 	int old_errno;
 	struct gzip_cushions_file *gz;
-	struct gz_header_s gzip_header = {
-		.text = false,
-		.time = 0,
-		.extra = NULL,
-		.extra_len = 0,
-		.extra_max = 0,
-		.name = (Bytef *)"libcushions.so",
-		.name_max = 0,
-		.comment = (Bytef *)"created with cushions gzip",
-		.comm_max = 0,
-		.hcrc = true,
-		.done = false,
-	};
 
 	LOGD(__func__);
 
@@ -156,7 +143,20 @@ static FILE *gzip_cushions_fopen(struct ch_handler *handler,
 			old_errno = zerr_to_errno(ret);
 			goto err;
 		}
-		ret = deflateSetHeader(&gz->strm, &gzip_header);
+		gz->header = (struct gz_header_s){
+			.text = false,
+			.time = 0,
+			.extra = NULL,
+			.extra_len = 0,
+			.extra_max = 0,
+			.name = (Bytef *)"libcushions.so",
+			.name_max = 0,
+			.comment = (Bytef *)"created with cushions gzip",
+			.comm_max = 0,
+			.hcrc = true,
+			.done = false,
+		};
+		ret = deflateSetHeader(&gz->strm, &gz->header);
 		if (ret != Z_OK) {
 			old_errno = zerr_to_errno(ret);
 			goto err;
