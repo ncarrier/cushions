@@ -204,7 +204,7 @@ static int gzip(const char *src_path, FILE *src_file)
 			have = BUF_SIZE - strm.avail_out;
 			sret = fwrite(out, 1, have, dest_file);
 			if (sret != have)
-				return -errno;
+				return -EIO;
 
 		} while (strm.avail_out == 0);
 		assert(strm.avail_in == 0);
