@@ -76,7 +76,7 @@ static char *build_unzip_dest_path(const char *src_path)
 	return res;
 }
 
-static int gunzip(const char *src_path, FILE *src_file)
+static int gunzip(const char *src_path)
 {
 	char __attribute__((cleanup(string_cleanup)))*dest_path = NULL;
 	FILE __attribute__((cleanup(file_cleanup)))*dest_file = NULL;
@@ -86,6 +86,12 @@ static int gunzip(const char *src_path, FILE *src_file)
 	unsigned char out[BUF_SIZE];
 	size_t sret;
 	struct z_stream_s __attribute__((cleanup(inflateEnd))) strm = { 0 };
+	FILE __attribute__((cleanup(file_cleanup)))*src_file = NULL;
+
+	src_file = fopen(src_path, "rbe");
+	if (src_file == NULL)
+		error(EXIT_FAILURE, errno, "fopen");
+
 
 	dest_path = build_unzip_dest_path(src_path);
 	if (dest_path == NULL)
@@ -144,7 +150,7 @@ static char *build_zip_dest_path(const char *src_path)
 	return res;
 }
 
-static int gzip(const char *src_path, FILE *src_file)
+static int gzip(const char *src_path)
 {
 	int ret;
 	int flush = Z_NO_FLUSH;
@@ -167,8 +173,13 @@ static int gzip(const char *src_path, FILE *src_file)
 	size_t sret;
 	unsigned char in[BUF_SIZE];
 	unsigned char out[BUF_SIZE];
+	FILE __attribute__((cleanup(file_cleanup)))*src_file = NULL;
 	char __attribute__((cleanup(string_cleanup)))*dest_path = NULL;
 	FILE __attribute__((cleanup(file_cleanup)))*dest_file = NULL;
+
+	src_file = fopen(src_path, "rbe");
+	if (src_file == NULL)
+		error(EXIT_FAILURE, errno, "fopen");
 
 	dest_path = build_zip_dest_path(src_path);
 	if (dest_path == NULL)
@@ -223,8 +234,6 @@ int main(int argc, char *argv[])
 	int ret;
 	const char *progname;
 	bool compress;
-	int (*action)(const char *path, FILE *src_file);
-	FILE __attribute__((cleanup(file_cleanup)))*src_file = NULL;
 	const char *path;
 
 	progname = basename(argv[0]);
@@ -233,12 +242,7 @@ int main(int argc, char *argv[])
 		error(EXIT_FAILURE, 0, "usage: %s file", progname);
 	path = argv[1];
 
-	src_file = fopen(path, "rbe");
-	if (src_file == NULL)
-		error(EXIT_FAILURE, errno, "fopen");
-
-	action = compress ? gzip : gunzip;
-	ret = action(path, src_file);
+	ret = (compress ? gzip : gunzip)(path);
 	if (ret < 0)
 		error(EXIT_FAILURE, -ret, "%s", progname);
 
