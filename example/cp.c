@@ -7,7 +7,7 @@
 #include <error.h>
 
 #define USAGE "usage: cp source destination"
-#define BUFFER_SIZE 0x2000
+#define BUFFER_SIZE 0x4000
 
 static void cleanup_file(FILE **f)
 {
@@ -46,11 +46,11 @@ static int old_main(int argc, char *argv[])
 	src_path = argv[1];
 	dest_path = argv[2];
 
-	src = fopen(src_path, "rb");
+	src = fopen(src_path, "rbe");
 	if (src == NULL)
 		error(EXIT_FAILURE, errno, "fopen %s", src_path);
 	atexit(cleanup);
-	dest = fopen(dest_path, "wb");
+	dest = fopen(dest_path, "wbex");
 	if (dest == NULL)
 		error(EXIT_FAILURE, errno, "fopen %s", dest_path);
 
