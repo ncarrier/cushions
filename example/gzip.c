@@ -112,8 +112,13 @@ static int gunzip(const char *src_path, FILE *src_file)
 			strm.avail_out = BUF_SIZE;
 			strm.next_out = out;
 			ret = inflate(&strm, Z_NO_FLUSH);
-			if (ret < Z_OK)
+			switch (ret) {
+			case Z_NEED_DICT:
+			case Z_DATA_ERROR:
+			case Z_MEM_ERROR:
+			case Z_STREAM_ERROR:
 				return -zerr_to_errno(ret);
+			}
 			have = BUF_SIZE - strm.avail_out;
 			sret = fwrite(out, 1, have, dest_file);
 			if (sret != have)
