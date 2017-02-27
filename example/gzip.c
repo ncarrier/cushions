@@ -16,6 +16,15 @@
 #define MAX_MEM_LEVEL 9
 #define MAX_COMP_LEVEL 9
 
+struct gzip {
+	struct z_stream_s strm;
+	FILE *dest_file;
+	unsigned char in[BUF_SIZE];
+	unsigned char out[BUF_SIZE];
+	bool strm_initialized;
+	struct gz_header_s header;
+};
+
 static int zerr_to_errno(int err)
 {
 	switch (err) {
@@ -136,6 +145,20 @@ static int gunzip(const char *src_path)
 	return EXIT_SUCCESS;
 }
 
+static void gzip_fclose(struct gzip **g)
+{
+	struct gzip *gzip;
+
+	if (g == NULL || *g == NULL)
+		return;
+	gzip = *g;
+
+	file_cleanup(&gzip->dest_file);
+	if (gzip->strm_initialized)
+		deflateEnd(&gzip->strm);
+	free(gzip);
+}
+
 static char *build_zip_dest_path(const char *src_path)
 {
 	int ret;
@@ -150,32 +173,65 @@ static char *build_zip_dest_path(const char *src_path)
 	return res;
 }
 
-static int gzip(const char *src_path)
+static struct gzip *gzip_fopen(const char *dest_path)
 {
 	int ret;
-	int flush = Z_NO_FLUSH;
-	unsigned have;
-	struct z_stream_s __attribute__((cleanup(deflateEnd)))strm = {0};
-	const char *name = basename(src_path);
+	struct gzip *gzip;
 	struct gz_header_s gzip_header = {
 		.text = false,
 		.time = 0,
 		.extra = NULL,
 		.extra_len = 0,
 		.extra_max = 0,
-		.name = (Bytef *)name,
+		.name = (Bytef *)"titi tata tutu",
 		.name_max = 0,
 		.comment = (Bytef *)"created with cushions gzip",
 		.comm_max = 0,
 		.hcrc = true,
 		.done = false,
 	};
+
+	gzip = calloc(1, sizeof(*gzip));
+	if (gzip == NULL)
+		return NULL;
+	gzip->dest_file = fopen(dest_path, "wbex");
+	if (gzip->dest_file == NULL) {
+		ret = errno;
+		goto err;
+	}
+
+	ret = deflateInit2(&gzip->strm, MAX_COMP_LEVEL, Z_DEFLATED,
+			WB_WITH_GZIP_HEADER(15), MAX_MEM_LEVEL,
+			Z_DEFAULT_STRATEGY);
+	if (ret != Z_OK) {
+		ret = zerr_to_errno(ret);
+		goto err;
+	}
+	gzip->strm_initialized = true;
+	gzip->header = gzip_header;
+	ret = deflateSetHeader(&gzip->strm, &gzip->header);
+	if (ret != Z_OK) {
+		ret = zerr_to_errno(ret);
+		goto err;
+	}
+
+	return gzip;
+err:
+	gzip_fclose(&gzip);
+	errno = ret;
+
+	return NULL;
+}
+
+static int gzip(const char *src_path)
+{
+	int ret;
+	int flush = Z_NO_FLUSH;
+	unsigned have;
 	size_t sret;
-	unsigned char in[BUF_SIZE];
-	unsigned char out[BUF_SIZE];
 	FILE __attribute__((cleanup(file_cleanup)))*src_file = NULL;
 	char __attribute__((cleanup(string_cleanup)))*dest_path = NULL;
-	FILE __attribute__((cleanup(file_cleanup)))*dest_file = NULL;
+	struct gzip __attribute__((cleanup(gzip_fclose)))*gzip = NULL;
 
 	src_file = fopen(src_path, "rbe");
 	if (src_file == NULL)
@@ -185,45 +241,36 @@ static int gzip(const char *src_path)
 	if (dest_path == NULL)
 		return -errno;
 
-	dest_file = fopen(dest_path, "wbex");
-	if (dest_file == NULL)
-		return -errno;
-
-	ret = deflateInit2(&strm, MAX_COMP_LEVEL, Z_DEFLATED,
-			WB_WITH_GZIP_HEADER(15), MAX_MEM_LEVEL,
-			Z_DEFAULT_STRATEGY);
-	if (ret != Z_OK) {
-		fprintf(stderr, "deflateInit2(%d): %s\n", ret, strm.msg ? : "");
-		return EXIT_FAILURE;
+	gzip = gzip_fopen(dest_path);
+	if (gzip == NULL) {
+		ret = -errno;
+		perror("gzip_fopen");
+		return ret;
 	}
 
-	ret = deflateSetHeader(&strm, &gzip_header);
-	if (ret != Z_OK)
-		return -zerr_to_errno(ret);
-
 	do {
-		sret = fread(in, 1, BUF_SIZE, src_file);
+		sret = fread(gzip->in, 1, BUF_SIZE, src_file);
 		if (sret < BUF_SIZE) {
 			if (ferror(src_file))
 				return -EIO;
 			flush = Z_FINISH;
 		}
-		strm.avail_in = sret;
-		strm.next_in = in;
+		gzip->strm.avail_in = sret;
+		gzip->strm.next_in = gzip->in;
 
 		do {
-			strm.avail_out = BUF_SIZE;
-			strm.next_out = out;
-			ret = deflate(&strm, flush);
+			gzip->strm.avail_out = BUF_SIZE;
+			gzip->strm.next_out = gzip->out;
+			ret = deflate(&gzip->strm, flush);
 			assert(ret != Z_STREAM_ERROR);
 
-			have = BUF_SIZE - strm.avail_out;
-			sret = fwrite(out, 1, have, dest_file);
+			have = BUF_SIZE - gzip->strm.avail_out;
+			sret = fwrite(gzip->out, 1, have, gzip->dest_file);
 			if (sret != have)
 				return -EIO;
 
-		} while (strm.avail_out == 0);
-		assert(strm.avail_in == 0);
+		} while (gzip->strm.avail_out == 0);
+		assert(gzip->strm.avail_in == 0);
 	} while (flush != Z_FINISH);
 
 	return 0;
