@@ -208,7 +208,7 @@ static ssize_t gzip_write(void *cookie, const char *buf, size_t size)
 		strm->avail_out = BUF_SIZE;
 		strm->next_out = gz->out;
 		ret = deflate(strm, Z_NO_FLUSH);
-		if (ret < 0) {
+		if (ret == Z_STREAM_ERROR) {
 			errno = zerr_to_errno(ret);
 			return 0;
 		}
@@ -236,8 +236,7 @@ static struct gzip_cushions_handler gzip_cushions_handler = {
 	},
 };
 
-static __attribute__((constructor)) void gzip_cushions_handler_constructor(
-		void)
+static __attribute__((constructor)) void gzip_cushions_handler_constructor(void)
 {
 	int ret;
 
