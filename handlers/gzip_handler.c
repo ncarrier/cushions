@@ -33,7 +33,6 @@ struct gzip_cushions_file {
 	bool strm_initialized;
 	bool eof;
 	enum direction direction;
-	struct gz_header_s header;
 };
 
 static struct gzip_cushions_handler gzip_cushions_handler;
@@ -60,27 +59,65 @@ static int zerr_to_errno(int err)
 	}
 }
 
+static ssize_t gzip_write(void *cookie, const char *buf, size_t size)
+{
+	size_t sret;
+	int ret;
+	struct gzip_cushions_file *gzip = cookie;
+	size_t remaining;
+	struct z_stream_s *strm;
+	int flush;
+
+	if (gzip->eof)
+		return 0;
+
+	if (size == 0) {
+		gzip->eof = true;
+		flush = Z_FINISH;
+	} else {
+		flush = Z_NO_FLUSH;
+	}
+
+	strm = &gzip->strm;
+	strm->avail_in = size;
+	strm->next_in = (unsigned char *)buf;
+
+	do {
+		strm->avail_out = BUF_SIZE;
+		strm->next_out = gzip->out;
+		ret = deflate(strm, flush);
+		if (ret == Z_STREAM_ERROR) {
+			errno = zerr_to_errno(ret);
+			return 0;
+		}
+
+		remaining = BUF_SIZE - strm->avail_out;
+		sret = fwrite(gzip->out, 1, remaining, gzip->file);
+		if (sret != remaining) {
+			errno = EIO;
+			return 0;
+		}
+	} while (strm->avail_out == 0);
+
+	return size;
+}
+
 static int gzip_close(void *c)
 {
-	struct gzip_cushions_file *gz = c;
+	struct gzip_cushions_file *gzip = c;
 
-	if (gz->strm_initialized) {
-		if (gz->direction == READ) {
-			// TODO
-			inflateEnd(&gz->strm);
+	if (gzip->strm_initialized) {
+		if (gzip->direction == READ) {
+			inflateEnd(&gzip->strm);
 		} else {
-			gz->strm.avail_in = 0;
-			gz->strm.next_in = (unsigned char *) "";
-			deflate(&gz->strm, Z_FINISH);
-			fwrite(gz->out, 1, BUF_SIZE - gz->strm.avail_out,
-					gz->file);
-			deflateEnd(&gz->strm);
+			gzip_write(gzip, "", 0);
+			deflateEnd(&gzip->strm);
 		}
 	}
-	if (gz->file != NULL)
-		fclose(gz->file);
-	memset(gz, 0, sizeof(*gz));
-	free(gz);
+	if (gzip->file != NULL)
+		fclose(gzip->file);
+	memset(gzip, 0, sizeof(*gzip));
+	free(gzip);
 
 	return 0;
 }
@@ -102,7 +139,7 @@ static FILE *gzip_cushions_fopen(struct ch_handler *handler,
 {
 	int ret;
 	int old_errno;
-	struct gzip_cushions_file *gz;
+	struct gzip_cushions_file *gzip;
 
 	LOGD(__func__);
 
@@ -113,29 +150,29 @@ static FILE *gzip_cushions_fopen(struct ch_handler *handler,
 	if (!mode->binary)
 		LOGW("binary mode not set, may cause problems on some OSes");
 
-	gz = calloc(1, sizeof(*gz));
-	if (gz == NULL) {
+	gzip = calloc(1, sizeof(*gzip));
+	if (gzip == NULL) {
 		old_errno = errno;
 		LOGPE("calloc", errno);
 		errno = old_errno;
 		return NULL;
 	}
-	gz->file = cushions_fopen(path, mode->mode);
-	if (gz->file == NULL) {
+	gzip->file = cushions_fopen(path, mode->mode);
+	if (gzip->file == NULL) {
 		old_errno = errno;
 		LOGPE("cushions_fopen", errno);
 		goto err;
 	}
-	gz->direction = mode->read ? READ : WRITE;
-	if (gz->direction == READ) {
-		ret = inflateInit2(&gz->strm, WB_WITH_GZIP_HEADER(15));
+	gzip->direction = mode->read ? READ : WRITE;
+	if (gzip->direction == READ) {
+		ret = inflateInit2(&gzip->strm, WB_WITH_GZIP_HEADER(15));
 		if (ret != Z_OK) {
 			LOGE("inflateInit2 error");
 			old_errno = zerr_to_errno(ret);
 			goto err;
 		}
 	} else {
-		ret = deflateInit2(&gz->strm, MAX_COMP_LEVEL, Z_DEFLATED,
+		ret = deflateInit2(&gzip->strm, MAX_COMP_LEVEL, Z_DEFLATED,
 				WB_WITH_GZIP_HEADER(15), MAX_MEM_LEVEL,
 				Z_DEFAULT_STRATEGY);
 		if (ret != Z_OK) {
@@ -143,31 +180,13 @@ static FILE *gzip_cushions_fopen(struct ch_handler *handler,
 			old_errno = zerr_to_errno(ret);
 			goto err;
 		}
-		gz->header = (struct gz_header_s){
-			.text = false,
-			.time = 0,
-			.extra = NULL,
-			.extra_len = 0,
-			.extra_max = 0,
-			.name = (Bytef *)"libcushions.so",
-			.name_max = 0,
-			.comment = (Bytef *)"created with cushions gzip",
-			.comm_max = 0,
-			.hcrc = true,
-			.done = false,
-		};
-		ret = deflateSetHeader(&gz->strm, &gz->header);
-		if (ret != Z_OK) {
-			old_errno = zerr_to_errno(ret);
-			goto err;
-		}
 	}
-	gz->strm_initialized = true;
+	gzip->strm_initialized = true;
 
-	return fopencookie(gz, mode->mode, gzip_cushions_handler.gzip_func);
+	return fopencookie(gzip, mode->mode, gzip_cushions_handler.gzip_func);
 err:
 
-	gzip_close(gz);
+	gzip_close(gzip);
 
 	errno = old_errno;
 	return NULL;
@@ -190,38 +209,6 @@ static ssize_t gzip_read(void *c, char *buf, size_t size)
 //		gz->eof = true;
 
 //	return ret;
-}
-
-static ssize_t gzip_write(void *cookie, const char *buf, size_t size)
-{
-	size_t sret;
-	int ret;
-	struct gzip_cushions_file *gz = cookie;
-	size_t remaining;
-	struct z_stream_s *strm;
-
-	strm = &gz->strm;
-	strm->avail_in = size;
-	strm->next_in = (unsigned char *)buf;
-
-	do {
-		strm->avail_out = BUF_SIZE;
-		strm->next_out = gz->out;
-		ret = deflate(strm, Z_NO_FLUSH);
-		if (ret == Z_STREAM_ERROR) {
-			errno = zerr_to_errno(ret);
-			return 0;
-		}
-
-		remaining = BUF_SIZE - strm->avail_out;
-		sret = fwrite(gz->out, 1, remaining, gz->file);
-		if (sret != remaining) {
-			errno = EIO;
-			return 0;
-		}
-	} while (strm->avail_out == 0);
-
-	return size;
 }
 
 static struct gzip_cushions_handler gzip_cushions_handler = {
