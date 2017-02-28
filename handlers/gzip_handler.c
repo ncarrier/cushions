@@ -194,21 +194,8 @@ err:
 
 static ssize_t gzip_read(void *c, char *buf, size_t size)
 {
-//	int ret;
-	struct gzip_cushions_file *gz = c;
-
 	errno = ENOSYS;
 	return -1;
-	if (gz->eof)
-		return 0;
-
-//	ret = my_gzip_read(&gz->gz, buf, size);
-//	if (ret < 0)
-//		errno = -ret;
-//	else if ((size_t)ret < size)
-//		gz->eof = true;
-
-//	return ret;
 }
 
 static struct gzip_cushions_handler gzip_cushions_handler = {
