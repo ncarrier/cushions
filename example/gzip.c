@@ -19,7 +19,6 @@
 struct gzip {
 	struct z_stream_s strm;
 	FILE *dest_file;
-	unsigned char in[BUF_SIZE];
 	unsigned char out[BUF_SIZE];
 	bool strm_initialized;
 	struct gz_header_s header;
@@ -144,6 +143,8 @@ static int gunzip(const char *src_path)
 
 	return EXIT_SUCCESS;
 }
+static ssize_t gzip_fwrite(struct gzip *gzip, const char *buf, size_t size,
+		int flush);
 
 static void gzip_fclose(struct gzip **g)
 {
@@ -153,9 +154,9 @@ static void gzip_fclose(struct gzip **g)
 		return;
 	gzip = *g;
 
-	file_cleanup(&gzip->dest_file);
 	if (gzip->strm_initialized)
 		deflateEnd(&gzip->strm);
+	file_cleanup(&gzip->dest_file);
 	free(gzip);
 }
 
@@ -223,15 +224,44 @@ err:
 	return NULL;
 }
 
+static ssize_t gzip_fwrite(struct gzip *gzip, const char *buf, size_t size,
+		int flush)
+{
+	int ret;
+	unsigned have;
+	size_t sret;
+
+	gzip->strm.avail_in = size;
+	gzip->strm.next_in = (unsigned char *)buf;
+
+	do {
+		gzip->strm.avail_out = BUF_SIZE;
+		gzip->strm.next_out = gzip->out;
+		ret = deflate(&gzip->strm, flush);
+		assert(ret != Z_STREAM_ERROR);
+
+		have = BUF_SIZE - gzip->strm.avail_out;
+		sret = fwrite(gzip->out, 1, have, gzip->dest_file);
+		if (sret != have) {
+			errno = EIO;
+			return 0;
+		}
+
+	} while (gzip->strm.avail_out == 0);
+	assert(gzip->strm.avail_in == 0);
+
+	return size;
+}
+
 static int gzip(const char *src_path)
 {
 	int ret;
 	int flush = Z_NO_FLUSH;
-	unsigned have;
 	size_t sret;
 	FILE __attribute__((cleanup(file_cleanup)))*src_file = NULL;
 	char __attribute__((cleanup(string_cleanup)))*dest_path = NULL;
 	struct gzip __attribute__((cleanup(gzip_fclose)))*gzip = NULL;
+	char in[BUF_SIZE];
 
 	src_file = fopen(src_path, "rbe");
 	if (src_file == NULL)
@@ -249,28 +279,15 @@ static int gzip(const char *src_path)
 	}
 
 	do {
-		sret = fread(gzip->in, 1, BUF_SIZE, src_file);
+		sret = fread(in, 1, BUF_SIZE, src_file);
 		if (sret < BUF_SIZE) {
 			if (ferror(src_file))
 				return -EIO;
 			flush = Z_FINISH;
 		}
-		gzip->strm.avail_in = sret;
-		gzip->strm.next_in = gzip->in;
-
-		do {
-			gzip->strm.avail_out = BUF_SIZE;
-			gzip->strm.next_out = gzip->out;
-			ret = deflate(&gzip->strm, flush);
-			assert(ret != Z_STREAM_ERROR);
-
-			have = BUF_SIZE - gzip->strm.avail_out;
-			sret = fwrite(gzip->out, 1, have, gzip->dest_file);
-			if (sret != have)
-				return -EIO;
-
-		} while (gzip->strm.avail_out == 0);
-		assert(gzip->strm.avail_in == 0);
+		sret = gzip_fwrite(gzip, in, sret, flush);
+		if (sret == 0)
+			return -errno;
 	} while (flush != Z_FINISH);
 
 	return 0;
