@@ -21,7 +21,7 @@ struct gzip {
 	FILE *dest_file;
 	unsigned char out[BUF_SIZE];
 	bool strm_initialized;
-	struct gz_header_s header;
+	bool eof;
 };
 
 static int zerr_to_errno(int err)
@@ -100,7 +100,6 @@ static int gunzip(const char *src_path)
 	if (src_file == NULL)
 		error(EXIT_FAILURE, errno, "fopen");
 
-
 	dest_path = build_unzip_dest_path(src_path);
 	if (dest_path == NULL)
 		return -errno;
@@ -143,8 +142,44 @@ static int gunzip(const char *src_path)
 
 	return EXIT_SUCCESS;
 }
-static ssize_t gzip_fwrite(struct gzip *gzip, const char *buf, size_t size,
-		int flush);
+static ssize_t gzip_fwrite(struct gzip *gzip, const char *buf, size_t size)
+{
+	int ret;
+	unsigned have;
+	size_t sret;
+	int flush;
+
+	if (gzip->eof)
+		return 0;
+
+	if (size == 0) {
+		gzip->eof = true;
+		flush = Z_FINISH;
+	} else {
+		flush = Z_NO_FLUSH;
+	}
+
+	gzip->strm.avail_in = size;
+	gzip->strm.next_in = (unsigned char *)buf;
+
+	do {
+		gzip->strm.avail_out = BUF_SIZE;
+		gzip->strm.next_out = gzip->out;
+		ret = deflate(&gzip->strm, flush);
+		assert(ret != Z_STREAM_ERROR);
+
+		have = BUF_SIZE - gzip->strm.avail_out;
+		sret = fwrite(gzip->out, 1, have, gzip->dest_file);
+		if (sret != have) {
+			errno = EIO;
+			return 0;
+		}
+
+	} while (gzip->strm.avail_out == 0);
+	assert(gzip->strm.avail_in == 0);
+
+	return size;
+}
 
 static void gzip_fclose(struct gzip **g)
 {
@@ -154,8 +189,10 @@ static void gzip_fclose(struct gzip **g)
 		return;
 	gzip = *g;
 
-	if (gzip->strm_initialized)
+	if (gzip->strm_initialized) {
+		gzip_fwrite(gzip, "", 0);
 		deflateEnd(&gzip->strm);
+	}
 	file_cleanup(&gzip->dest_file);
 	free(gzip);
 }
@@ -178,19 +215,6 @@ static struct gzip *gzip_fopen(const char *dest_path)
 {
 	int ret;
 	struct gzip *gzip;
-	struct gz_header_s gzip_header = {
-		.text = false,
-		.time = 0,
-		.extra = NULL,
-		.extra_len = 0,
-		.extra_max = 0,
-		.name = (Bytef *)"titi tata tutu",
-		.name_max = 0,
-		.comment = (Bytef *)"created with cushions gzip",
-		.comm_max = 0,
-		.hcrc = true,
-		.done = false,
-	};
 
 	gzip = calloc(1, sizeof(*gzip));
 	if (gzip == NULL)
@@ -209,12 +233,6 @@ static struct gzip *gzip_fopen(const char *dest_path)
 		goto err;
 	}
 	gzip->strm_initialized = true;
-	gzip->header = gzip_header;
-	ret = deflateSetHeader(&gzip->strm, &gzip->header);
-	if (ret != Z_OK) {
-		ret = zerr_to_errno(ret);
-		goto err;
-	}
 
 	return gzip;
 err:
@@ -222,35 +240,6 @@ err:
 	errno = ret;
 
 	return NULL;
-}
-
-static ssize_t gzip_fwrite(struct gzip *gzip, const char *buf, size_t size,
-		int flush)
-{
-	int ret;
-	unsigned have;
-	size_t sret;
-
-	gzip->strm.avail_in = size;
-	gzip->strm.next_in = (unsigned char *)buf;
-
-	do {
-		gzip->strm.avail_out = BUF_SIZE;
-		gzip->strm.next_out = gzip->out;
-		ret = deflate(&gzip->strm, flush);
-		assert(ret != Z_STREAM_ERROR);
-
-		have = BUF_SIZE - gzip->strm.avail_out;
-		sret = fwrite(gzip->out, 1, have, gzip->dest_file);
-		if (sret != have) {
-			errno = EIO;
-			return 0;
-		}
-
-	} while (gzip->strm.avail_out == 0);
-	assert(gzip->strm.avail_in == 0);
-
-	return size;
 }
 
 static int gzip(const char *src_path)
@@ -285,7 +274,7 @@ static int gzip(const char *src_path)
 				return -EIO;
 			flush = Z_FINISH;
 		}
-		sret = gzip_fwrite(gzip, in, sret, flush);
+		sret = gzip_fwrite(gzip, in, sret);
 		if (sret == 0)
 			return -errno;
 	} while (flush != Z_FINISH);
