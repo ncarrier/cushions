@@ -14,6 +14,11 @@
 #define WB_WITH_GZIP_HEADER(wb) (0x10 | (wb))
 #define MAX_MEM_LEVEL 9
 #define MAX_COMP_LEVEL 9
+#define MIN(a, b) ({ \
+	__typeof__(a) _a = (a); \
+	__typeof__(b) _b = (b); \
+	_a < _b ? _a : _b; \
+})
 
 struct gzip_cushions_handler {
 	struct ch_handler handler;
@@ -33,6 +38,13 @@ struct gzip_cushions_file {
 	bool strm_initialized;
 	bool eof;
 	enum direction direction;
+
+	/* fields for read */
+	/* total available for output in out, remaining is have - offset */
+	unsigned have;
+	/* first byte to consume in the out buffer */
+	unsigned offset;
+	bool need_to_refill_in;
 };
 
 static struct gzip_cushions_handler gzip_cushions_handler;
@@ -57,6 +69,100 @@ static int zerr_to_errno(int err)
 	default:
 		return 0;
 	}
+}
+
+static ssize_t available_to_read(struct gzip_cushions_file *gzip)
+{
+	return gzip->have - gzip->offset;
+}
+
+/* returns 0 on end of file, 1 on success, -errno on error */
+static int refill_read_buffer(struct gzip_cushions_file *gzip)
+{
+	int ret;
+	size_t sret;
+	struct z_stream_s *strm;
+	bool retry;
+
+	if (available_to_read(gzip) != 0)
+		return -EINVAL;
+
+	strm = &gzip->strm;
+
+	do {
+		retry = false;
+		if (gzip->need_to_refill_in) {
+			sret = fread(gzip->in, 1, BUF_SIZE, gzip->file);
+			if (sret < BUF_SIZE && ferror(gzip->file))
+				return -EIO;
+			strm->avail_in = sret;
+			if (strm->avail_in == 0) {
+				gzip->eof = true;
+				return 0;
+			}
+			strm->next_in = gzip->in;
+			gzip->need_to_refill_in = false;
+		}
+
+		strm->avail_out = BUF_SIZE;
+		strm->next_out = gzip->out;
+		ret = inflate(strm, Z_NO_FLUSH);
+		switch (ret) {
+		case Z_NEED_DICT:
+		case Z_DATA_ERROR:
+		case Z_MEM_ERROR:
+		case Z_STREAM_ERROR:
+			return -zerr_to_errno(ret);
+		}
+		gzip->have = BUF_SIZE - strm->avail_out;
+		gzip->offset = 0;
+		if (strm->avail_out == BUF_SIZE) {
+			gzip->need_to_refill_in = true;
+			retry = true;
+		}
+	} while (retry);
+
+	return 1;
+}
+
+static void consume(struct gzip_cushions_file *gzip, size_t to_consume)
+{
+	gzip->offset += to_consume;
+}
+
+static ssize_t gzip_read(void *cookie, char *buf, size_t size)
+{
+	int ret;
+	struct gzip_cushions_file *gzip = cookie;
+	size_t missing;
+	size_t available;
+	size_t to_consume;
+	unsigned offset;
+
+	if (gzip->eof)
+		return 0;
+
+	offset = 0;
+	missing = size;
+	do {
+		if (available_to_read(gzip) <= 0) {
+			ret = refill_read_buffer(gzip);
+			if (ret < 0) {
+				errno = -ret;
+				return -1;
+			}
+			if (ret == 0)
+				return size - missing;
+		}
+		available = available_to_read(gzip);
+		to_consume = MIN(available, missing);
+		memcpy(buf + offset, gzip->out + gzip->offset, to_consume);
+		missing -= to_consume;
+		offset += to_consume;
+		consume(gzip, to_consume);
+	} while (missing != 0);
+
+	return size;
 }
 
 static ssize_t gzip_write(void *cookie, const char *buf, size_t size)
@@ -171,6 +277,7 @@ static FILE *gzip_cushions_fopen(struct ch_handler *handler,
 			old_errno = zerr_to_errno(ret);
 			goto err;
 		}
+		gzip->need_to_refill_in = true;
 	} else {
 		ret = deflateInit2(&gzip->strm, MAX_COMP_LEVEL, Z_DEFLATED,
 				WB_WITH_GZIP_HEADER(15), MAX_MEM_LEVEL,
@@ -190,12 +297,6 @@ err:
 
 	errno = old_errno;
 	return NULL;
-}
-
-static ssize_t gzip_read(void *c, char *buf, size_t size)
-{
-	errno = ENOSYS;
-	return -1;
 }
 
 static struct gzip_cushions_handler gzip_cushions_handler = {
