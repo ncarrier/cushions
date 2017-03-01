@@ -7,7 +7,6 @@
 #include <error.h>
 
 #define USAGE "usage: cp source destination"
-#define BUFFER_SIZE 0x4000
 
 static void cleanup_file(FILE **f)
 {
@@ -33,7 +32,8 @@ static int old_main(int argc, char *argv[])
 	const char *dest_path;
 	size_t sread;
 	size_t swritten;
-	char buf[BUFFER_SIZE];
+	size_t buffer_size = atoi(getenv("CU_CP_BUFFER_SIZE") ? : "16384");
+	char buf[buffer_size];
 	bool eof = false;
 
 	if (argc == 1) {
@@ -55,8 +55,8 @@ static int old_main(int argc, char *argv[])
 		error(EXIT_FAILURE, errno, "fopen %s", dest_path);
 
 	do {
-		sread = fread(buf, 1, BUFFER_SIZE, src);
-		if (sread != BUFFER_SIZE) {
+		sread = fread(buf, 1, buffer_size, src);
+		if (sread != buffer_size) {
 			if (ferror(src))
 				error(EXIT_FAILURE, errno, "fread");
 			else
