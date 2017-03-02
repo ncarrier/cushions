@@ -1,0 +1,7 @@
+* allow to disable colors in logging with CUSHIONS_LOG_NO_COLOR set to y
+* more coherent public API naming scheme
+* read/write gzip compression support
+* added cucp in the package, cp program with URL schemes support built-in
+* added cuw, wrapper to launch programs with libcushions.so preloaded
+  can also be sourced for even easier usage
+
