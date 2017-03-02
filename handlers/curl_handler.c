@@ -137,6 +137,17 @@ static size_t write_callback(char *buffer, size_t size, size_t nitems,
 	return size;
 }
 
+static bool mode_is_valid(const struct ch_mode *mode)
+{
+	if (mode->append)
+		return false;
+
+	if (mode->read && mode->write)
+		return false;
+
+	return mode->read /* TODO uncomment when write is ok || mode->write */;
+}
+
 static FILE *curl_cushions_fopen(struct ch_handler *handler,
 		const char *path, const char *full_path, const char *scheme,
 		const struct ch_mode *mode)
@@ -148,12 +159,12 @@ static FILE *curl_cushions_fopen(struct ch_handler *handler,
 
 	ch = to_curl_handler(handler);
 
-	/* TODO less restrictive condition */
-	if (strcmp(mode->mode, "r") != 0 && strcmp(mode->mode, "rb") != 0) {
-		LOGE("curl scheme only supports \"r\" open mode");
+	if (!mode_is_valid(mode)) {
 		errno = EINVAL;
 		return NULL;
 	}
+	if (!mode->binary)
+		LOGW("binary mode not set, may cause problems on some OSes");
 
 	file = calloc(1, sizeof(*file));
 	if (file == NULL)
