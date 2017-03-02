@@ -6,8 +6,8 @@
  * header.
  *
  * To implement a new handler, one need mainly to register a ch_handler
- * structure, with its ch_handler.fopen operation implemented and register it with
- * ch_handler_register().
+ * structure, with its ch_handler.fopen operation implemented and register it
+ * with ch_handler_register().
  * Other functions of this header and the other ones matching the
  * cushions_handler prefix, are mainly helper functions to ease the development
  * of new handlers.
