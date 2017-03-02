@@ -224,6 +224,7 @@ install: all cpw $(lib).pc
 	mkdir -p $(prefix)/lib/pkgconfig/
 
 	install --mode=0755 cpw $(prefix)/bin/cucp
+	install --mode=0755 $(here)tools/cuw $(prefix)/bin/cuw
 	install --mode=0755 $(lib).a $(prefix)/lib/
 	install --mode=0755 $(lib).so $(prefix)/lib/
 	install --mode=0644 $(lib).pc $(prefix)/lib/pkgconfig/

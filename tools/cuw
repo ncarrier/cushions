@@ -1,0 +1,22 @@
+#!/bin/bash
+
+if [ "$(basename -- $0)" = "cuw" ]; then
+	sourced=0
+elif [ -n "${BASH_SOURCE}" ]; then
+	# Sourced by bash
+	sourced=1
+else
+	echo "Unsupported shell"
+fi
+
+if [ -n "${LD_PRELOAD}" ]; then
+	LD_PRELOAD=libcushions.so:${LD_PRELOAD}
+else
+	LD_PRELOAD=libcushions.so
+fi
+
+export LD_PRELOAD
+
+if [ ! "${sourced}" = "1" ]; then
+	"$@"
+fi
