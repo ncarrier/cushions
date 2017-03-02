@@ -1,5 +1,3 @@
-install cp as part of the package
-install a wrapper to perform the LD_PRELOAD modification
 finish the doxygen
 package doc / manpage
 write test cases for all handlers
