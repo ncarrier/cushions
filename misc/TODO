@@ -1,12 +1,12 @@
-parametrize tests so that they run in the three configurations :
- * explicit call to cushions_fopen
- * use of -Wl,--wrap=fopen
- * use of LD_PRELOAD
+install cp as part of the package
+install a wrapper to perform the LD_PRELOAD modification
+finish the doxygen
 package doc / manpage
 write test cases for all handlers
   still missing: test case for curl-no-http and big bad check
 add support for at least one static analysis tool (scan-build ?)
 make lzop readable
 can cURL be writable too ?
+
 implement a popen handler, see popen_noshell from project relog
-make returned FILE structures access thread safe
+check if FILE structures' accesses are thread safe
