@@ -6,9 +6,9 @@
 
 **libcushions** aims at adding support for url-like schemes to the glibc's
 fopen function.
-By using linker flags or **LD\_PRELOAD** tricks, this can be done without
-modifying or even without recompiling the program, adding transparent support
-for archives files, or web urls, for example.
+By using linker flags or the **LD\_PRELOAD** environment variable, this can be
+done without modifying or even without recompiling the program, adding
+transparent support for archives files, or web urls, for example.
 
 **IMPORTANT NOTICE:** **libcushions**, while already potentially useful in some
 use cases, should be considered as a proof of concept.
