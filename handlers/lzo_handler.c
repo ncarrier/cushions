@@ -199,6 +199,17 @@ static int fill_and_write_header(const struct lzo_cushions_file *lzo_c_file)
 	return 0;
 }
 
+static bool mode_is_valid(const struct ch_mode *mode)
+{
+	if (mode->append)
+		return false;
+
+	if (mode->read && mode->write)
+		return false;
+
+	return /* TODO uncomment when read is ok mode->read || */ mode->write;
+}
+
 static FILE *lzo_cushions_fopen(struct ch_handler *handler,
 		const char *path, const char *full_path, const char *scheme,
 		const struct ch_mode *mode)
@@ -209,12 +220,12 @@ static FILE *lzo_cushions_fopen(struct ch_handler *handler,
 
 	LOGD(__func__);
 
-	/* TODO less restrictive condition */
-	if (strcmp(mode->mode, "w") != 0 && strcmp(mode->mode, "wb") != 0) {
-		LOGE("lzo scheme only supports \"r\" open mode");
+	if (!mode_is_valid(mode)) {
 		errno = EINVAL;
 		return NULL;
 	}
+	if (!mode->binary)
+		LOGW("binary mode not set, may cause problems on some OSes");
 
 	lzo_c_file = calloc(1, sizeof(*lzo_c_file));
 	if (lzo_c_file == NULL) {
@@ -237,7 +248,6 @@ static FILE *lzo_cushions_fopen(struct ch_handler *handler,
 		return NULL;
 	}
 
-	/* TODO adapt mode according to the mode argument */
 	return fopencookie(lzo_c_file, mode->mode,
 			lzo_cushions_handler.lzo_func);
 err:
