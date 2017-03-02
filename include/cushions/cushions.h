@@ -1,3 +1,15 @@
+/**
+ * @file cushions.h
+ * @brief Main API, for clients willing to add URL-like support to their
+ * program.
+ *
+ * Three solutions are available:
+ *
+ * * A client can call directly cushions_fopen().
+ * * He/she can left his program untouched and link it with -Wl,--wrap=fopen.
+ * * He can call the original fopen() function and launch the program with
+ * the environment variable **LD_PRELOAD** set to **libcushions.so**.
+ */
 #ifndef _CUSHIONS_H
 #define _CUSHIONS_H
 #include <stdio.h>
