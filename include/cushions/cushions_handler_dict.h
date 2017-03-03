@@ -79,10 +79,11 @@ struct ch_dict_node {
  * @def CH_DICT_NODE
  * @brief Builds a non terminal node, given a character and the list of its
  * children.
- * @param c Character of this node.
+ * @param p Character of this node.
  * @param ... List of the node's children.
  */
-#define CH_DICT_NODE(c, ...) { .c = c, .next = (struct ch_dict_node[]){ \
+/* note: p is used instead of c, because it would collide with the c member. */
+#define CH_DICT_NODE(p, ...) { .c = p, .next = (struct ch_dict_node[]){ \
 	__VA_ARGS__, CH_DICT_GUARD} }
 
 /**
