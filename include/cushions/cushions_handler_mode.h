@@ -11,7 +11,6 @@
 struct ch_mode {
 	bool read:1;
 	bool beginning:1;
-	bool end:1;
 	bool write:1;
 	bool truncate:1;
 	bool create:1;

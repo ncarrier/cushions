@@ -14,7 +14,6 @@
 #define masserteq(m, r) do { \
 	assert((m).read == (r).read); \
 	assert((m).beginning == (r).beginning); \
-	assert((m).end == (r).end); \
 	assert((m).write == (r).write); \
 	assert((m).truncate == (r).truncate); \
 	assert((m).create == (r).create); \
@@ -43,7 +42,6 @@ static void cushions_handler_mode_from_stringTEST(void)
 	ref = (struct ch_mode){
 		.read = 1,
 		.beginning = 1,
-		.end = 0,
 		.write = 1,
 		.truncate = 0,
 		.create = 0,
@@ -73,7 +71,6 @@ static void cushions_handler_mode_from_stringTEST(void)
 	ref = (struct ch_mode){
 		.read = 0,
 		.beginning = 0,
-		.end = 1,
 		.write = 1,
 		.truncate = 0,
 		.create = 1,
@@ -119,7 +116,6 @@ static void cushions_handler_mode_to_stringTEST(void)
 	ref = (struct ch_mode){
 		.read = 0,
 		.beginning = 0,
-		.end = 1,
 		.write = 1,
 		.truncate = 0,
 		.create = 1,

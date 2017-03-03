@@ -53,7 +53,6 @@ int ch_mode_from_string(struct ch_mode *mode,
 		}
 	} else if (strchr(str, 'a')) {
 		mode->append = 1;
-		mode->end = 1;
 		mode->write = 1;
 		mode->create = 1;
 		if (strchr(str, '+')) {
@@ -142,10 +141,9 @@ void ch_mode_dump(const struct ch_mode *mode)
 {
 	if (mode == NULL)
 		return;
-	LOGD("mode is [%s%s%s%s%s%s%s%s%s%s%s%sccs=%s]",
+	LOGD("mode is [%s%s%s%s%s%s%s%s%s%s%sccs=%s]",
 			mode->read ? "read " : "",
 			mode->beginning ? "beginning " : "",
-			mode->end ? "end " : "",
 			mode->write ? "write " : "",
 			mode->truncate ? "truncate " : "",
 			mode->create ? "create " : "",
