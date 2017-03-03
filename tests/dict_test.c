@@ -10,7 +10,7 @@
 static const struct ch_dict_node dict = CH_DICT(F(T(P(_))),
                                                 S(C(P(_)),
                                                   M(B(S(_),
-                                                        _)),
+                                                      _)),
                                                 F(T(P(_)))),
                                                 H(T(T(P(S(_),
                                                         _)))),

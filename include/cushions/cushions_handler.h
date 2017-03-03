@@ -18,6 +18,7 @@
 #include <stdbool.h>
 
 #include <cushions.h>
+#include <cushions_common.h>
 #include <cushions_handler_dict.h>
 #include <cushions_handler_log.h>
 #include <cushions_handler_utils.h>
