@@ -214,6 +214,18 @@ $(lib).pc: $(here)$(lib).pc.in
 	sed -e "s|PPP_PREFIX_PPP|$(prefix)|g" \
 		-e "s/PPP_VERSION_PPP/$(version)/g" $^ > $@
 
+ifneq ($(CU_NEW_VERSION),)
+version:
+	make -f $(here)/Makefile doc version=$(CU_NEW_VERSION)
+	mkdir -p $(here)/docs
+	mv doc/html/ $(here)docs/$(CU_NEW_VERSION)
+	git add $(here)docs/$(CU_NEW_VERSION)
+	git commit -m "integration: new version $(CU_NEW_VERSION)"
+	git tag $(CU_NEW_VERSION)
+
+.PHONY: version
+endif
+
 doc:
 	rm -rf doc/
 	echo "PROJECT_NUMBER = $(version)" | cat $(here)misc/Doxyfile - | \
