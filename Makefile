@@ -215,7 +215,9 @@ $(lib).pc: $(here)$(lib).pc.in
 		-e "s/PPP_VERSION_PPP/$(version)/g" $^ > $@
 
 doc:
-	doxygen $(here)misc/Doxyfile
+	rm -rf doc/
+	echo "PROJECT_NUMBER = $(version)" | cat $(here)misc/Doxyfile - | \
+		doxygen -
 
 install: all cpw $(lib).pc
 	mkdir -p $(prefix)/share/doc/libcushions
