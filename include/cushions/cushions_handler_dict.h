@@ -14,14 +14,13 @@
  *                                                   _)))),
  *                                           T(F(T(P(_)))));
  *
- * Macros for building dictionaries for all the 26 lower-case Latin letters are
- * provided.
- *
  * Which will contain the following words list, order from top to bottom:
  * "ftp", "scp", "smbs", "smb", "ftp", "https", "http", "tftp".
- *
  * Then the dict_contains() function can be used to test if a string is
  * contained by the dictionnary.
+ *
+ * Macros for building dictionaries for all the 26 lower-case Latin letters are
+ * provided.
  *
  * One should not need to include this header directly, include
  * cushions_handler.h instead.
