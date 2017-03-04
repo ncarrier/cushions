@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">libcushions
-   &#160;<span id="projectnumber">0.2.0</span>
+   &#160;<span id="projectnumber">0.2.0-11-ga467955</span>
    </div>
    <div id="projectbrief">CUstom Stream Handlers Integrated by Overriding Native Symbols</div>
   </td>
@@ -92,7 +92,7 @@ $(document).ready(function(){initNavTree('cushions__handler_8h.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Macros</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -116,16 +116,17 @@ $(document).ready(function(){initNavTree('cushions__handler_8h.html','');});
 <div class="textblock"><code>#include &lt;stdio.h&gt;</code><br />
 <code>#include &lt;stdbool.h&gt;</code><br />
 <code>#include &lt;<a class="el" href="cushions_8h_source.html">cushions.h</a>&gt;</code><br />
-<code>#include &lt;cushions_handler_dict.h&gt;</code><br />
-<code>#include &lt;cushions_handler_log.h&gt;</code><br />
-<code>#include &lt;cushions_handler_utils.h&gt;</code><br />
-<code>#include &lt;cushions_handler_mode.h&gt;</code><br />
+<code>#include &lt;<a class="el" href="cushions__common_8h_source.html">cushions_common.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="cushions__handler__dict_8h_source.html">cushions_handler_dict.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="cushions__handler__log_8h_source.html">cushions_handler_log.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="cushions__handler__utils_8h_source.html">cushions_handler_utils.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="cushions__handler__mode_8h_source.html">cushions_handler_mode.h</a>&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for cushions_handler.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="cushions__handler_8h__incl.png" border="0" usemap="#cushions__handler_8h" alt=""/></div>
 <map name="cushions__handler_8h" id="cushions__handler_8h">
-<area shape="rect" id="node4" href="cushions_8h.html" title="Main API, for clients willing to add URL&#45;like support to their program. " alt="" coords="73,80,159,107"/><area shape="rect" id="node6" href="cushions__handler__dict_8h_source.html" title="cushions_handler_dict.h" alt="" coords="141,155,304,181"/><area shape="rect" id="node8" href="cushions__handler__log_8h_source.html" title="cushions_handler_log.h" alt="" coords="581,80,739,107"/><area shape="rect" id="node11" href="cushions__handler__utils_8h_source.html" title="cushions_handler_utils.h" alt="" coords="716,155,881,181"/><area shape="rect" id="node13" href="cushions__handler__mode_8h_source.html" title="cushions_handler_mode.h" alt="" coords="328,155,501,181"/><area shape="rect" id="node5" href="cushions__common_8h_source.html" title="cushions_common.h" alt="" coords="335,229,478,256"/></map>
+<area shape="rect" id="node4" href="cushions_8h.html" title="Main API, for clients willing to add URL&#45;like support to their program. " alt="" coords="60,80,145,107"/><area shape="rect" id="node5" href="cushions__common_8h.html" title="Header for use in other public API headers, should not be used directly. " alt="" coords="283,229,426,256"/><area shape="rect" id="node6" href="cushions__handler__dict_8h.html" title="Simple and lightweight string dictonary based on a macro&#45;based n&#45;ary tree structure implementation..." alt="" coords="460,155,623,181"/><area shape="rect" id="node8" href="cushions__handler__log_8h.html" title="Utility functions for logging in the libcushions log system. " alt="" coords="685,80,843,107"/><area shape="rect" id="node11" href="cushions__handler__utils_8h.html" title="Various utility definitions. " alt="" coords="787,155,952,181"/><area shape="rect" id="node13" href="cushions__handler__mode_8h.html" title="Utility functions for breaking up the mode fopen(3) argument into an explicit set of boolean flags..." alt="" coords="212,155,385,181"/></map>
 </div>
 </div>
 <p><a href="cushions__handler_8h_source.html">Go to the source code of this file.</a></p>
@@ -147,13 +148,13 @@ Typedefs</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a07bb50d8abe79117a7e1bba652031f77"><td class="memItemLeft" align="right" valign="top">CUSHIONS_API int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler_8h.html#a07bb50d8abe79117a7e1bba652031f77">ch_handler_register</a> (struct <a class="el" href="structch__handler.html">ch_handler</a> *handler)</td></tr>
+<tr class="memitem:a07bb50d8abe79117a7e1bba652031f77"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler_8h.html#a07bb50d8abe79117a7e1bba652031f77">ch_handler_register</a> (struct <a class="el" href="structch__handler.html">ch_handler</a> *handler)</td></tr>
 <tr class="memdesc:a07bb50d8abe79117a7e1bba652031f77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers a new scheme handler in libcushions.  <a href="#a07bb50d8abe79117a7e1bba652031f77">More...</a><br /></td></tr>
 <tr class="separator:a07bb50d8abe79117a7e1bba652031f77"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96ee21b891688fc65c130beccc210f31"><td class="memItemLeft" align="right" valign="top">CUSHIONS_API FILE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler_8h.html#a96ee21b891688fc65c130beccc210f31">ch_handler_real_fopen</a> (const char *path, const char *mode)</td></tr>
+<tr class="memitem:a96ee21b891688fc65c130beccc210f31"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a> FILE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler_8h.html#a96ee21b891688fc65c130beccc210f31">ch_handler_real_fopen</a> (const char *path, const char *mode)</td></tr>
 <tr class="memdesc:a96ee21b891688fc65c130beccc210f31"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calls the original libc's fopen implementation.  <a href="#a96ee21b891688fc65c130beccc210f31">More...</a><br /></td></tr>
 <tr class="separator:a96ee21b891688fc65c130beccc210f31"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aefc19b961f46ab75450d99530bb2a43e"><td class="memItemLeft" align="right" valign="top">CUSHIONS_API int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler_8h.html#aefc19b961f46ab75450d99530bb2a43e">ch_break_params</a> (const char *input, char **path, char **envz, size_t *envz_len)</td></tr>
+<tr class="memitem:aefc19b961f46ab75450d99530bb2a43e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler_8h.html#aefc19b961f46ab75450d99530bb2a43e">ch_break_params</a> (const char *input, char **path, char **envz, size_t *envz_len)</td></tr>
 <tr class="memdesc:aefc19b961f46ab75450d99530bb2a43e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts the rightmost part of a path, starting with a '?' char and break it as a semi-colon separated of key=value pairs.  <a href="#aefc19b961f46ab75450d99530bb2a43e">More...</a><br /></td></tr>
 <tr class="separator:aefc19b961f46ab75450d99530bb2a43e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -187,7 +188,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>FILE * stream pointer on success, NULL with errno set appropriately, on errors. </dd></dl>
 
-<p>Definition at line <a class="el" href="cushions__handler_8h_source.html#l00047">47</a> of file <a class="el" href="cushions__handler_8h_source.html">cushions_handler.h</a>.</p>
+<p>Definition at line <a class="el" href="cushions__handler_8h_source.html#l00048">48</a> of file <a class="el" href="cushions__handler_8h_source.html">cushions_handler.h</a>.</p>
 
 </div>
 </div>
@@ -211,7 +212,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true if the handler is able to handle this scheme, false otherwise. </dd></dl>
 
-<p>Definition at line <a class="el" href="cushions__handler_8h_source.html#l00060">60</a> of file <a class="el" href="cushions__handler_8h_source.html">cushions_handler.h</a>.</p>
+<p>Definition at line <a class="el" href="cushions__handler_8h_source.html#l00061">61</a> of file <a class="el" href="cushions__handler_8h_source.html">cushions_handler.h</a>.</p>
 
 </div>
 </div>
@@ -221,7 +222,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">CUSHIONS_API int ch_break_params </td>
+          <td class="memname"><a class="el" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a> int ch_break_params </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>input</em>, </td>
@@ -272,7 +273,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">CUSHIONS_API FILE* ch_handler_real_fopen </td>
+          <td class="memname"><a class="el" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a> FILE* ch_handler_real_fopen </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>path</em>, </td>
@@ -309,7 +310,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">CUSHIONS_API int ch_handler_register </td>
+          <td class="memname"><a class="el" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a> int ch_handler_register </td>
           <td>(</td>
           <td class="paramtype">struct <a class="el" href="structch__handler.html">ch_handler</a> *&#160;</td>
           <td class="paramname"><em>handler</em></td><td>)</td>
@@ -335,7 +336,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_7e27d905ecd52da5eafa0161abe57997.html">cushions</a></li><li class="navelem"><a class="el" href="cushions__handler_8h.html">cushions_handler.h</a></li>
-    <li class="footer">Generated on Thu Mar 2 2017 22:27:31 for libcushions by
+    <li class="footer">Generated on Sat Mar 4 2017 07:49:16 for libcushions by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

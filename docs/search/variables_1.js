@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['handles',['handles',['../structch__handler.html#a0fb6d5c7526e9a65b4d4d91c6a0efbe4',1,'ch_handler']]]
+  ['beginning',['beginning',['../structch__mode.html#a71c97aa525458666302f3228beb5362f',1,'ch_mode']]],
+  ['binary',['binary',['../structch__mode.html#a83e2d733a0d5fc50537df4e5b07041a3',1,'ch_mode']]]
 ];

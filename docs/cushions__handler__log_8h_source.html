@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">libcushions
-   &#160;<span id="projectnumber">0.2.0</span>
+   &#160;<span id="projectnumber">0.2.0-11-ga467955</span>
    </div>
    <div id="projectbrief">CUstom Stream Handlers Integrated by Overriding Native Symbols</div>
   </td>
@@ -92,7 +92,7 @@ $(document).ready(function(){initNavTree('cushions__handler__log_8h_source.html'
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Macros</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -106,50 +106,67 @@ $(document).ready(function(){initNavTree('cushions__handler__log_8h_source.html'
 <div class="title">cushions_handler_log.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * one should not need to include this header directly, include</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> * cushions_handler.h instead</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#ifndef CUSHIONS_HANDLER_LOG_H</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#define CUSHIONS_HANDLER_LOG_H</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;string.h&gt;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;cushions_handler_utils.h&gt;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;cushions_common.h&gt;</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;__attribute__((unused))</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#ifndef CH_LOG_TAG</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *log_tag = <span class="stringliteral">&quot;&quot;</span>;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *log_tag = CH_STRINGIFY(CH_LOG_TAG);</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* LOG_TAG */</span><span class="preprocessor"></span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#define CH_ERROR 0</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#define CH_WARNING 1</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#define CH_INFO 2</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#define CH_DEBUG 3</span></div>
+<a href="cushions__handler__log_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#ifndef CUSHIONS_HANDLER_LOG_H</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#define CUSHIONS_HANDLER_LOG_H</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &lt;string.h&gt;</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="cushions__handler__utils_8h.html">cushions_handler_utils.h</a>&gt;</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="cushions__common_8h.html">cushions_common.h</a>&gt;</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#define LOG(l, ...) ch_log(log_tag, (l), __VA_ARGS__)</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#define LOGE(...) LOG(CH_ERROR, __VA_ARGS__)</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#define LOGW(...) LOG(CH_WARNING, __VA_ARGS__)</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#define LOGI(...) LOG(CH_INFO, __VA_ARGS__)</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#define LOGD(...) LOG(CH_DEBUG, __VA_ARGS__)</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#define LOGPE(s, e) LOGE(&quot;%s: %s&quot;, (s), strerror(abs((e))))</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;CUSHIONS_API __attribute__((format(printf, 3, 4))) void ch_log(const <span class="keywordtype">char</span> *tag,</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <span class="keywordtype">int</span> level, const <span class="keywordtype">char</span> *fmt, ...);</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;CUSHIONS_API <span class="keywordtype">void</span> ch_log_set_color(<span class="keywordtype">bool</span> enable);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;CUSHIONS_API <span class="keywordtype">void</span> ch_log_set_level(<span class="keywordtype">int</span> level);</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<a class="code" href="cushions__common_8h.html#a117874e1d53a428a5628de098b4a3731">CUSHIONS_UNUSED</a></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#ifndef CH_LOG_TAG</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *log_tag = <span class="stringliteral">&quot;&quot;</span>;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#else</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *log_tag = <a class="code" href="cushions__handler__utils_8h.html#af9f2bdb55af70583c35dd48a1511e3eb">CH_STRINGIFY</a>(CH_LOG_TAG);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* LOG_TAG */</span><span class="preprocessor"></span></div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* CUSHIONS_HANDLER_LOG_H */</span><span class="preprocessor"></span></div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="cushions__handler__log_8h.html#a24b94d321625a9d6795eb429236de9f2">   41</a></span>&#160;<span class="preprocessor">#define CH_ERROR 0</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="cushions__handler__log_8h.html#a2f172c6e498ba31a9b820fa1f3863de6">   47</a></span>&#160;<span class="preprocessor">#define CH_WARNING 1</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="cushions__handler__log_8h.html#abb9ecae0118d1374bf0dcfea862c19ce">   53</a></span>&#160;<span class="preprocessor">#define CH_INFO 2</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="cushions__handler__log_8h.html#a28c3e88acbc751285b42f590a075fb3f">   59</a></span>&#160;<span class="preprocessor">#define CH_DEBUG 3</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
+<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="cushions__handler__log_8h.html#a52a453d1be7f653a38caa7612d5cfd63">   68</a></span>&#160;<span class="preprocessor">#define LOG(l, ...) ch_log(log_tag, (l), __VA_ARGS__)</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="cushions__handler__log_8h.html#ae02538a80ad5fc009caec73487d11a8d">   74</a></span>&#160;<span class="preprocessor">#define LOGE(...) LOG(CH_ERROR, __VA_ARGS__)</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
+<div class="line"><a name="l00080"></a><span class="lineno"><a class="line" href="cushions__handler__log_8h.html#a07f1b0d507acedeb7550353eba4f6e66">   80</a></span>&#160;<span class="preprocessor">#define LOGW(...) LOG(CH_WARNING, __VA_ARGS__)</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
+<div class="line"><a name="l00086"></a><span class="lineno"><a class="line" href="cushions__handler__log_8h.html#a5512e59d578a380a441a70256af997d0">   86</a></span>&#160;<span class="preprocessor">#define LOGI(...) LOG(CH_INFO, __VA_ARGS__)</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
+<div class="line"><a name="l00092"></a><span class="lineno"><a class="line" href="cushions__handler__log_8h.html#aa839997a58e14061861cd634fdb7664d">   92</a></span>&#160;<span class="preprocessor">#define LOGD(...) LOG(CH_DEBUG, __VA_ARGS__)</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
+<div class="line"><a name="l00100"></a><span class="lineno"><a class="line" href="cushions__handler__log_8h.html#a4ac27de6b83ad971859150de7dded08f">  100</a></span>&#160;<span class="preprocessor">#define LOGPE(s, e) LOGE(&quot;%s: %s&quot;, (s), strerror(abs((e))))</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<a class="code" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a> <span class="keywordtype">void</span> <a class="code" href="cushions__handler__log_8h.html#a6bc02a6352993d583138604238b7b182">ch_log</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *tag,</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        <span class="keywordtype">int</span> level, <span class="keyword">const</span> <span class="keywordtype">char</span> *fmt, ...) <a class="code" href="cushions__common_8h.html#a19df87cdb1a8deb2adbb0203da16d07f">CUHSIONS_PRINTF</a>(3, 4);</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<a class="code" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a> <span class="keywordtype">void</span> <a class="code" href="cushions__handler__log_8h.html#acf8cf28b7b149c1dd601ad0dd024ca61">ch_log_set_color</a>(<span class="keywordtype">bool</span> enable);</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<a class="code" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a> <span class="keywordtype">void</span> <a class="code" href="cushions__handler__log_8h.html#ac50c93b69e6086976cb1de78bae359a0">ch_log_set_level</a>(<span class="keywordtype">int</span> level);</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* CUSHIONS_HANDLER_LOG_H */</span><span class="preprocessor"></span></div>
+<div class="ttc" id="cushions__handler__utils_8h_html"><div class="ttname"><a href="cushions__handler__utils_8h.html">cushions_handler_utils.h</a></div><div class="ttdoc">Various utility definitions. </div></div>
+<div class="ttc" id="cushions__common_8h_html_a8843feb0b32e8f74616dfc943efe34f0"><div class="ttname"><a href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a></div><div class="ttdeci">#define CUSHIONS_API</div><div class="ttdoc">Macro used to make the public API symbols visible, to be used in conjunction with the -fvisibility=hi...</div><div class="ttdef"><b>Definition:</b> <a href="cushions__common_8h_source.html#l00029">cushions_common.h:29</a></div></div>
+<div class="ttc" id="cushions__common_8h_html_a117874e1d53a428a5628de098b4a3731"><div class="ttname"><a href="cushions__common_8h.html#a117874e1d53a428a5628de098b4a3731">CUSHIONS_UNUSED</a></div><div class="ttdeci">#define CUSHIONS_UNUSED</div><div class="ttdoc">Marks a variable as possibly unused, avoid compiler&#39;s warnings. </div><div class="ttdef"><b>Definition:</b> <a href="cushions__common_8h_source.html#l00022">cushions_common.h:22</a></div></div>
+<div class="ttc" id="cushions__handler__log_8h_html_ac50c93b69e6086976cb1de78bae359a0"><div class="ttname"><a href="cushions__handler__log_8h.html#ac50c93b69e6086976cb1de78bae359a0">ch_log_set_level</a></div><div class="ttdeci">CUSHIONS_API void ch_log_set_level(int level)</div><div class="ttdoc">Sets the current log level of libcushions, messages with a log level above this threshold will be dis...</div></div>
+<div class="ttc" id="cushions__common_8h_html_a19df87cdb1a8deb2adbb0203da16d07f"><div class="ttname"><a href="cushions__common_8h.html#a19df87cdb1a8deb2adbb0203da16d07f">CUHSIONS_PRINTF</a></div><div class="ttdeci">#define CUHSIONS_PRINTF(a, b)</div><div class="ttdoc">Specifies that a function takes printf style arguments which should be type-checked against a format ...</div><div class="ttdef"><b>Definition:</b> <a href="cushions__common_8h_source.html#l00016">cushions_common.h:16</a></div></div>
+<div class="ttc" id="cushions__handler__log_8h_html_a6bc02a6352993d583138604238b7b182"><div class="ttname"><a href="cushions__handler__log_8h.html#a6bc02a6352993d583138604238b7b182">ch_log</a></div><div class="ttdeci">CUSHIONS_API void ch_log(const char *tag, int level, const char *fmt,...) CUHSIONS_PRINTF(3</div><div class="ttdoc">Logs a message. Avoid using it directly, use one of the LOGX macros instead. </div></div>
+<div class="ttc" id="cushions__common_8h_html"><div class="ttname"><a href="cushions__common_8h.html">cushions_common.h</a></div><div class="ttdoc">Header for use in other public API headers, should not be used directly. </div></div>
+<div class="ttc" id="cushions__handler__utils_8h_html_af9f2bdb55af70583c35dd48a1511e3eb"><div class="ttname"><a href="cushions__handler__utils_8h.html#af9f2bdb55af70583c35dd48a1511e3eb">CH_STRINGIFY</a></div><div class="ttdeci">#define CH_STRINGIFY(s)</div><div class="ttdoc">Macro for converting it&#39;s argument into a string. </div><div class="ttdef"><b>Definition:</b> <a href="cushions__handler__utils_8h_source.html#l00023">cushions_handler_utils.h:23</a></div></div>
+<div class="ttc" id="cushions__handler__log_8h_html_acf8cf28b7b149c1dd601ad0dd024ca61"><div class="ttname"><a href="cushions__handler__log_8h.html#acf8cf28b7b149c1dd601ad0dd024ca61">ch_log_set_color</a></div><div class="ttdeci">CUSHIONS_API void CUSHIONS_API void ch_log_set_color(bool enable)</div><div class="ttdoc">Enables / disables the use of colors in the log messages. Default is set to &#39;enable&#39;. </div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_7e27d905ecd52da5eafa0161abe57997.html">cushions</a></li><li class="navelem"><b>cushions_handler_log.h</b></li>
-    <li class="footer">Generated on Thu Mar 2 2017 22:27:30 for libcushions by
+    <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_7e27d905ecd52da5eafa0161abe57997.html">cushions</a></li><li class="navelem"><a class="el" href="cushions__handler__log_8h.html">cushions_handler_log.h</a></li>
+    <li class="footer">Generated on Sat Mar 4 2017 07:49:16 for libcushions by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

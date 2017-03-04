@@ -1,4 +1,4 @@
 <map id="cushions_handler_log.h" name="cushions_handler_log.h">
-<area shape="rect" id="node4" href="$cushions__handler__utils_8h.html" title="cushions_handler_utils.h" alt="" coords="146,80,311,107"/>
-<area shape="rect" id="node7" href="$cushions__common_8h.html" title="cushions_common.h" alt="" coords="336,155,479,181"/>
+<area shape="rect" id="node4" href="$cushions__handler__utils_8h.html" title="Various utility definitions. " alt="" coords="146,80,311,107"/>
+<area shape="rect" id="node7" href="$cushions__common_8h.html" title="Header for use in other public API headers, should not be used directly. " alt="" coords="336,155,479,181"/>
 </map>

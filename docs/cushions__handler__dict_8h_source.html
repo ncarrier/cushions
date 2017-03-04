@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">libcushions
-   &#160;<span id="projectnumber">0.2.0</span>
+   &#160;<span id="projectnumber">0.2.0-11-ga467955</span>
    </div>
    <div id="projectbrief">CUstom Stream Handlers Integrated by Overriding Native Symbols</div>
   </td>
@@ -92,7 +92,7 @@ $(document).ready(function(){initNavTree('cushions__handler__dict_8h_source.html
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Macros</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -106,81 +106,86 @@ $(document).ready(function(){initNavTree('cushions__handler__dict_8h_source.html
 <div class="title">cushions_handler_dict.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * one should not need to include this header directly, include</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> * cushions_handler.h instead</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#ifndef CUSHIONS_HANDLERS_DICT_H_</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#define CUSHIONS_HANDLERS_DICT_H_</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;stdbool.h&gt;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;stdarg.h&gt;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;cushions_common.h&gt;</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;</div>
-<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="structch__dict__node.html">   13</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structch__dict__node.html">ch_dict_node</a> {</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keywordtype">char</span> c;</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keyword">struct </span><a class="code" href="structch__dict__node.html">ch_dict_node</a> *next;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;};</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#define CH_DICT_EOT 0x04</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment"> * word length above which, the string will be truncated when a dict_cb is</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment"> * called during a dict_foreach_word()</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#define CH_DICT_FOREACH_MAX_WORD_LEN 0x400</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#define CH_DICT_TERMINAL(ch) { .c = (ch), .next = NULL}</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#define CH_DICT_GUARD CH_DICT_TERMINAL(CH_DICT_EOT)</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#define CH_DICT_NODE(p, ...) { .c = p, .next = (struct ch_dict_node[]){ \</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">    __VA_ARGS__, CH_DICT_GUARD} }</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#define CH_DICT(...) CH_DICT_NODE(&#39;\0&#39;, __VA_ARGS__)</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#define _ CH_DICT_TERMINAL(&#39;\0&#39;)</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#define A(...) CH_DICT_NODE(&#39;a&#39;, __VA_ARGS__)</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#define B(...) CH_DICT_NODE(&#39;b&#39;, __VA_ARGS__)</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#define C(...) CH_DICT_NODE(&#39;c&#39;, __VA_ARGS__)</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#define D(...) CH_DICT_NODE(&#39;d&#39;, __VA_ARGS__)</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#define E(...) CH_DICT_NODE(&#39;e&#39;, __VA_ARGS__)</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#define F(...) CH_DICT_NODE(&#39;f&#39;, __VA_ARGS__)</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#define G(...) CH_DICT_NODE(&#39;g&#39;, __VA_ARGS__)</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#define H(...) CH_DICT_NODE(&#39;h&#39;, __VA_ARGS__)</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#define I(...) CH_DICT_NODE(&#39;i&#39;, __VA_ARGS__)</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#define J(...) CH_DICT_NODE(&#39;j&#39;, __VA_ARGS__)</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#define K(...) CH_DICT_NODE(&#39;k&#39;, __VA_ARGS__)</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#define L(...) CH_DICT_NODE(&#39;l&#39;, __VA_ARGS__)</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">#define M(...) CH_DICT_NODE(&#39;m&#39;, __VA_ARGS__)</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">#define N(...) CH_DICT_NODE(&#39;n&#39;, __VA_ARGS__)</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">#define O(...) CH_DICT_NODE(&#39;o&#39;, __VA_ARGS__)</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#define P(...) CH_DICT_NODE(&#39;p&#39;, __VA_ARGS__)</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#define Q(...) CH_DICT_NODE(&#39;q&#39;, __VA_ARGS__)</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">#define R(...) CH_DICT_NODE(&#39;r&#39;, __VA_ARGS__)</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">#define S(...) CH_DICT_NODE(&#39;s&#39;, __VA_ARGS__)</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#define T(...) CH_DICT_NODE(&#39;t&#39;, __VA_ARGS__)</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">#define U(...) CH_DICT_NODE(&#39;u&#39;, __VA_ARGS__)</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">#define V(...) CH_DICT_NODE(&#39;v&#39;, __VA_ARGS__)</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#define W(...) CH_DICT_NODE(&#39;w&#39;, __VA_ARGS__)</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">#define X(...) CH_DICT_NODE(&#39;x&#39;, __VA_ARGS__)</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">#define Y(...) CH_DICT_NODE(&#39;y&#39;, __VA_ARGS__)</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor">#define Z(...) CH_DICT_NODE(&#39;z&#39;, __VA_ARGS__)</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keyword">typedef</span> void (*ch_dict_cb)(<span class="keyword">const</span> <span class="keywordtype">char</span> *string, <span class="keywordtype">void</span> *data);</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;CUSHIONS_API <span class="keywordtype">void</span> ch_dict_foreach_word(<span class="keyword">const</span> <span class="keyword">struct</span> <a class="code" href="structch__dict__node.html">ch_dict_node</a> *dict,</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        ch_dict_cb cb, <span class="keywordtype">void</span> *data);</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;CUSHIONS_API <span class="keywordtype">bool</span> dict_contains(<span class="keyword">const</span> <span class="keyword">struct</span> <a class="code" href="structch__dict__node.html">ch_dict_node</a> *dict,</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span> *str);</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* CUSHIONS_HANDLERS_DICT_H_ */</span><span class="preprocessor"></span></div>
-<div class="ttc" id="structch__dict__node_html"><div class="ttname"><a href="structch__dict__node.html">ch_dict_node</a></div><div class="ttdef"><b>Definition:</b> <a href="cushions__handler__dict_8h_source.html#l00013">cushions_handler_dict.h:13</a></div></div>
+<a href="cushions__handler__dict_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#ifndef CUSHIONS_HANDLERS_DICT_H_</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#define CUSHIONS_HANDLERS_DICT_H_</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &lt;stdbool.h&gt;</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &lt;stdarg.h&gt;</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="cushions__common_8h.html">cushions_common.h</a>&gt;</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="structch__dict__node.html">   41</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structch__dict__node.html">ch_dict_node</a> {</div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="structch__dict__node.html#a8cf78008fa486978c583e694d8cb907c">   46</a></span>&#160;    <span class="keywordtype">char</span> <a class="code" href="structch__dict__node.html#a8cf78008fa486978c583e694d8cb907c">c</a>;</div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="structch__dict__node.html#a8cca8be7ac0cefcfc751f049f62a9b17">   50</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="structch__dict__node.html">ch_dict_node</a> *<a class="code" href="structch__dict__node.html#a8cca8be7ac0cefcfc751f049f62a9b17">next</a>;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;};</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#a07d5d793c5c9a6733165cf18943645ca">   57</a></span>&#160;<span class="preprocessor">#define CH_DICT_EOT 0x04</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#a578cb4583311a326e23546230c4b98ad">   64</a></span>&#160;<span class="preprocessor">#define CH_DICT_FOREACH_MAX_WORD_LEN 0x400</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
+<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#afe13a7f86ac289ab68532fc95ee9272b">   70</a></span>&#160;<span class="preprocessor">#define CH_DICT_TERMINAL(ch) { .c = (ch), .next = NULL}</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
+<div class="line"><a name="l00076"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#a6114684b305c14f971355af2f2b0d9fb">   76</a></span>&#160;<span class="preprocessor">#define CH_DICT_GUARD CH_DICT_TERMINAL(CH_DICT_EOT)</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="comment">/* note: p is used instead of c, because it would collide with the c member. */</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#a64cb14d687f41b13ca4769addb4c6b1a">   86</a></span>&#160;<span class="preprocessor">#define CH_DICT_NODE(p, ...) { .c = p, .next = (struct ch_dict_node[]){ \</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="preprocessor">    __VA_ARGS__, CH_DICT_GUARD} }</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00094"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#ab26f8e5d65f749e77a271109d9115c23">   94</a></span>&#160;<span class="preprocessor">#define CH_DICT(...) CH_DICT_NODE(&#39;\0&#39;, __VA_ARGS__)</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
+<div class="line"><a name="l00100"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#ae4dfd7b0d66121016d6466d2ff10e8ba">  100</a></span>&#160;<span class="preprocessor">#define _ CH_DICT_TERMINAL(&#39;\0&#39;)</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
+<div class="line"><a name="l00108"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#a16bd7278c17b0a4a0fe4ce270acdf15c">  108</a></span>&#160;<span class="preprocessor">#define A(...) CH_DICT_NODE(&#39;a&#39;, __VA_ARGS__)</span></div>
+<div class="line"><a name="l00109"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#aa41c01a5571edfa06da0064633e061a7">  109</a></span>&#160;<span class="preprocessor">#define B(...) CH_DICT_NODE(&#39;b&#39;, __VA_ARGS__) </span></div>
+<div class="line"><a name="l00110"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#a02e7a411707fb34867539eb48e0e1a5a">  110</a></span>&#160;<span class="preprocessor">#define C(...) CH_DICT_NODE(&#39;c&#39;, __VA_ARGS__) </span></div>
+<div class="line"><a name="l00111"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#a74021f021dcdfbb22891787b79c5529d">  111</a></span>&#160;<span class="preprocessor">#define D(...) CH_DICT_NODE(&#39;d&#39;, __VA_ARGS__) </span></div>
+<div class="line"><a name="l00112"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#a891d86355d8f2c7569c884771fc63ac8">  112</a></span>&#160;<span class="preprocessor">#define E(...) CH_DICT_NODE(&#39;e&#39;, __VA_ARGS__) </span></div>
+<div class="line"><a name="l00113"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#ab0c3fc26d5a365f79e1ee5fd1f00dab4">  113</a></span>&#160;<span class="preprocessor">#define F(...) CH_DICT_NODE(&#39;f&#39;, __VA_ARGS__) </span></div>
+<div class="line"><a name="l00114"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#a1e3bf7b2bd83ed72de74569006129f7b">  114</a></span>&#160;<span class="preprocessor">#define G(...) CH_DICT_NODE(&#39;g&#39;, __VA_ARGS__) </span></div>
+<div class="line"><a name="l00115"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#a64e6d5e2011380dd99f58574e441e629">  115</a></span>&#160;<span class="preprocessor">#define H(...) CH_DICT_NODE(&#39;h&#39;, __VA_ARGS__) </span></div>
+<div class="line"><a name="l00116"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#a35b3e63b52a18007fe508219245e7270">  116</a></span>&#160;<span class="preprocessor">#define I(...) CH_DICT_NODE(&#39;i&#39;, __VA_ARGS__) </span></div>
+<div class="line"><a name="l00117"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#af0a14c80f0e8c8ddc4ae1a4508b95add">  117</a></span>&#160;<span class="preprocessor">#define J(...) CH_DICT_NODE(&#39;j&#39;, __VA_ARGS__) </span></div>
+<div class="line"><a name="l00118"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#afec5a33a927a39e9ac6f2d0b48f15bbe">  118</a></span>&#160;<span class="preprocessor">#define K(...) CH_DICT_NODE(&#39;k&#39;, __VA_ARGS__) </span></div>
+<div class="line"><a name="l00119"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#aef4da6fb0e7d9e42ca135187a7acafcc">  119</a></span>&#160;<span class="preprocessor">#define L(...) CH_DICT_NODE(&#39;l&#39;, __VA_ARGS__) </span></div>
+<div class="line"><a name="l00120"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#ac8d784d8c747f53aed8954cf1f56f31f">  120</a></span>&#160;<span class="preprocessor">#define M(...) CH_DICT_NODE(&#39;m&#39;, __VA_ARGS__) </span></div>
+<div class="line"><a name="l00121"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#a26f178f9d62f1ca138bec5656bfc1098">  121</a></span>&#160;<span class="preprocessor">#define N(...) CH_DICT_NODE(&#39;n&#39;, __VA_ARGS__) </span></div>
+<div class="line"><a name="l00122"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#ab999edc57efe57ec9ee612335f9622e3">  122</a></span>&#160;<span class="preprocessor">#define O(...) CH_DICT_NODE(&#39;o&#39;, __VA_ARGS__) </span></div>
+<div class="line"><a name="l00123"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#afba9f40fe63e258302b2c472f9e9f386">  123</a></span>&#160;<span class="preprocessor">#define P(...) CH_DICT_NODE(&#39;p&#39;, __VA_ARGS__) </span></div>
+<div class="line"><a name="l00124"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#ada9e1ee0a110051a986c8e0ad0512a22">  124</a></span>&#160;<span class="preprocessor">#define Q(...) CH_DICT_NODE(&#39;q&#39;, __VA_ARGS__) </span></div>
+<div class="line"><a name="l00125"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#a5aeb053d997f8c7e4824c85bc2f4f917">  125</a></span>&#160;<span class="preprocessor">#define R(...) CH_DICT_NODE(&#39;r&#39;, __VA_ARGS__) </span></div>
+<div class="line"><a name="l00126"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#a7d91a8db12eb785ef0e69481858486bd">  126</a></span>&#160;<span class="preprocessor">#define S(...) CH_DICT_NODE(&#39;s&#39;, __VA_ARGS__) </span></div>
+<div class="line"><a name="l00127"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#adbcab411989b6a144ee6506f67678681">  127</a></span>&#160;<span class="preprocessor">#define T(...) CH_DICT_NODE(&#39;t&#39;, __VA_ARGS__) </span></div>
+<div class="line"><a name="l00128"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#a7a5f1ee32c0330618b3e3aa84cc35c94">  128</a></span>&#160;<span class="preprocessor">#define U(...) CH_DICT_NODE(&#39;u&#39;, __VA_ARGS__) </span></div>
+<div class="line"><a name="l00129"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#ab03ba43f5486151eee7c46649d8f3a6c">  129</a></span>&#160;<span class="preprocessor">#define V(...) CH_DICT_NODE(&#39;v&#39;, __VA_ARGS__) </span></div>
+<div class="line"><a name="l00130"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#a65d6b9061271a045390c104caa6524dc">  130</a></span>&#160;<span class="preprocessor">#define W(...) CH_DICT_NODE(&#39;w&#39;, __VA_ARGS__) </span></div>
+<div class="line"><a name="l00131"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#afdf69592e415211f43cebf6138b0322b">  131</a></span>&#160;<span class="preprocessor">#define X(...) CH_DICT_NODE(&#39;x&#39;, __VA_ARGS__) </span></div>
+<div class="line"><a name="l00132"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#acec51faeb0681c58de451cb9d59abe95">  132</a></span>&#160;<span class="preprocessor">#define Y(...) CH_DICT_NODE(&#39;y&#39;, __VA_ARGS__) </span></div>
+<div class="line"><a name="l00133"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#ac4c09bbaa39ae0fe16177c0c85c4dd51">  133</a></span>&#160;<span class="preprocessor">#define Z(...) CH_DICT_NODE(&#39;z&#39;, __VA_ARGS__) </span></div>
+<div class="line"><a name="l00141"></a><span class="lineno"><a class="line" href="cushions__handler__dict_8h.html#a7ecf0a1362746842acb4b36c7c1ae6b9">  141</a></span>&#160;<span class="preprocessor">typedef void (*ch_dict_cb)(const char *string, void *data);</span></div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;<a class="code" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a> <span class="keywordtype">void</span> <a class="code" href="cushions__handler__dict_8h.html#af7d82619ce9a14360052fa8600fb7307">ch_dict_foreach_word</a>(<span class="keyword">const</span> <span class="keyword">struct</span> <a class="code" href="structch__dict__node.html">ch_dict_node</a> *dict,</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;        <a class="code" href="cushions__handler__dict_8h.html#a7ecf0a1362746842acb4b36c7c1ae6b9">ch_dict_cb</a> cb, <span class="keywordtype">void</span> *data);</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;<a class="code" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a> <span class="keywordtype">bool</span> <a class="code" href="cushions__handler__dict_8h.html#a72759ec53c7953d90187c1fc71827259">dict_contains</a>(<span class="keyword">const</span> <span class="keyword">struct</span> <a class="code" href="structch__dict__node.html">ch_dict_node</a> *dict,</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span> *str);</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;<span class="preprocessor">#endif </span><span class="comment">/* CUSHIONS_HANDLERS_DICT_H_ */</span><span class="preprocessor"></span></div>
+<div class="ttc" id="structch__dict__node_html_a8cf78008fa486978c583e694d8cb907c"><div class="ttname"><a href="structch__dict__node.html#a8cf78008fa486978c583e694d8cb907c">ch_dict_node::c</a></div><div class="ttdeci">char c</div><div class="ttdef"><b>Definition:</b> <a href="cushions__handler__dict_8h_source.html#l00046">cushions_handler_dict.h:46</a></div></div>
+<div class="ttc" id="cushions__common_8h_html_a8843feb0b32e8f74616dfc943efe34f0"><div class="ttname"><a href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a></div><div class="ttdeci">#define CUSHIONS_API</div><div class="ttdoc">Macro used to make the public API symbols visible, to be used in conjunction with the -fvisibility=hi...</div><div class="ttdef"><b>Definition:</b> <a href="cushions__common_8h_source.html#l00029">cushions_common.h:29</a></div></div>
+<div class="ttc" id="structch__dict__node_html_a8cca8be7ac0cefcfc751f049f62a9b17"><div class="ttname"><a href="structch__dict__node.html#a8cca8be7ac0cefcfc751f049f62a9b17">ch_dict_node::next</a></div><div class="ttdeci">struct ch_dict_node * next</div><div class="ttdef"><b>Definition:</b> <a href="cushions__handler__dict_8h_source.html#l00050">cushions_handler_dict.h:50</a></div></div>
+<div class="ttc" id="cushions__handler__dict_8h_html_a72759ec53c7953d90187c1fc71827259"><div class="ttname"><a href="cushions__handler__dict_8h.html#a72759ec53c7953d90187c1fc71827259">dict_contains</a></div><div class="ttdeci">CUSHIONS_API bool dict_contains(const struct ch_dict_node *dict, const char *str)</div><div class="ttdoc">Checks if a dictionary contains a given string. </div></div>
+<div class="ttc" id="structch__dict__node_html"><div class="ttname"><a href="structch__dict__node.html">ch_dict_node</a></div><div class="ttdoc">Node for building a dictionnary tree structure. </div><div class="ttdef"><b>Definition:</b> <a href="cushions__handler__dict_8h_source.html#l00041">cushions_handler_dict.h:41</a></div></div>
+<div class="ttc" id="cushions__common_8h_html"><div class="ttname"><a href="cushions__common_8h.html">cushions_common.h</a></div><div class="ttdoc">Header for use in other public API headers, should not be used directly. </div></div>
+<div class="ttc" id="cushions__handler__dict_8h_html_a7ecf0a1362746842acb4b36c7c1ae6b9"><div class="ttname"><a href="cushions__handler__dict_8h.html#a7ecf0a1362746842acb4b36c7c1ae6b9">ch_dict_cb</a></div><div class="ttdeci">void(* ch_dict_cb)(const char *string, void *data)</div><div class="ttdoc">Callback type for passing as an argument to ch_dict_foreach_word(). </div><div class="ttdef"><b>Definition:</b> <a href="cushions__handler__dict_8h_source.html#l00141">cushions_handler_dict.h:141</a></div></div>
+<div class="ttc" id="cushions__handler__dict_8h_html_af7d82619ce9a14360052fa8600fb7307"><div class="ttname"><a href="cushions__handler__dict_8h.html#af7d82619ce9a14360052fa8600fb7307">ch_dict_foreach_word</a></div><div class="ttdeci">CUSHIONS_API void ch_dict_foreach_word(const struct ch_dict_node *dict, ch_dict_cb cb, void *data)</div><div class="ttdoc">Iterates through all the dictionary. </div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_7e27d905ecd52da5eafa0161abe57997.html">cushions</a></li><li class="navelem"><b>cushions_handler_dict.h</b></li>
-    <li class="footer">Generated on Thu Mar 2 2017 22:27:30 for libcushions by
+    <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_7e27d905ecd52da5eafa0161abe57997.html">cushions</a></li><li class="navelem"><a class="el" href="cushions__handler__dict_8h.html">cushions_handler_dict.h</a></li>
+    <li class="footer">Generated on Sat Mar 4 2017 07:49:16 for libcushions by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

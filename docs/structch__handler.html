@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">libcushions
-   &#160;<span id="projectnumber">0.2.0</span>
+   &#160;<span id="projectnumber">0.2.0-11-ga467955</span>
    </div>
    <div id="projectbrief">CUstom Stream Handlers Integrated by Overriding Native Symbols</div>
   </td>
@@ -93,7 +93,7 @@ $(document).ready(function(){initNavTree('structch__handler.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Macros</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -118,6 +118,8 @@ $(document).ready(function(){initNavTree('structch__handler.html','');});
 Collaboration diagram for ch_handler:</div>
 <div class="dyncontent">
 <div class="center"><img src="structch__handler__coll__graph.png" border="0" usemap="#ch__handler_coll__map" alt="Collaboration graph"/></div>
+<map name="ch__handler_coll__map" id="ch__handler_coll__map">
+</map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
@@ -132,7 +134,7 @@ Data Fields</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Main structure, represents a plugin, able to handle possibly multiple URL schemes. </p>
 
-<p>Definition at line <a class="el" href="cushions__handler_8h_source.html#l00068">68</a> of file <a class="el" href="cushions__handler_8h_source.html">cushions_handler.h</a>.</p>
+<p>Definition at line <a class="el" href="cushions__handler_8h_source.html#l00069">69</a> of file <a class="el" href="cushions__handler_8h_source.html">cushions_handler.h</a>.</p>
 </div><h2 class="groupheader">Field Documentation</h2>
 <a class="anchor" id="aa7048175beacb6007684750cc7897026"></a>
 <div class="memitem">
@@ -147,7 +149,7 @@ Data Fields</h2></td></tr>
 <p>Must return a valid FILE * stream, suitable for fread / fwrite operations.</p>
 <p>Most of the time, it will be implementet upon fopencookie(3). </p>
 
-<p>Definition at line <a class="el" href="cushions__handler_8h_source.html#l00082">82</a> of file <a class="el" href="cushions__handler_8h_source.html">cushions_handler.h</a>.</p>
+<p>Definition at line <a class="el" href="cushions__handler_8h_source.html#l00083">83</a> of file <a class="el" href="cushions__handler_8h_source.html">cushions_handler.h</a>.</p>
 
 </div>
 </div>
@@ -163,7 +165,7 @@ Data Fields</h2></td></tr>
 <p>Function used to determine whether or not, this handler handles a particular scheme.</p>
 <p>Optional, if NULL, the schemes will be compared with the name of the handler. </p>
 
-<p>Definition at line <a class="el" href="cushions__handler_8h_source.html#l00090">90</a> of file <a class="el" href="cushions__handler_8h_source.html">cushions_handler.h</a>.</p>
+<p>Definition at line <a class="el" href="cushions__handler_8h_source.html#l00091">91</a> of file <a class="el" href="cushions__handler_8h_source.html">cushions_handler.h</a>.</p>
 
 </div>
 </div>
@@ -178,7 +180,7 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 <p>Name of the handler, doesn't necessarily correspond to the scheme it handles. </p>
 
-<p>Definition at line <a class="el" href="cushions__handler_8h_source.html#l00073">73</a> of file <a class="el" href="cushions__handler_8h_source.html">cushions_handler.h</a>.</p>
+<p>Definition at line <a class="el" href="cushions__handler_8h_source.html#l00074">74</a> of file <a class="el" href="cushions__handler_8h_source.html">cushions_handler.h</a>.</p>
 
 </div>
 </div>
@@ -191,7 +193,7 @@ Data Fields</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="structch__handler.html">ch_handler</a></li>
-    <li class="footer">Generated on Thu Mar 2 2017 22:27:31 for libcushions by
+    <li class="footer">Generated on Sat Mar 4 2017 07:49:16 for libcushions by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

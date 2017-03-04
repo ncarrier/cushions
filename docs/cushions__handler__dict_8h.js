@@ -34,7 +34,7 @@ var cushions__handler__dict_8h =
     [ "X", "cushions__handler__dict_8h.html#afdf69592e415211f43cebf6138b0322b", null ],
     [ "Y", "cushions__handler__dict_8h.html#acec51faeb0681c58de451cb9d59abe95", null ],
     [ "Z", "cushions__handler__dict_8h.html#ac4c09bbaa39ae0fe16177c0c85c4dd51", null ],
-    [ "ch_dict_cb", "cushions__handler__dict_8h.html#a2f78ab571d35a62f3ac3619cf5764136", null ],
+    [ "ch_dict_cb", "cushions__handler__dict_8h.html#a7ecf0a1362746842acb4b36c7c1ae6b9", null ],
     [ "ch_dict_foreach_word", "cushions__handler__dict_8h.html#af7d82619ce9a14360052fa8600fb7307", null ],
     [ "dict_contains", "cushions__handler__dict_8h.html#a72759ec53c7953d90187c1fc71827259", null ]
 ];

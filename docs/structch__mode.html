@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">libcushions
-   &#160;<span id="projectnumber">0.2.0</span>
+   &#160;<span id="projectnumber">0.2.0-11-ga467955</span>
    </div>
    <div id="projectbrief">CUstom Stream Handlers Integrated by Overriding Native Symbols</div>
   </td>
@@ -93,7 +93,7 @@ $(document).ready(function(){initNavTree('structch__mode.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Data Structures</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Macros</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -109,56 +109,243 @@ $(document).ready(function(){initNavTree('structch__mode.html','');});
 <div class="title">ch_mode Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Represents a broken out mode string.  
+ <a href="structch__mode.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="cushions__handler__mode_8h_source.html">cushions_handler_mode.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:af09cee1b947cceaa90e112afce1969f7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af09cee1b947cceaa90e112afce1969f7"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>read</b>:1</td></tr>
+<tr class="memitem:af09cee1b947cceaa90e112afce1969f7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structch__mode.html#af09cee1b947cceaa90e112afce1969f7">read</a>:1</td></tr>
 <tr class="separator:af09cee1b947cceaa90e112afce1969f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a71c97aa525458666302f3228beb5362f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a71c97aa525458666302f3228beb5362f"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>beginning</b>:1</td></tr>
+<tr class="memitem:a71c97aa525458666302f3228beb5362f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structch__mode.html#a71c97aa525458666302f3228beb5362f">beginning</a>:1</td></tr>
 <tr class="separator:a71c97aa525458666302f3228beb5362f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa73105300fda8ceefb018ff41f637e14"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa73105300fda8ceefb018ff41f637e14"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>end</b>:1</td></tr>
-<tr class="separator:aa73105300fda8ceefb018ff41f637e14"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a38e2c185deb0304d3848309648564f6c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a38e2c185deb0304d3848309648564f6c"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>write</b>:1</td></tr>
+<tr class="memitem:a38e2c185deb0304d3848309648564f6c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structch__mode.html#a38e2c185deb0304d3848309648564f6c">write</a>:1</td></tr>
 <tr class="separator:a38e2c185deb0304d3848309648564f6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac713795a5ccef4c31afe0db2656f2807"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac713795a5ccef4c31afe0db2656f2807"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>truncate</b>:1</td></tr>
+<tr class="memitem:ac713795a5ccef4c31afe0db2656f2807"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structch__mode.html#ac713795a5ccef4c31afe0db2656f2807">truncate</a>:1</td></tr>
 <tr class="separator:ac713795a5ccef4c31afe0db2656f2807"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae920f0dd88e720417f5120b1dfa53e73"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae920f0dd88e720417f5120b1dfa53e73"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>create</b>:1</td></tr>
+<tr class="memitem:ae920f0dd88e720417f5120b1dfa53e73"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structch__mode.html#ae920f0dd88e720417f5120b1dfa53e73">create</a>:1</td></tr>
 <tr class="separator:ae920f0dd88e720417f5120b1dfa53e73"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a83e2d733a0d5fc50537df4e5b07041a3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a83e2d733a0d5fc50537df4e5b07041a3"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>binary</b>:1</td></tr>
+<tr class="memitem:a83e2d733a0d5fc50537df4e5b07041a3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structch__mode.html#a83e2d733a0d5fc50537df4e5b07041a3">binary</a>:1</td></tr>
 <tr class="separator:a83e2d733a0d5fc50537df4e5b07041a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41e78c2421819d76aae48841bcebf0a9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a41e78c2421819d76aae48841bcebf0a9"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>append</b>:1</td></tr>
+<tr class="memitem:a41e78c2421819d76aae48841bcebf0a9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structch__mode.html#a41e78c2421819d76aae48841bcebf0a9">append</a>:1</td></tr>
 <tr class="separator:a41e78c2421819d76aae48841bcebf0a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a394b7521f0872fb265e27701b5906784"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a394b7521f0872fb265e27701b5906784"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>no_cancellation</b>:1</td></tr>
+<tr class="memitem:a394b7521f0872fb265e27701b5906784"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structch__mode.html#a394b7521f0872fb265e27701b5906784">no_cancellation</a>:1</td></tr>
 <tr class="separator:a394b7521f0872fb265e27701b5906784"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a65db9e1d3aa768baeaaada93b0084551"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a65db9e1d3aa768baeaaada93b0084551"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>cloexec</b>:1</td></tr>
+<tr class="memitem:a65db9e1d3aa768baeaaada93b0084551"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structch__mode.html#a65db9e1d3aa768baeaaada93b0084551">cloexec</a>:1</td></tr>
 <tr class="separator:a65db9e1d3aa768baeaaada93b0084551"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6931fa8f75d9a5c3a043b1d08894465f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6931fa8f75d9a5c3a043b1d08894465f"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>mmap</b>:1</td></tr>
+<tr class="memitem:a6931fa8f75d9a5c3a043b1d08894465f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structch__mode.html#a6931fa8f75d9a5c3a043b1d08894465f">mmap</a>:1</td></tr>
 <tr class="separator:a6931fa8f75d9a5c3a043b1d08894465f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac44c2eb23939646cb4a7e129b1a7889b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac44c2eb23939646cb4a7e129b1a7889b"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>excl</b>:1</td></tr>
+<tr class="memitem:ac44c2eb23939646cb4a7e129b1a7889b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structch__mode.html#ac44c2eb23939646cb4a7e129b1a7889b">excl</a>:1</td></tr>
 <tr class="separator:ac44c2eb23939646cb4a7e129b1a7889b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b5e179f12bd58119a8c110b375a439d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4b5e179f12bd58119a8c110b375a439d"></a>
-char *&#160;</td><td class="memItemRight" valign="bottom"><b>mode</b></td></tr>
+<tr class="memitem:a4b5e179f12bd58119a8c110b375a439d"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structch__mode.html#a4b5e179f12bd58119a8c110b375a439d">mode</a></td></tr>
 <tr class="separator:a4b5e179f12bd58119a8c110b375a439d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa537f64ade962f6b50ea00df6f4ed67a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa537f64ade962f6b50ea00df6f4ed67a"></a>
-char *&#160;</td><td class="memItemRight" valign="bottom"><b>ccs</b></td></tr>
+<tr class="memitem:aa537f64ade962f6b50ea00df6f4ed67a"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structch__mode.html#aa537f64ade962f6b50ea00df6f4ed67a">ccs</a></td></tr>
 <tr class="separator:aa537f64ade962f6b50ea00df6f4ed67a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p>Definition at line <a class="el" href="cushions__handler__mode_8h_source.html#l00011">11</a> of file <a class="el" href="cushions__handler__mode_8h_source.html">cushions_handler_mode.h</a>.</p>
-</div><hr/>The documentation for this struct was generated from the following file:<ul>
+<div class="textblock"><p>Represents a broken out mode string. </p>
+
+<p>Definition at line <a class="el" href="cushions__handler__mode_8h_source.html#l00019">19</a> of file <a class="el" href="cushions__handler__mode_8h_source.html">cushions_handler_mode.h</a>.</p>
+</div><h2 class="groupheader">Field Documentation</h2>
+<a class="anchor" id="a41e78c2421819d76aae48841bcebf0a9"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ch_mode::append</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>true iif the file must be opened for appending (at the end) </p>
+
+<p>Definition at line <a class="el" href="cushions__handler__mode_8h_source.html#l00036">36</a> of file <a class="el" href="cushions__handler__mode_8h_source.html">cushions_handler_mode.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a71c97aa525458666302f3228beb5362f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ch_mode::beginning</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>true iif the stream must be positionned at the beginning, writing may be done at the end, if append is true </p>
+
+<p>Definition at line <a class="el" href="cushions__handler__mode_8h_source.html#l00026">26</a> of file <a class="el" href="cushions__handler__mode_8h_source.html">cushions_handler_mode.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a83e2d733a0d5fc50537df4e5b07041a3"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ch_mode::binary</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>true iif the file must be opened in binary mode </p>
+
+<p>Definition at line <a class="el" href="cushions__handler__mode_8h_source.html#l00034">34</a> of file <a class="el" href="cushions__handler__mode_8h_source.html">cushions_handler_mode.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aa537f64ade962f6b50ea00df6f4ed67a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char* ch_mode::ccs</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>coded character set to use, marks the stream as wide-oriented </p>
+
+<p>Definition at line <a class="el" href="cushions__handler__mode_8h_source.html#l00052">52</a> of file <a class="el" href="cushions__handler__mode_8h_source.html">cushions_handler_mode.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a65db9e1d3aa768baeaaada93b0084551"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ch_mode::cloexec</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>the file must be closed after exec() call </p>
+
+<p>Definition at line <a class="el" href="cushions__handler__mode_8h_source.html#l00044">44</a> of file <a class="el" href="cushions__handler__mode_8h_source.html">cushions_handler_mode.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae920f0dd88e720417f5120b1dfa53e73"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ch_mode::create</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>true iif the file must be created if it does not exist </p>
+
+<p>Definition at line <a class="el" href="cushions__handler__mode_8h_source.html#l00032">32</a> of file <a class="el" href="cushions__handler__mode_8h_source.html">cushions_handler_mode.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac44c2eb23939646cb4a7e129b1a7889b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ch_mode::excl</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>used with 'create', fail if the file already exist </p>
+
+<p>Definition at line <a class="el" href="cushions__handler__mode_8h_source.html#l00048">48</a> of file <a class="el" href="cushions__handler__mode_8h_source.html">cushions_handler_mode.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a6931fa8f75d9a5c3a043b1d08894465f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ch_mode::mmap</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>attempt to access the file with mmap </p>
+
+<p>Definition at line <a class="el" href="cushions__handler__mode_8h_source.html#l00046">46</a> of file <a class="el" href="cushions__handler__mode_8h_source.html">cushions_handler_mode.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a4b5e179f12bd58119a8c110b375a439d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char* ch_mode::mode</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>original mode string, if any </p>
+
+<p>Definition at line <a class="el" href="cushions__handler__mode_8h_source.html#l00050">50</a> of file <a class="el" href="cushions__handler__mode_8h_source.html">cushions_handler_mode.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a394b7521f0872fb265e27701b5906784"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ch_mode::no_cancellation</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>from the manpage: "Do not make the open operation, or subsequent read and write
+   operations, thread cancellation points." </p>
+
+<p>Definition at line <a class="el" href="cushions__handler__mode_8h_source.html#l00042">42</a> of file <a class="el" href="cushions__handler__mode_8h_source.html">cushions_handler_mode.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af09cee1b947cceaa90e112afce1969f7"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ch_mode::read</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>true iif the file must be opened for reading </p>
+
+<p>Definition at line <a class="el" href="cushions__handler__mode_8h_source.html#l00021">21</a> of file <a class="el" href="cushions__handler__mode_8h_source.html">cushions_handler_mode.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac713795a5ccef4c31afe0db2656f2807"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ch_mode::truncate</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>true iif the file must be truncated </p>
+
+<p>Definition at line <a class="el" href="cushions__handler__mode_8h_source.html#l00030">30</a> of file <a class="el" href="cushions__handler__mode_8h_source.html">cushions_handler_mode.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a38e2c185deb0304d3848309648564f6c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool ch_mode::write</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>true iif the file must be opened for writing </p>
+
+<p>Definition at line <a class="el" href="cushions__handler__mode_8h_source.html#l00028">28</a> of file <a class="el" href="cushions__handler__mode_8h_source.html">cushions_handler_mode.h</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
 <li><a class="el" href="cushions__handler__mode_8h_source.html">cushions_handler_mode.h</a></li>
 </ul>
 </div><!-- contents -->
@@ -167,7 +354,7 @@ char *&#160;</td><td class="memItemRight" valign="bottom"><b>ccs</b></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="structch__mode.html">ch_mode</a></li>
-    <li class="footer">Generated on Thu Mar 2 2017 22:27:31 for libcushions by
+    <li class="footer">Generated on Sat Mar 4 2017 07:49:16 for libcushions by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

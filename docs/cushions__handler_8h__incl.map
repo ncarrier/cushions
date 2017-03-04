@@ -1,8 +1,8 @@
 <map id="cushions_handler.h" name="cushions_handler.h">
-<area shape="rect" id="node4" href="$cushions_8h.html" title="Main API, for clients willing to add URL&#45;like support to their program. " alt="" coords="73,80,159,107"/>
-<area shape="rect" id="node6" href="$cushions__handler__dict_8h_source.html" title="cushions_handler_dict.h" alt="" coords="141,155,304,181"/>
-<area shape="rect" id="node8" href="$cushions__handler__log_8h_source.html" title="cushions_handler_log.h" alt="" coords="581,80,739,107"/>
-<area shape="rect" id="node11" href="$cushions__handler__utils_8h_source.html" title="cushions_handler_utils.h" alt="" coords="716,155,881,181"/>
-<area shape="rect" id="node13" href="$cushions__handler__mode_8h_source.html" title="cushions_handler_mode.h" alt="" coords="328,155,501,181"/>
-<area shape="rect" id="node5" href="$cushions__common_8h_source.html" title="cushions_common.h" alt="" coords="335,229,478,256"/>
+<area shape="rect" id="node4" href="$cushions_8h.html" title="Main API, for clients willing to add URL&#45;like support to their program. " alt="" coords="60,80,145,107"/>
+<area shape="rect" id="node5" href="$cushions__common_8h.html" title="Header for use in other public API headers, should not be used directly. " alt="" coords="283,229,426,256"/>
+<area shape="rect" id="node6" href="$cushions__handler__dict_8h.html" title="Simple and lightweight string dictonary based on a macro&#45;based n&#45;ary tree structure implementation..." alt="" coords="460,155,623,181"/>
+<area shape="rect" id="node8" href="$cushions__handler__log_8h.html" title="Utility functions for logging in the libcushions log system. " alt="" coords="685,80,843,107"/>
+<area shape="rect" id="node11" href="$cushions__handler__utils_8h.html" title="Various utility definitions. " alt="" coords="787,155,952,181"/>
+<area shape="rect" id="node13" href="$cushions__handler__mode_8h.html" title="Utility functions for breaking up the mode fopen(3) argument into an explicit set of boolean flags..." alt="" coords="212,155,385,181"/>
 </map>

@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">libcushions
-   &#160;<span id="projectnumber">0.1.0</span>
+   &#160;<span id="projectnumber">0.2.0-11-ga467955</span>
    </div>
    <div id="projectbrief">CUstom Stream Handlers Integrated by Overriding Native Symbols</div>
   </td>
@@ -104,12 +104,14 @@ $(document).ready(function(){initNavTree('cushions__handler__log_8h.html','');})
 <div class="header">
   <div class="summary">
 <a href="#define-members">Macros</a> &#124;
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">cushions_handler_log.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Utility functions for logging in the libcushions log system.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;string.h&gt;</code><br />
 <code>#include &lt;stdlib.h&gt;</code><br />
 <code>#include &lt;<a class="el" href="cushions__handler__utils_8h_source.html">cushions_handler_utils.h</a>&gt;</code><br />
@@ -119,117 +121,79 @@ Include dependency graph for cushions_handler_log.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="cushions__handler__log_8h__incl.png" border="0" usemap="#cushions__handler__log_8h" alt=""/></div>
 <map name="cushions__handler__log_8h" id="cushions__handler__log_8h">
-<area shape="rect" id="node4" href="cushions__handler__utils_8h.html" title="cushions_handler_utils.h" alt="" coords="146,80,311,107"/><area shape="rect" id="node7" href="cushions__common_8h.html" title="cushions_common.h" alt="" coords="336,155,479,181"/></map>
+<area shape="rect" id="node4" href="cushions__handler__utils_8h.html" title="Various utility definitions. " alt="" coords="146,80,311,107"/><area shape="rect" id="node7" href="cushions__common_8h.html" title="Header for use in other public API headers, should not be used directly. " alt="" coords="336,155,479,181"/></map>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="cushions__handler__log_8h__dep__incl.png" border="0" usemap="#cushions__handler__log_8hdep" alt=""/></div>
 <map name="cushions__handler__log_8hdep" id="cushions__handler__log_8hdep">
-<area shape="rect" id="node2" href="cushions__handler_8h.html" title="cushions_handler.h" alt="" coords="17,80,152,107"/></map>
+<area shape="rect" id="node2" href="cushions__handler_8h.html" title="Main header for scheme handler implementors. " alt="" coords="17,80,152,107"/></map>
 </div>
 </div>
 <p><a href="cushions__handler__log_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a24b94d321625a9d6795eb429236de9f2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler__log_8h.html#a24b94d321625a9d6795eb429236de9f2">CH_ERROR</a>&#160;&#160;&#160;0</td></tr>
+<tr class="memitem:a24b94d321625a9d6795eb429236de9f2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a24b94d321625a9d6795eb429236de9f2"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler__log_8h.html#a24b94d321625a9d6795eb429236de9f2">CH_ERROR</a>&#160;&#160;&#160;0</td></tr>
+<tr class="memdesc:a24b94d321625a9d6795eb429236de9f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Error log level for a message, it is the highest level. <br /></td></tr>
 <tr class="separator:a24b94d321625a9d6795eb429236de9f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2f172c6e498ba31a9b820fa1f3863de6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler__log_8h.html#a2f172c6e498ba31a9b820fa1f3863de6">CH_WARNING</a>&#160;&#160;&#160;1</td></tr>
+<tr class="memitem:a2f172c6e498ba31a9b820fa1f3863de6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2f172c6e498ba31a9b820fa1f3863de6"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler__log_8h.html#a2f172c6e498ba31a9b820fa1f3863de6">CH_WARNING</a>&#160;&#160;&#160;1</td></tr>
+<tr class="memdesc:a2f172c6e498ba31a9b820fa1f3863de6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Error log level for a message. <br /></td></tr>
 <tr class="separator:a2f172c6e498ba31a9b820fa1f3863de6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abb9ecae0118d1374bf0dcfea862c19ce"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler__log_8h.html#abb9ecae0118d1374bf0dcfea862c19ce">CH_INFO</a>&#160;&#160;&#160;2</td></tr>
+<tr class="memitem:abb9ecae0118d1374bf0dcfea862c19ce"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abb9ecae0118d1374bf0dcfea862c19ce"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler__log_8h.html#abb9ecae0118d1374bf0dcfea862c19ce">CH_INFO</a>&#160;&#160;&#160;2</td></tr>
+<tr class="memdesc:abb9ecae0118d1374bf0dcfea862c19ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Error log level for a message. <br /></td></tr>
 <tr class="separator:abb9ecae0118d1374bf0dcfea862c19ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a28c3e88acbc751285b42f590a075fb3f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler__log_8h.html#a28c3e88acbc751285b42f590a075fb3f">CH_DEBUG</a>&#160;&#160;&#160;3</td></tr>
+<tr class="memitem:a28c3e88acbc751285b42f590a075fb3f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a28c3e88acbc751285b42f590a075fb3f"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler__log_8h.html#a28c3e88acbc751285b42f590a075fb3f">CH_DEBUG</a>&#160;&#160;&#160;3</td></tr>
+<tr class="memdesc:a28c3e88acbc751285b42f590a075fb3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Error log level for a message. <br /></td></tr>
 <tr class="separator:a28c3e88acbc751285b42f590a075fb3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a52a453d1be7f653a38caa7612d5cfd63"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler__log_8h.html#a52a453d1be7f653a38caa7612d5cfd63">LOG</a>(l,...)&#160;&#160;&#160;ch_log(log_tag, (l), __VA_ARGS__)</td></tr>
+<tr class="memitem:a52a453d1be7f653a38caa7612d5cfd63"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler__log_8h.html#a52a453d1be7f653a38caa7612d5cfd63">LOG</a>(l,...)&#160;&#160;&#160;<a class="el" href="cushions__handler__log_8h.html#a6bc02a6352993d583138604238b7b182">ch_log</a>(log_tag, (l), __VA_ARGS__)</td></tr>
+<tr class="memdesc:a52a453d1be7f653a38caa7612d5cfd63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message at a given severity.  <a href="#a52a453d1be7f653a38caa7612d5cfd63">More...</a><br /></td></tr>
 <tr class="separator:a52a453d1be7f653a38caa7612d5cfd63"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae02538a80ad5fc009caec73487d11a8d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler__log_8h.html#ae02538a80ad5fc009caec73487d11a8d">LOGE</a>(...)&#160;&#160;&#160;<a class="el" href="cushions__handler__log_8h.html#a52a453d1be7f653a38caa7612d5cfd63">LOG</a>(<a class="el" href="cushions__handler__log_8h.html#a24b94d321625a9d6795eb429236de9f2">CH_ERROR</a>, __VA_ARGS__)</td></tr>
+<tr class="memitem:ae02538a80ad5fc009caec73487d11a8d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae02538a80ad5fc009caec73487d11a8d"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler__log_8h.html#ae02538a80ad5fc009caec73487d11a8d">LOGE</a>(...)&#160;&#160;&#160;<a class="el" href="cushions__handler__log_8h.html#a52a453d1be7f653a38caa7612d5cfd63">LOG</a>(<a class="el" href="cushions__handler__log_8h.html#a24b94d321625a9d6795eb429236de9f2">CH_ERROR</a>, __VA_ARGS__)</td></tr>
+<tr class="memdesc:ae02538a80ad5fc009caec73487d11a8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message at the CH_ERROR level. <br /></td></tr>
 <tr class="separator:ae02538a80ad5fc009caec73487d11a8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a07f1b0d507acedeb7550353eba4f6e66"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler__log_8h.html#a07f1b0d507acedeb7550353eba4f6e66">LOGW</a>(...)&#160;&#160;&#160;<a class="el" href="cushions__handler__log_8h.html#a52a453d1be7f653a38caa7612d5cfd63">LOG</a>(<a class="el" href="cushions__handler__log_8h.html#a2f172c6e498ba31a9b820fa1f3863de6">CH_WARNING</a>, __VA_ARGS__)</td></tr>
+<tr class="memitem:a07f1b0d507acedeb7550353eba4f6e66"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a07f1b0d507acedeb7550353eba4f6e66"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler__log_8h.html#a07f1b0d507acedeb7550353eba4f6e66">LOGW</a>(...)&#160;&#160;&#160;<a class="el" href="cushions__handler__log_8h.html#a52a453d1be7f653a38caa7612d5cfd63">LOG</a>(<a class="el" href="cushions__handler__log_8h.html#a2f172c6e498ba31a9b820fa1f3863de6">CH_WARNING</a>, __VA_ARGS__)</td></tr>
+<tr class="memdesc:a07f1b0d507acedeb7550353eba4f6e66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message at the CH_WARNING level. <br /></td></tr>
 <tr class="separator:a07f1b0d507acedeb7550353eba4f6e66"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5512e59d578a380a441a70256af997d0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler__log_8h.html#a5512e59d578a380a441a70256af997d0">LOGI</a>(...)&#160;&#160;&#160;<a class="el" href="cushions__handler__log_8h.html#a52a453d1be7f653a38caa7612d5cfd63">LOG</a>(<a class="el" href="cushions__handler__log_8h.html#abb9ecae0118d1374bf0dcfea862c19ce">CH_INFO</a>, __VA_ARGS__)</td></tr>
+<tr class="memitem:a5512e59d578a380a441a70256af997d0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5512e59d578a380a441a70256af997d0"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler__log_8h.html#a5512e59d578a380a441a70256af997d0">LOGI</a>(...)&#160;&#160;&#160;<a class="el" href="cushions__handler__log_8h.html#a52a453d1be7f653a38caa7612d5cfd63">LOG</a>(<a class="el" href="cushions__handler__log_8h.html#abb9ecae0118d1374bf0dcfea862c19ce">CH_INFO</a>, __VA_ARGS__)</td></tr>
+<tr class="memdesc:a5512e59d578a380a441a70256af997d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message at the CH_INFO level. <br /></td></tr>
 <tr class="separator:a5512e59d578a380a441a70256af997d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa839997a58e14061861cd634fdb7664d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler__log_8h.html#aa839997a58e14061861cd634fdb7664d">LOGD</a>(...)&#160;&#160;&#160;<a class="el" href="cushions__handler__log_8h.html#a52a453d1be7f653a38caa7612d5cfd63">LOG</a>(<a class="el" href="cushions__handler__log_8h.html#a28c3e88acbc751285b42f590a075fb3f">CH_DEBUG</a>, __VA_ARGS__)</td></tr>
+<tr class="memitem:aa839997a58e14061861cd634fdb7664d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa839997a58e14061861cd634fdb7664d"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler__log_8h.html#aa839997a58e14061861cd634fdb7664d">LOGD</a>(...)&#160;&#160;&#160;<a class="el" href="cushions__handler__log_8h.html#a52a453d1be7f653a38caa7612d5cfd63">LOG</a>(<a class="el" href="cushions__handler__log_8h.html#a28c3e88acbc751285b42f590a075fb3f">CH_DEBUG</a>, __VA_ARGS__)</td></tr>
+<tr class="memdesc:aa839997a58e14061861cd634fdb7664d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message at the CH_DEBUG level. <br /></td></tr>
 <tr class="separator:aa839997a58e14061861cd634fdb7664d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ac27de6b83ad971859150de7dded08f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler__log_8h.html#a4ac27de6b83ad971859150de7dded08f">LOGPE</a>(s, e)&#160;&#160;&#160;<a class="el" href="cushions__handler__log_8h.html#ae02538a80ad5fc009caec73487d11a8d">LOGE</a>(&quot;%s: %s&quot;, (s), strerror(abs((e))))</td></tr>
+<tr class="memdesc:a4ac27de6b83ad971859150de7dded08f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message at the CH_ERROR level, with the form "*s*: perror_msg".  <a href="#a4ac27de6b83ad971859150de7dded08f">More...</a><br /></td></tr>
 <tr class="separator:a4ac27de6b83ad971859150de7dded08f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a4ffd9b908866fdcb3effca1d5be23c94"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler__log_8h.html#a4ffd9b908866fdcb3effca1d5be23c94">__attribute__</a> ((unused)) static const char *log_tag</td></tr>
-<tr class="separator:a4ffd9b908866fdcb3effca1d5be23c94"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe9211f9420842b4678234e742b1dca6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler__log_8h.html#afe9211f9420842b4678234e742b1dca6">__attribute__</a> ((format(printf, 3, 4))) void ch_log(const char *tag</td></tr>
-<tr class="separator:afe9211f9420842b4678234e742b1dca6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a10def8d729082e5df3fdb9ba02404509"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a> int const char <br class="typebreak" />
-<a class="el" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler__log_8h.html#a10def8d729082e5df3fdb9ba02404509">ch_log_set_color</a> (bool enable)</td></tr>
-<tr class="separator:a10def8d729082e5df3fdb9ba02404509"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac50c93b69e6086976cb1de78bae359a0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler__log_8h.html#ac50c93b69e6086976cb1de78bae359a0">ch_log_set_level</a> (int <a class="el" href="cushions__handler__log_8h.html#a91597094adb875e7d82ce3a0d0be842e">level</a>)</td></tr>
+<tr class="memitem:a6bc02a6352993d583138604238b7b182"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler__log_8h.html#a6bc02a6352993d583138604238b7b182">ch_log</a> (const char *tag, int level, const char *fmt,...) <a class="el" href="cushions__common_8h.html#a19df87cdb1a8deb2adbb0203da16d07f">CUHSIONS_PRINTF</a>(3</td></tr>
+<tr class="memdesc:a6bc02a6352993d583138604238b7b182"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message. Avoid using it directly, use one of the LOGX macros instead.  <a href="#a6bc02a6352993d583138604238b7b182">More...</a><br /></td></tr>
+<tr class="separator:a6bc02a6352993d583138604238b7b182"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf8cf28b7b149c1dd601ad0dd024ca61"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a> void <a class="el" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler__log_8h.html#acf8cf28b7b149c1dd601ad0dd024ca61">ch_log_set_color</a> (bool enable)</td></tr>
+<tr class="memdesc:acf8cf28b7b149c1dd601ad0dd024ca61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables / disables the use of colors in the log messages. Default is set to 'enable'.  <a href="#acf8cf28b7b149c1dd601ad0dd024ca61">More...</a><br /></td></tr>
+<tr class="separator:acf8cf28b7b149c1dd601ad0dd024ca61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac50c93b69e6086976cb1de78bae359a0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler__log_8h.html#ac50c93b69e6086976cb1de78bae359a0">ch_log_set_level</a> (int level)</td></tr>
+<tr class="memdesc:ac50c93b69e6086976cb1de78bae359a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the current log level of libcushions, messages with a log level above this threshold will be discarded.  <a href="#ac50c93b69e6086976cb1de78bae359a0">More...</a><br /></td></tr>
 <tr class="separator:ac50c93b69e6086976cb1de78bae359a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:a91597094adb875e7d82ce3a0d0be842e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler__log_8h.html#a91597094adb875e7d82ce3a0d0be842e">level</a></td></tr>
-<tr class="separator:a91597094adb875e7d82ce3a0d0be842e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2426e1fac217c4930b51260838a9de32"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a> int const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler__log_8h.html#a2426e1fac217c4930b51260838a9de32">fmt</a></td></tr>
-<tr class="separator:a2426e1fac217c4930b51260838a9de32"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Macro Definition Documentation</h2>
-<a class="anchor" id="a28c3e88acbc751285b42f590a075fb3f"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CH_DEBUG&#160;&#160;&#160;3</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Utility functions for logging in the libcushions log system. </p>
+<p>Messages are logged to the standard error, provided their log level is above the log level set in the CUSHIONS_LOG_LEVEL environment variable, at the program's startup or in the last call to <a class="el" href="cushions__handler__log_8h.html#ac50c93b69e6086976cb1de78bae359a0" title="Sets the current log level of libcushions, messages with a log level above this threshold will be dis...">ch_log_set_level()</a>, the latter taking precedence over the former.</p>
+<p>If the CUSHIONS_LOG_NO_COLOR environment variable is set to anything non-empty, then no ansi escape control sequence will be output for adding colors to the log messages.</p>
+<p>One should not need to include this header directly, include <a class="el" href="cushions__handler_8h.html" title="Main header for scheme handler implementors. ">cushions_handler.h</a> instead </p>
 
-<p>Definition at line <a class="el" href="cushions__handler__log_8h_source.html#l00023">23</a> of file <a class="el" href="cushions__handler__log_8h_source.html">cushions_handler_log.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a24b94d321625a9d6795eb429236de9f2"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CH_ERROR&#160;&#160;&#160;0</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="cushions__handler__log_8h_source.html#l00020">20</a> of file <a class="el" href="cushions__handler__log_8h_source.html">cushions_handler_log.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="abb9ecae0118d1374bf0dcfea862c19ce"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CH_INFO&#160;&#160;&#160;2</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="cushions__handler__log_8h_source.html#l00022">22</a> of file <a class="el" href="cushions__handler__log_8h_source.html">cushions_handler_log.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a2f172c6e498ba31a9b820fa1f3863de6"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CH_WARNING&#160;&#160;&#160;1</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="cushions__handler__log_8h_source.html#l00021">21</a> of file <a class="el" href="cushions__handler__log_8h_source.html">cushions_handler_log.h</a>.</p>
-
-</div>
-</div>
+<p>Definition in file <a class="el" href="cushions__handler__log_8h_source.html">cushions_handler_log.h</a>.</p>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a class="anchor" id="a52a453d1be7f653a38caa7612d5cfd63"></a>
 <div class="memitem">
 <div class="memproto">
@@ -249,66 +213,20 @@ Variables</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;ch_log(log_tag, (l), __VA_ARGS__)</td>
+          <td></td><td>&#160;&#160;&#160;<a class="el" href="cushions__handler__log_8h.html#a6bc02a6352993d583138604238b7b182">ch_log</a>(log_tag, (l), __VA_ARGS__)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="cushions__handler__log_8h_source.html#l00025">25</a> of file <a class="el" href="cushions__handler__log_8h_source.html">cushions_handler_log.h</a>.</p>
+<p>Logs a message at a given severity. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">l</td><td>Log level of the message, which is discarded if the level is under the currently set log level, either by <a class="el" href="cushions__handler__log_8h.html#ac50c93b69e6086976cb1de78bae359a0" title="Sets the current log level of libcushions, messages with a log level above this threshold will be dis...">ch_log_set_level()</a> or by the CUSHIONS_LOG_NO_COLOR environment variable. </td></tr>
+  </table>
+  </dd>
+</dl>
 
-</div>
-</div>
-<a class="anchor" id="aa839997a58e14061861cd634fdb7664d"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define LOGD</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>...</em></td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="cushions__handler__log_8h.html#a52a453d1be7f653a38caa7612d5cfd63">LOG</a>(<a class="el" href="cushions__handler__log_8h.html#a28c3e88acbc751285b42f590a075fb3f">CH_DEBUG</a>, __VA_ARGS__)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="cushions__handler__log_8h_source.html#l00029">29</a> of file <a class="el" href="cushions__handler__log_8h_source.html">cushions_handler_log.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ae02538a80ad5fc009caec73487d11a8d"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define LOGE</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>...</em></td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="cushions__handler__log_8h.html#a52a453d1be7f653a38caa7612d5cfd63">LOG</a>(<a class="el" href="cushions__handler__log_8h.html#a24b94d321625a9d6795eb429236de9f2">CH_ERROR</a>, __VA_ARGS__)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="cushions__handler__log_8h_source.html#l00026">26</a> of file <a class="el" href="cushions__handler__log_8h_source.html">cushions_handler_log.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a5512e59d578a380a441a70256af997d0"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define LOGI</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>...</em></td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="cushions__handler__log_8h.html#a52a453d1be7f653a38caa7612d5cfd63">LOG</a>(<a class="el" href="cushions__handler__log_8h.html#abb9ecae0118d1374bf0dcfea862c19ce">CH_INFO</a>, __VA_ARGS__)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="cushions__handler__log_8h_source.html#l00028">28</a> of file <a class="el" href="cushions__handler__log_8h_source.html">cushions_handler_log.h</a>.</p>
+<p>Definition at line <a class="el" href="cushions__handler__log_8h_source.html#l00068">68</a> of file <a class="el" href="cushions__handler__log_8h_source.html">cushions_handler_log.h</a>.</p>
 
 </div>
 </div>
@@ -336,67 +254,74 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="cushions__handler__log_8h_source.html#l00030">30</a> of file <a class="el" href="cushions__handler__log_8h_source.html">cushions_handler_log.h</a>.</p>
+<p>Logs a message at the CH_ERROR level, with the form "*s*: perror_msg". </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">s</td><td>String of the message. </td></tr>
+    <tr><td class="paramname">e</td><td>Error which occurred, converted to a string message with strerror(). </td></tr>
+  </table>
+  </dd>
+</dl>
 
-</div>
-</div>
-<a class="anchor" id="a07f1b0d507acedeb7550353eba4f6e66"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define LOGW</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>...</em></td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="cushions__handler__log_8h.html#a52a453d1be7f653a38caa7612d5cfd63">LOG</a>(<a class="el" href="cushions__handler__log_8h.html#a2f172c6e498ba31a9b820fa1f3863de6">CH_WARNING</a>, __VA_ARGS__)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="cushions__handler__log_8h_source.html#l00027">27</a> of file <a class="el" href="cushions__handler__log_8h_source.html">cushions_handler_log.h</a>.</p>
+<p>Definition at line <a class="el" href="cushions__handler__log_8h_source.html#l00100">100</a> of file <a class="el" href="cushions__handler__log_8h_source.html">cushions_handler_log.h</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="a4ffd9b908866fdcb3effca1d5be23c94"></a>
+<a class="anchor" id="a6bc02a6352993d583138604238b7b182"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">__attribute__ </td>
+          <td class="memname"><a class="el" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a> void ch_log </td>
           <td>(</td>
-          <td class="paramtype">(unused)&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>tag</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>level</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>fmt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>...</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-</div>
-</div>
-<a class="anchor" id="afe9211f9420842b4678234e742b1dca6"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a> __attribute__ </td>
-          <td>(</td>
-          <td class="paramtype">(format(printf, 3, 4))&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
+<p>Logs a message. Avoid using it directly, use one of the LOGX macros instead. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tag</td><td>Log tag of the message. </td></tr>
+    <tr><td class="paramname">level</td><td>Level of the message to log. </td></tr>
+    <tr><td class="paramname">fmt</td><td>Format string of the message. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
-<a class="anchor" id="a10def8d729082e5df3fdb9ba02404509"></a>
+<a class="anchor" id="acf8cf28b7b149c1dd601ad0dd024ca61"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a> int const char <a class="el" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a> void ch_log_set_color </td>
+          <td class="memname"><a class="el" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a> void <a class="el" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a> void ch_log_set_color </td>
           <td>(</td>
           <td class="paramtype">bool&#160;</td>
           <td class="paramname"><em>enable</em></td><td>)</td>
@@ -404,6 +329,14 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Enables / disables the use of colors in the log messages. Default is set to 'enable'. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">enable</td><td>True to enable color usage, false to disable it. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -421,34 +354,13 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-</div>
-</div>
-<h2 class="groupheader">Variable Documentation</h2>
-<a class="anchor" id="a2426e1fac217c4930b51260838a9de32"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a> int const char* fmt</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="cushions__handler__log_8h_source.html#l00033">33</a> of file <a class="el" href="cushions__handler__log_8h_source.html">cushions_handler_log.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a91597094adb875e7d82ce3a0d0be842e"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a> int level</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="cushions__handler__log_8h_source.html#l00033">33</a> of file <a class="el" href="cushions__handler__log_8h_source.html">cushions_handler_log.h</a>.</p>
+<p>Sets the current log level of libcushions, messages with a log level above this threshold will be discarded. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">level</td><td>New log level. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -458,7 +370,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_7e27d905ecd52da5eafa0161abe57997.html">cushions</a></li><li class="navelem"><a class="el" href="cushions__handler__log_8h.html">cushions_handler_log.h</a></li>
-    <li class="footer">Generated on Thu Mar 2 2017 17:49:38 for libcushions by
+    <li class="footer">Generated on Sat Mar 4 2017 07:49:16 for libcushions by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

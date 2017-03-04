@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">libcushions
-   &#160;<span id="projectnumber">0.1.0</span>
+   &#160;<span id="projectnumber">0.2.0-11-ga467955</span>
    </div>
    <div id="projectbrief">CUstom Stream Handlers Integrated by Overriding Native Symbols</div>
   </td>
@@ -108,33 +108,72 @@ $(document).ready(function(){initNavTree('cushions__common_8h.html','');});
 <div class="title">cushions_common.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Header for use in other public API headers, should not be used directly.  
+<a href="#details">More...</a></p>
 <div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="cushions__common_8h__dep__incl.png" border="0" usemap="#cushions__common_8hdep" alt=""/></div>
 <map name="cushions__common_8hdep" id="cushions__common_8hdep">
-<area shape="rect" id="node2" href="cushions_8h.html" title="cushions.h" alt="" coords="5,155,91,181"/><area shape="rect" id="node4" href="cushions__handler__dict_8h.html" title="cushions_handler_dict.h" alt="" coords="115,155,277,181"/><area shape="rect" id="node5" href="cushions__handler__log_8h.html" title="cushions_handler_log.h" alt="" coords="353,155,511,181"/><area shape="rect" id="node6" href="cushions__handler__mode_8h.html" title="cushions_handler_mode.h" alt="" coords="220,80,393,107"/><area shape="rect" id="node7" href="cushions__handler__utils_8h.html" title="cushions_handler_utils.h" alt="" coords="468,80,633,107"/><area shape="rect" id="node3" href="cushions__handler_8h.html" title="cushions_handler.h" alt="" coords="247,229,382,256"/></map>
+<area shape="rect" id="node2" href="cushions_8h.html" title="Main API, for clients willing to add URL&#45;like support to their program. " alt="" coords="5,155,91,181"/><area shape="rect" id="node3" href="cushions__handler_8h.html" title="Main header for scheme handler implementors. " alt="" coords="271,229,406,256"/><area shape="rect" id="node4" href="cushions__handler__dict_8h.html" title="Simple and lightweight string dictonary based on a macro&#45;based n&#45;ary tree structure implementation..." alt="" coords="165,155,328,181"/><area shape="rect" id="node5" href="cushions__handler__log_8h.html" title="Utility functions for logging in the libcushions log system. " alt="" coords="353,155,511,181"/><area shape="rect" id="node6" href="cushions__handler__mode_8h.html" title="Utility functions for breaking up the mode fopen(3) argument into an explicit set of boolean flags..." alt="" coords="524,80,697,107"/><area shape="rect" id="node7" href="cushions__handler__utils_8h.html" title="Various utility definitions. " alt="" coords="335,80,500,107"/></map>
 </div>
 </div>
 <p><a href="cushions__common_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a8843feb0b32e8f74616dfc943efe34f0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a>&#160;&#160;&#160;<a class="el" href="cushions__handler__log_8h.html#afe9211f9420842b4678234e742b1dca6">__attribute__</a>((visibility(&quot;default&quot;)))</td></tr>
+<tr class="memitem:a19df87cdb1a8deb2adbb0203da16d07f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__common_8h.html#a19df87cdb1a8deb2adbb0203da16d07f">CUHSIONS_PRINTF</a>(a, b)&#160;&#160;&#160;__attribute__((format(printf, (a), (b))))</td></tr>
+<tr class="memdesc:a19df87cdb1a8deb2adbb0203da16d07f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies that a function takes printf style arguments which should be type-checked against a format string.  <a href="#a19df87cdb1a8deb2adbb0203da16d07f">More...</a><br /></td></tr>
+<tr class="separator:a19df87cdb1a8deb2adbb0203da16d07f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a117874e1d53a428a5628de098b4a3731"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a117874e1d53a428a5628de098b4a3731"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__common_8h.html#a117874e1d53a428a5628de098b4a3731">CUSHIONS_UNUSED</a>&#160;&#160;&#160;__attribute__((unused))</td></tr>
+<tr class="memdesc:a117874e1d53a428a5628de098b4a3731"><td class="mdescLeft">&#160;</td><td class="mdescRight">Marks a variable as possibly unused, avoid compiler's warnings. <br /></td></tr>
+<tr class="separator:a117874e1d53a428a5628de098b4a3731"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8843feb0b32e8f74616dfc943efe34f0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8843feb0b32e8f74616dfc943efe34f0"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a>&#160;&#160;&#160;__attribute__((visibility(&quot;default&quot;)))</td></tr>
+<tr class="memdesc:a8843feb0b32e8f74616dfc943efe34f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro used to make the public API symbols visible, to be used in conjunction with the -fvisibility=hidden flag passed at compilation time. <br /></td></tr>
 <tr class="separator:a8843feb0b32e8f74616dfc943efe34f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Macro Definition Documentation</h2>
-<a class="anchor" id="a8843feb0b32e8f74616dfc943efe34f0"></a>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Header for use in other public API headers, should not be used directly. </p>
+
+<p>Definition in file <a class="el" href="cushions__common_8h_source.html">cushions_common.h</a>.</p>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a class="anchor" id="a19df87cdb1a8deb2adbb0203da16d07f"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define CUSHIONS_API&#160;&#160;&#160;<a class="el" href="cushions__handler__log_8h.html#afe9211f9420842b4678234e742b1dca6">__attribute__</a>((visibility(&quot;default&quot;)))</td>
+          <td class="memname">#define CUHSIONS_PRINTF</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">a, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">b&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td>&#160;&#160;&#160;__attribute__((format(printf, (a), (b))))</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="cushions__common_8h_source.html#l00004">4</a> of file <a class="el" href="cushions__common_8h_source.html">cushions_common.h</a>.</p>
+<p>Specifies that a function takes printf style arguments which should be type-checked against a format string. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>Index of the format string, in the parameters list. </td></tr>
+    <tr><td class="paramname">b</td><td>Index of the first argument to be checked against the format. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="cushions__common_8h_source.html#l00016">16</a> of file <a class="el" href="cushions__common_8h_source.html">cushions_common.h</a>.</p>
 
 </div>
 </div>
@@ -144,7 +183,7 @@ Macros</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_7e27d905ecd52da5eafa0161abe57997.html">cushions</a></li><li class="navelem"><a class="el" href="cushions__common_8h.html">cushions_common.h</a></li>
-    <li class="footer">Generated on Thu Mar 2 2017 17:49:38 for libcushions by
+    <li class="footer">Generated on Sat Mar 4 2017 07:49:16 for libcushions by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

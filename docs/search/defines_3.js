@@ -14,5 +14,7 @@ var searchData=
   ['ch_5fstringify',['CH_STRINGIFY',['../cushions__handler__utils_8h.html#af9f2bdb55af70583c35dd48a1511e3eb',1,'cushions_handler_utils.h']]],
   ['ch_5fstringify_5fhelper',['CH_STRINGIFY_HELPER',['../cushions__handler__utils_8h.html#a4edc8c82b61c9221f9a90fb84b958433',1,'cushions_handler_utils.h']]],
   ['ch_5fwarning',['CH_WARNING',['../cushions__handler__log_8h.html#a2f172c6e498ba31a9b820fa1f3863de6',1,'cushions_handler_log.h']]],
-  ['cushions_5fapi',['CUSHIONS_API',['../cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0',1,'cushions_common.h']]]
+  ['cuhsions_5fprintf',['CUHSIONS_PRINTF',['../cushions__common_8h.html#a19df87cdb1a8deb2adbb0203da16d07f',1,'cushions_common.h']]],
+  ['cushions_5fapi',['CUSHIONS_API',['../cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0',1,'cushions_common.h']]],
+  ['cushions_5funused',['CUSHIONS_UNUSED',['../cushions__common_8h.html#a117874e1d53a428a5628de098b4a3731',1,'cushions_common.h']]]
 ];

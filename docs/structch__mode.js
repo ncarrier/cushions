@@ -6,7 +6,6 @@ var structch__mode =
     [ "ccs", "structch__mode.html#aa537f64ade962f6b50ea00df6f4ed67a", null ],
     [ "cloexec", "structch__mode.html#a65db9e1d3aa768baeaaada93b0084551", null ],
     [ "create", "structch__mode.html#ae920f0dd88e720417f5120b1dfa53e73", null ],
-    [ "end", "structch__mode.html#aa73105300fda8ceefb018ff41f637e14", null ],
     [ "excl", "structch__mode.html#ac44c2eb23939646cb4a7e129b1a7889b", null ],
     [ "mmap", "structch__mode.html#a6931fa8f75d9a5c3a043b1d08894465f", null ],
     [ "mode", "structch__mode.html#a4b5e179f12bd58119a8c110b375a439d", null ],

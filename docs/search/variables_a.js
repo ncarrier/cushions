@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['truncate',['truncate',['../structch__mode.html#ac713795a5ccef4c31afe0db2656f2807',1,'ch_mode']]]
+  ['write',['write',['../structch__mode.html#a38e2c185deb0304d3848309648564f6c',1,'ch_mode']]]
 ];

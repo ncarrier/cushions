@@ -30,7 +30,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">libcushions
-   &#160;<span id="projectnumber">0.1.0</span>
+   &#160;<span id="projectnumber">0.2.0-11-ga467955</span>
    </div>
    <div id="projectbrief">CUstom Stream Handlers Integrated by Overriding Native Symbols</div>
   </td>
@@ -109,6 +109,9 @@ $(document).ready(function(){initNavTree('cushions__handler__mode_8h.html','');}
 <div class="title">cushions_handler_mode.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Utility functions for breaking up the mode fopen(3) argument into an explicit set of boolean flags.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;stdbool.h&gt;</code><br />
 <code>#include &lt;<a class="el" href="cushions__common_8h_source.html">cushions_common.h</a>&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
@@ -116,14 +119,14 @@ Include dependency graph for cushions_handler_mode.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="cushions__handler__mode_8h__incl.png" border="0" usemap="#cushions__handler__mode_8h" alt=""/></div>
 <map name="cushions__handler__mode_8h" id="cushions__handler__mode_8h">
-<area shape="rect" id="node3" href="cushions__common_8h.html" title="cushions_common.h" alt="" coords="103,80,246,107"/></map>
+<area shape="rect" id="node3" href="cushions__common_8h.html" title="Header for use in other public API headers, should not be used directly. " alt="" coords="103,80,246,107"/></map>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="cushions__handler__mode_8h__dep__incl.png" border="0" usemap="#cushions__handler__mode_8hdep" alt=""/></div>
 <map name="cushions__handler__mode_8hdep" id="cushions__handler__mode_8hdep">
-<area shape="rect" id="node2" href="cushions__handler_8h.html" title="cushions_handler.h" alt="" coords="25,80,159,107"/></map>
+<area shape="rect" id="node2" href="cushions__handler_8h.html" title="Main header for scheme handler implementors. " alt="" coords="25,80,159,107"/></map>
 </div>
 </div>
 <p><a href="cushions__handler__mode_8h_source.html">Go to the source code of this file.</a></p>
@@ -131,20 +134,30 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structch__mode.html">ch_mode</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a broken out mode string.  <a href="structch__mode.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a1594cdc6f0d6461f6196dd66c22f623f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler__mode_8h.html#a1594cdc6f0d6461f6196dd66c22f623f">ch_mode_from_string</a> (struct <a class="el" href="structch__mode.html">ch_mode</a> *mode, const char *str)</td></tr>
+<tr class="memdesc:a1594cdc6f0d6461f6196dd66c22f623f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Breaks a mode string into a set of flags in a <a class="el" href="structch__mode.html" title="Represents a broken out mode string. ">ch_mode</a> structure.  <a href="#a1594cdc6f0d6461f6196dd66c22f623f">More...</a><br /></td></tr>
 <tr class="separator:a1594cdc6f0d6461f6196dd66c22f623f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a00c43c02f80b974f5ea02ae85104fcfb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler__mode_8h.html#a00c43c02f80b974f5ea02ae85104fcfb">ch_mode_to_string</a> (const struct <a class="el" href="structch__mode.html">ch_mode</a> *mode, char **str)</td></tr>
+<tr class="memdesc:a00c43c02f80b974f5ea02ae85104fcfb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <a class="el" href="structch__mode.html" title="Represents a broken out mode string. ">ch_mode</a> structure to a string suitable for passing as a mode string to fopen et al..  <a href="#a00c43c02f80b974f5ea02ae85104fcfb">More...</a><br /></td></tr>
 <tr class="separator:a00c43c02f80b974f5ea02ae85104fcfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8138df4aded9f66686ea431abafe608d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler__mode_8h.html#a8138df4aded9f66686ea431abafe608d">ch_mode_cleanup</a> (struct <a class="el" href="structch__mode.html">ch_mode</a> *mode)</td></tr>
+<tr class="memdesc:a8138df4aded9f66686ea431abafe608d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees the ressources allocated to a <a class="el" href="structch__mode.html" title="Represents a broken out mode string. ">ch_mode</a> structure after a call to <a class="el" href="cushions__handler__mode_8h.html#a1594cdc6f0d6461f6196dd66c22f623f" title="Breaks a mode string into a set of flags in a ch_mode structure. ">ch_mode_from_string()</a>.  <a href="#a8138df4aded9f66686ea431abafe608d">More...</a><br /></td></tr>
 <tr class="separator:a8138df4aded9f66686ea431abafe608d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5533120f6a1c6b213499544785100fea"><td class="memItemLeft" align="right" valign="top"><a class="el" href="cushions__common_8h.html#a8843feb0b32e8f74616dfc943efe34f0">CUSHIONS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cushions__handler__mode_8h.html#a5533120f6a1c6b213499544785100fea">ch_mode_dump</a> (const struct <a class="el" href="structch__mode.html">ch_mode</a> *mode)</td></tr>
+<tr class="memdesc:a5533120f6a1c6b213499544785100fea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dumps a <a class="el" href="structch__mode.html" title="Represents a broken out mode string. ">ch_mode</a> structure's content in a human readable way in the cushions log system, for debugging purpose.  <a href="#a5533120f6a1c6b213499544785100fea">More...</a><br /></td></tr>
 <tr class="separator:a5533120f6a1c6b213499544785100fea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Utility functions for breaking up the mode fopen(3) argument into an explicit set of boolean flags. </p>
+<p>One should not need to include this header directly, include <a class="el" href="cushions__handler_8h.html" title="Main header for scheme handler implementors. ">cushions_handler.h</a> instead. </p>
+
+<p>Definition in file <a class="el" href="cushions__handler__mode_8h_source.html">cushions_handler_mode.h</a>.</p>
+</div><h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="a8138df4aded9f66686ea431abafe608d"></a>
 <div class="memitem">
 <div class="memproto">
@@ -158,6 +171,14 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Frees the ressources allocated to a <a class="el" href="structch__mode.html" title="Represents a broken out mode string. ">ch_mode</a> structure after a call to <a class="el" href="cushions__handler__mode_8h.html#a1594cdc6f0d6461f6196dd66c22f623f" title="Breaks a mode string into a set of flags in a ch_mode structure. ">ch_mode_from_string()</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">mode</td><td>Mod structure to perform the cleanup on. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -174,6 +195,14 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Dumps a <a class="el" href="structch__mode.html" title="Represents a broken out mode string. ">ch_mode</a> structure's content in a human readable way in the cushions log system, for debugging purpose. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">mode</td><td>Mode structure to dump. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -201,6 +230,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Breaks a mode string into a set of flags in a <a class="el" href="structch__mode.html" title="Represents a broken out mode string. ">ch_mode</a> structure. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">mode</td><td>In output, contains the broken flags of <em>str</em>. <a class="el" href="cushions__handler__mode_8h.html#a8138df4aded9f66686ea431abafe608d" title="Frees the ressources allocated to a ch_mode structure after a call to ch_mode_from_string(). ">ch_mode_cleanup()</a> must be called when this structure is not to be used anymore. </td></tr>
+    <tr><td class="paramname">str</td><td>String to convert to a set of flags. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>errno-compatible negative value or error, 0 on success. </dd></dl>
+
 </div>
 </div>
 <a class="anchor" id="a00c43c02f80b974f5ea02ae85104fcfb"></a>
@@ -227,6 +266,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Converts a <a class="el" href="structch__mode.html" title="Represents a broken out mode string. ">ch_mode</a> structure to a string suitable for passing as a mode string to fopen et al.. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">mode</td><td>Mode structure to convert. </td></tr>
+    <tr><td class="paramname">str</td><td>In output, points to the result of the conversion, which must be free()-ed after usage. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>errno-compatible negative value on error, 0 on success. </dd></dl>
+
 </div>
 </div>
 </div><!-- contents -->
@@ -235,7 +284,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_7e27d905ecd52da5eafa0161abe57997.html">cushions</a></li><li class="navelem"><a class="el" href="cushions__handler__mode_8h.html">cushions_handler_mode.h</a></li>
-    <li class="footer">Generated on Thu Mar 2 2017 17:49:38 for libcushions by
+    <li class="footer">Generated on Sat Mar 4 2017 07:49:16 for libcushions by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>
