@@ -1,4 +1,5 @@
 finish the doxygen
+create packages for various distributions, using docker
 package doc / manpage
 write test cases for all handlers
   still missing: test case for curl-no-http and big bad check
