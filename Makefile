@@ -192,8 +192,9 @@ clean:
 
 package: $(package)
 
-$(package):all $(lib).pc
+$(package):all $(lib).pc doc
 	checkinstall \
+		--docdir=:$(prefix)share \
 		--fstrans=yes \
 		--type=debian \
 		--deldoc=yes \
@@ -218,7 +219,7 @@ ifneq ($(CU_NEW_VERSION),)
 version:
 	make -f $(here)/Makefile doc version=$(CU_NEW_VERSION)
 	mkdir -p $(here)/docs
-	mv doc/html/ $(here)docs/$(CU_NEW_VERSION)
+	cp -r doc/libcushions $(here)docs/$(CU_NEW_VERSION)
 	git add $(here)docs/$(CU_NEW_VERSION)
 	git commit -m "integration: new version $(CU_NEW_VERSION)"
 	git tag $(CU_NEW_VERSION)
