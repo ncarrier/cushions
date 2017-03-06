@@ -13,7 +13,7 @@ transparent support for archives files, or web urls, for example.
 It comes with a full [doxygen API documentation][doxygen], for libcushions users
 or scheme handler implementors.
 
-The latest version, 0.2.0, [can be download here][latest].
+The latest version, 0.2.1, [can be download here][latest].
 
 **IMPORTANT NOTICE:** **libcushions**, while already potentially useful in some
 use cases, should be considered as a proof of concept.
@@ -119,5 +119,5 @@ you want to:
 |         | opens a server socket                          | ssock  | <img src="https://raw.githubusercontent.com/ncarrier/cushions/master/misc/tick.png" alt="yes" style="width: 20px;"/>        | <img src="https://raw.githubusercontent.com/ncarrier/cushions/master/misc/tick.png" alt="yes" style="width: 20px;"/>        |
 | tar     | read from / write to a tar archive             | tar    | <img src="https://raw.githubusercontent.com/ncarrier/cushions/master/misc/tick.png" alt="yes" style="width: 20px;"/>        | <img src="https://raw.githubusercontent.com/ncarrier/cushions/master/misc/tick.png" alt="yes" style="width: 20px;"/>        |
 
-[doxygen]: https://ncarrier.github.io/cushions/
-[latest]: https://github.com/ncarrier/cushions/releases/tag/0.2.0
+[doxygen]: https://ncarrier.github.io/cushions/0.2.1
+[latest]: https://github.com/ncarrier/cushions/releases/tag/0.2.1
