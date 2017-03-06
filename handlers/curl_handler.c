@@ -177,6 +177,13 @@ static FILE *curl_cushions_fopen(struct ch_handler *handler,
 	}
 	file->handler = ch;
 
+	ecode = curl_easy_setopt(file->curl, CURLOPT_FOLLOWLOCATION, true);
+	if (ecode != CURLE_OK) {
+		LOGE("curl_easy_setopt followlocation: %s, %s",
+				curl_easy_strerror(ecode),
+				file->err_buf);
+		goto err;
+	}
 	ecode = curl_easy_setopt(file->curl, CURLOPT_URL, full_path);
 	if (ecode != CURLE_OK) {
 		LOGE("curl_easy_setopt url: %s, %s", curl_easy_strerror(ecode),
