@@ -176,6 +176,11 @@ static void tar_out_deserialize(struct tar *tar)
 		tar->err = errno;
 		return;
 	}
+	ret = tar_close(tar->tar);
+	if (ret < 0) {
+		tar->err = errno;
+		return;
+	}
 
 	tar->err = 0;
 	tar->eof = true;
