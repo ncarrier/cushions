@@ -7,7 +7,7 @@ on_exit() {
 	rm -rf ${wdir}
 }
 
-set -xeu
+set -eu
 
 cp=${CP_COMMAND:-./cpw}
 

@@ -8,7 +8,7 @@ on_exit() {
 	kill ${pid}
 }
 
-set -xeu
+set -eu
 
 cp=${CP_COMMAND:-./cpw}
 

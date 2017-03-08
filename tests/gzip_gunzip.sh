@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -xeu
+set -eu
 
 on_exit() {
 	rm -f test_file test_file.backup test_file.gz
