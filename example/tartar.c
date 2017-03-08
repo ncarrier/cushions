@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 {
 	TAR *tar;
 	int ret;
-	const char *src_path;
+	char *src_path;
 	const char *dst_path;
 
 	if (argc < 3)
