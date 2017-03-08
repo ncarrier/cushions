@@ -22,6 +22,7 @@ ${cp} csock://inet:127.0.0.1:56789 ${wdir}toto
 cmp ${wdir}tutu ${wdir}toto
 
 # client serves file
+rm ${wdir}toto
 ${cp} ssock://inet:127.0.0.1:56789 ${wdir}toto &
 sleep .05 # a small sleep shortens the test
 ${cp} ${wdir}tutu csock://inet:127.0.0.1:56789

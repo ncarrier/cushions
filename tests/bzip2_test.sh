@@ -21,6 +21,7 @@ ${cp} bzip2://${wdir}tutu.bz2 ${wdir}toto
 cmp ${wdir}tutu ${wdir}toto
 
 # compression
+rm ${wdir}tutu.bz2
 ${cp} ${wdir}tutu bzip2://${wdir}tutu.bz2
 bzip2 --decompress ${wdir}tutu.bz2 --stdout > ${wdir}toto
 cmp ${wdir}tutu ${wdir}toto
