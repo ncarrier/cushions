@@ -9,6 +9,9 @@ on_exit() {
 }
 
 set -eu
+if [ "${CUSHIONS_LOG_LEVEL}" -gt 2 ]; then
+	set -x
+fi
 
 cp=${CP_COMMAND:-./cpw}
 
