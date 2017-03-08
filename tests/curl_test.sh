@@ -4,8 +4,11 @@ wdir=${PWD}/$(basename $0)/
 mkdir -p ${wdir}
 
 on_exit() {
+	set +e
 	rm -rf ${wdir}
-	kill ${pid}
+	kill -15 ${pid}
+	wait ${pid}
+	echo "http server exited with status $?"
 }
 
 set -eu
