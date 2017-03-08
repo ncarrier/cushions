@@ -23,6 +23,6 @@ pid=$!
 
 trap on_exit EXIT
 
-${cp} http://localhost:8000/libcushions.so ${wdir}libcushions.so
-cmp libcushions.so ${wdir}libcushions.so
+${cp} http://localhost:8000/world.d ${wdir}world.d
+cmp world.d ${wdir}world.d
 
