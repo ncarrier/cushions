@@ -23,6 +23,9 @@ pid=$!
 
 trap on_exit EXIT
 
+# buy the simple HTTP server some time to get up
+sleep .1
+
 ${cp} http://localhost:8000/world.d ${wdir}world.d
 cmp world.d ${wdir}world.d
 
