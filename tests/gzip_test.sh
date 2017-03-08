@@ -16,7 +16,7 @@ trap on_exit EXIT
 dd if=/dev/urandom of=${wdir}tutu bs=1024 count=1024
 
 # decompression
-gzip -fck ${wdir}tutu > ${wdir}tutu.gz
+gzip -c ${wdir}tutu > ${wdir}tutu.gz
 ${cp} gzip://${wdir}tutu.gz ${wdir}toto
 cmp ${wdir}tutu ${wdir}toto
 rm ${wdir}tutu.gz
