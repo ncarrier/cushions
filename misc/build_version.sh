@@ -17,7 +17,7 @@ mkdir build_version
 cd build_version
 make -f ../Makefile -j $(nproc) CU_NEW_VERSION=${version} version
 
-docker_cmd="docker run --rm -v ${OLDPWD}:/workspace"
+docker_cmd="docker run --rm -v ${OLDPWD}:/workspace --user $(id -u):$(id -g)"
 
 cd ${start_dir}
 for f in $(find docker/ -name Dockerfile); do

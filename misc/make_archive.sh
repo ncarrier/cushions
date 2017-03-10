@@ -25,6 +25,5 @@ cd ${build_dir}
 make -f ../Makefile -j$(nproc) world check package
 cd -
 mkdir -p releases/${distrib}
-chmod a+rwx ${build_dir}/*.deb
 mv ${build_dir}/*.deb releases/${distrib}
 
