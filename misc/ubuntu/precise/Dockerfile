@@ -5,5 +5,8 @@ RUN apt-get -y update && apt-get install -y libbz2-dev liblzo2-dev lzop bzip2 \
 	libtool vim wget
 RUN apt-get install -y libarchive-dev
 RUN apt-get install -y moreutils
+RUN apt-get install -y doxygen
+RUN apt-get install -y graphviz
+RUN apt-get install -y lsb-release
 RUN mkdir -p /workspace/
 WORKDIR /workspace/
