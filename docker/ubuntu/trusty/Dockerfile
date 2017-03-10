@@ -8,6 +8,5 @@ RUN apt-get install -y moreutils
 RUN apt-get install -y python
 RUN apt-get install -y doxygen
 RUN apt-get install -y graphviz
-RUN apt-get install -y dot
 RUN mkdir -p /workspace/
 WORKDIR /workspace/
