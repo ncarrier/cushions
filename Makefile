@@ -233,7 +233,9 @@ endif
 
 doc:
 	rm -rf doc/
-	echo "PROJECT_NUMBER = $(version)" | cat $(here)misc/Doxyfile - | \
+	echo -ne "PROJECT_NUMBER = $(version)\n" \
+		"INPUT = $(here)include/cushions/\n" | \
+		cat $(here)misc/Doxyfile - | \
 		doxygen -
 
 install: all cpw $(lib).pc
