@@ -2,8 +2,9 @@
 
 set -xeu
 
-if [ -d .git ]; then
+if [ ! -d .git ]; then
 	echo "not at the root of the libcushions repository"
+	exit 1
 fi
 
 start_dir=$PWD
