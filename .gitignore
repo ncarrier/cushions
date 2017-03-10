@@ -4,4 +4,5 @@
 .project
 .cproject
 build
+build_version
 build_dir_*
