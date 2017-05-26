@@ -23,6 +23,6 @@ cd ${start_dir}
 for f in $(find docker/ -name Dockerfile); do
 	(d=$(echo $f | cut -d / -f 3)
 	docker build -t ${d}_for_cushions $(dirname ${f})
-	${docker_cmd} ${d}_for_cushions ./misc/make_archive.sh) &
+	${docker_cmd} ${d}_for_cushions ./misc/make_archive.sh)
 done
 wait
