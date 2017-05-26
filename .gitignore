@@ -7,3 +7,4 @@ build
 build_version
 build_dir_*
 releases
+deps

@@ -166,10 +166,10 @@ $(handlers): $(handler_pattern): $(handler_deps)
 setenv := $(here)/misc/setenv.sh
 check:$(tests) $(handlers) cpw
 	@echo checking coding style
-	@parallel $(here)/misc/checkpatch.pl \
+	$(Q)parallel $(here)/misc/checkpatch.pl \
 		--no-tree --no-summary --terse --show-types \
-		-f -- $$(find $(here) -name '*.c' -o -name '*.h' | \
-		grep -Ev 'curl_handler.c|dict_test.c')
+		-f -- $$(find $(here) -name '*.c' -o -name '*.h' -a -prune \
+			$(here)/deps/ | grep -Ev 'curl_handler.c|dict_test.c')
 	@echo run some unit tests
 	$(foreach t,$(tests),$(setenv) ./$(t))
 	@echo run some functional tests
