@@ -13,7 +13,7 @@ transparent support for archives files, or web urls, for example.
 It comes with a full [doxygen API documentation][doxygen], for libcushions users
 or scheme handler implementors.
 
-The latest version, 0.2.1, [can be download here][latest].
+The latest version, [can be download here][latest].
 
 **IMPORTANT NOTICE:** **libcushions**, while already potentially useful in some
 use cases, should be considered as a proof of concept.
