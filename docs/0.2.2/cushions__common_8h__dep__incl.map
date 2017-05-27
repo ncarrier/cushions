@@ -1,0 +1,8 @@
+<map id="cushions_common.h" name="cushions_common.h">
+<area shape="rect" id="node2" href="$cushions_8h.html" title="Main API, for clients willing to add URL&#45;like support to their program. " alt="" coords="5,155,91,181"/>
+<area shape="rect" id="node3" href="$cushions__handler_8h.html" title="Main header for scheme handler implementors. " alt="" coords="271,229,406,256"/>
+<area shape="rect" id="node4" href="$cushions__handler__dict_8h.html" title="Simple and lightweight string dictonary based on a macro&#45;based n&#45;ary tree structure implementation..." alt="" coords="165,155,328,181"/>
+<area shape="rect" id="node5" href="$cushions__handler__log_8h.html" title="Utility functions for logging in the libcushions log system. " alt="" coords="353,155,511,181"/>
+<area shape="rect" id="node6" href="$cushions__handler__mode_8h.html" title="Utility functions for breaking up the mode fopen(3) argument into an explicit set of boolean flags..." alt="" coords="524,80,697,107"/>
+<area shape="rect" id="node7" href="$cushions__handler__utils_8h.html" title="Various utility definitions. " alt="" coords="335,80,500,107"/>
+</map>
