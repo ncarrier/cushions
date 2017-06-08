@@ -2,7 +2,7 @@
  * Adapted from the fopen.c example provided in the curl website:
  *     https://curl.haxx.se/libcurl/c/fopen.html
  *
- * The original copyrigth notice is reproduced here:
+ * The original copyright notice is reproduced here:
  *
  * Copyright (c) 2003 Simtec Electronics
  *
