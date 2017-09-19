@@ -93,6 +93,29 @@ int ch_break_params(const char *input, char **path, char **envz,
 	return 0;
 }
 
+static FILE *call_handler(const struct ch_handler *h, const char *scheme,
+		const char *m, const char *path, unsigned offset)
+{
+	int ret;
+	struct ch_mode
+	__attribute__((cleanup(ch_mode_cleanup)))mode = {
+			.ccs = NULL,
+	};
+
+	LOGI("%s handles scheme '%s'", h->name, scheme);
+	ret = ch_mode_from_string(&mode, m);
+	if (ret < 0) {
+		LOGPE("cushions_handler_mode_from_string", ret);
+		errno = -ret;
+		return NULL;
+	}
+	if (!mode.binary)
+		LOGI("binary mode not set, may cause problems "
+				"on some OSes");
+
+	return h->fopen(h, path + offset, path, scheme, &mode);
+}
+
 FILE *cushions_fopen(const char *path, const char *m)
 {
 	int ret;
@@ -101,10 +124,6 @@ FILE *cushions_fopen(const char *path, const char *m)
 	char __attribute__((cleanup(ch_string_cleanup)))*scheme = NULL;
 	char __attribute__((cleanup(ch_string_cleanup)))*envz = NULL;
 	unsigned offset;
-	struct ch_mode
-	__attribute__((cleanup(ch_mode_cleanup)))mode = {
-			.ccs = NULL,
-	};
 
 	LOGD("%s(%s, %s)", __func__, path, m);
 
@@ -123,19 +142,8 @@ FILE *cushions_fopen(const char *path, const char *m)
 		h = handlers[i];
 		if (h == NULL)
 			break;
-		if (handle_handles(h, scheme)) {
-			LOGI("%s handles scheme '%s'", h->name, scheme);
-			ret = ch_mode_from_string(&mode, m);
-			if (ret < 0) {
-				LOGPE("cushions_handler_mode_from_string", ret);
-				errno = -ret;
-				return NULL;
-			}
-			if (!mode.binary)
-				LOGI("binary mode not set, may cause problems "
-						"on some OSes");
-			return h->fopen(h, path + offset, path, scheme, &mode);
-		}
+		if (handle_handles(h, scheme))
+			return call_handler(h, scheme, m, path, offset);
 	}
 
 	LOGI("no handler for scheme %s, fallback to real fopen", scheme);
