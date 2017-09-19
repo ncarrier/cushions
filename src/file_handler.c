@@ -8,7 +8,7 @@ struct file_cushions_handler {
 	/* here could come some custom data */
 };
 
-static FILE *file_cushions_fopen(struct ch_handler *handler,
+static FILE *file_cushions_fopen(const struct ch_handler *handler,
 		const char *path, const char *full_path, const char *scheme,
 		const struct ch_mode *mode)
 {

@@ -293,7 +293,7 @@ static FILE *pimp_client(const char *address, int flags)
 	return client;
 }
 
-static FILE *server_socket(struct ch_handler *handler, const char *path,
+static FILE *server_socket(const struct ch_handler *handler, const char *path,
 		const struct ch_mode *mode)
 {
 	int __attribute__((cleanup(ch_fd_cleanup)))server = -1;
@@ -305,13 +305,13 @@ static FILE *server_socket(struct ch_handler *handler, const char *path,
 	return pimp_accept(server, 0);
 }
 
-static FILE *client_socket(struct ch_handler *handler, const char *path,
+static FILE *client_socket(const struct ch_handler *handler, const char *path,
 		const struct ch_mode *mode)
 {
 	return pimp_client(path, 0);
 }
 
-static FILE *sock_cushions_fopen(struct ch_handler *handler,
+static FILE *sock_cushions_fopen(const struct ch_handler *handler,
 		const char *path, const char *full_path, const char *scheme,
 		const struct ch_mode *mode)
 {

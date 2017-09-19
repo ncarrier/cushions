@@ -84,7 +84,7 @@ static bool mode_is_valid(const struct ch_mode *mode)
 	return mode->write;
 }
 
-static FILE *mem_cushions_fopen(struct ch_handler *handler,
+static FILE *mem_cushions_fopen(const struct ch_handler *handler,
 		const char *path, const char *full_path, const char *scheme,
 		const struct ch_mode *mode)
 {

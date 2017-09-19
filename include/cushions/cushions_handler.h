@@ -45,7 +45,7 @@ struct ch_handler;
  * on errors.
  */
 /* codecheck_ignore[NEW_TYPEDEFS,SPACING] */
-typedef FILE *(*ch_fopen)(struct ch_handler *handler, const char *path,
+typedef FILE *(*ch_fopen)(const struct ch_handler *handler, const char *path,
 		const char *full_path, const char *scheme,
 		const struct ch_mode *mode);
 
