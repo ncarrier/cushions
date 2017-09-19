@@ -224,8 +224,6 @@ static FILE *lzo_cushions_fopen(struct ch_handler *handler,
 		errno = EINVAL;
 		return NULL;
 	}
-	if (!mode->binary)
-		LOGW("binary mode not set, may cause problems on some OSes");
 
 	lzo_c_file = calloc(1, sizeof(*lzo_c_file));
 	if (lzo_c_file == NULL) {

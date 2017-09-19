@@ -131,6 +131,9 @@ FILE *cushions_fopen(const char *path, const char *m)
 				errno = -ret;
 				return NULL;
 			}
+			if (!mode.binary)
+				LOGI("binary mode not set, may cause problems "
+						"on some OSes");
 			return h->fopen(h, path + offset, path, scheme, &mode);
 		}
 	}

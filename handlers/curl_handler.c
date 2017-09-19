@@ -163,8 +163,6 @@ static FILE *curl_cushions_fopen(struct ch_handler *handler,
 		errno = EINVAL;
 		return NULL;
 	}
-	if (!mode->binary)
-		LOGW("binary mode not set, may cause problems on some OSes");
 
 	file = calloc(1, sizeof(*file));
 	if (file == NULL)

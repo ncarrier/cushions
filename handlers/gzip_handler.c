@@ -253,8 +253,6 @@ static FILE *gzip_cushions_fopen(struct ch_handler *handler,
 		errno = EINVAL;
 		return NULL;
 	}
-	if (!mode->binary)
-		LOGW("binary mode not set, may cause problems on some OSes");
 
 	gzip = calloc(1, sizeof(*gzip));
 	if (gzip == NULL) {
