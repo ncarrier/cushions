@@ -5,6 +5,8 @@ ifeq ($(CC),cc)
 CC := gcc
 endif
 
+SHELL := /bin/bash
+
 version := $(shell git describe --always --tags --dirty)
 ifndef prefix
 prefix := /usr/
