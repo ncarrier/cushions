@@ -23,9 +23,19 @@ pid=$!
 
 trap on_exit EXIT
 
-# buy the simple HTTP server some time to get up
-sleep .1
+i=10
+while [ $i -gt 0 ]; do
+	# retry until the http server is up, or a timeout of 1 second
+	# because cp can't (yet) detect errors, we rely on cmp to know if we can
+	# halt the loop
+	${cp} http://localhost:8000/world.d ${wdir}world.d
+	cmp world.d ${wdir}world.d && break
+	# test failed, buy the simple HTTP server some time in case it wasn't ready
+	sleep .1
+	i=$(($i - 1))
+	rm ${wdir}world.d
+done
 
-${cp} http://localhost:8000/world.d ${wdir}world.d
+# we redo one more cmp, because the previous' one status code has been consumed
+# by the &&
 cmp world.d ${wdir}world.d
-
