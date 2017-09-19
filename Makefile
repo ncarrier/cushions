@@ -199,6 +199,7 @@ clean:
 package: $(package)
 
 $(package):all $(lib).pc doc
+	cp $(here)misc/description-pak description-pak
 	checkinstall \
 		--docdir=:$(prefix)share \
 		--fstrans=yes \
